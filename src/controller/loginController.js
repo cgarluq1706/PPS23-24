@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');// Añade la importación de bcrypt
 const connection = require('../conexion');
 
-
+    
 
 const getIndex = (req, res) => {
     res.render('index',{ mensaje: '' });
