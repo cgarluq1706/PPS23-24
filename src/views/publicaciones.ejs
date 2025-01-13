@@ -53,34 +53,42 @@
         <br>
 
 
-        <% publicaciones.forEach(function(publicacion) { %>
-        <section data-bs-version="5.1" class="article13 cid-u6ZF78RI9e" id="call-to-action-5-u6ZF78RI9e">       
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="card col-md-12 col-lg-10">
-                        <div class="card-wrapper">
-                            <div class="card-box align-center">
-                                <section data-bs-version="5.1" class="features21 cid-u6ZF78SJlX" id="features-4-u6ZF78SJlX">
-                                <div class="item features-without-image">
-                                    <div class="item-wrapper">
-                                        <div class="card-box align-left">
-                                            <div class="img-wrapper mb-3">
-                                                <img src="/imagenID/<%= publicacion.id %>" alt="Foto de perfil"> 
+        <% if (publicaciones && publicaciones.length > 0) { %>
+            <% publicaciones.forEach(function(publicacion) { %>
+                <section data-bs-version="5.1" class="article13 cid-u6ZF78RI9e" id="call-to-action-5-u6ZF78RI9e">       
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="card col-md-12 col-lg-10">
+                                <div class="card-wrapper">
+                                    <div class="card-box align-center">
+                                        <section data-bs-version="5.1" class="features21 cid-u6ZF78SJlX" id="features-4-u6ZF78SJlX">
+                                            <div class="item features-without-image">
+                                                <div class="item-wrapper">
+                                                    <div class="card-box align-left">
+                                                        <div class="img-wrapper mb-3">
+                                                            <img src="/imagenID/<%= publicacion.id %>" alt="Foto de perfil de <%= publicacion.nombre %>"> 
+                                                        </div>
+                                                        <h5 class="card-title mbr-fonts-style display-5">
+                                                            <strong><%= publicacion.contenido %></strong>
+                                                        </h5>
+                                                        <p class="card-text mbr-fonts-style display-7">
+                                                            Escrito por <%= publicacion.nombre %> el <%= publicacion.fecha_publicacion %>
+                                                        </p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <h5 class="card-title mbr-fonts-style display-5">
-                                                <strong><%= publicacion.contenido %></strong>
-                                            </h5>
-                                            <p class="card-text mbr-fonts-style display-7">Escrito por <%= publicacion.nombre %> el <%= publicacion.fecha_publicacion %></p>
-                                        </div>
+                                        </section>
                                     </div>
                                 </div>
-                            </section>
                             </div>
-                        </div>
-                </div>
-            </div>     
-        </section>
-        <% }); %>
+                        </div>     
+                    </div>
+                </section>
+            <% }); %>
+        <% } else { %>
+            <p>No tenemos nada que mostrarte</p>
+        <% } %>
+        
 
         
     <section data-bs-version="5.1" class="footer3 cid-u6ZF78TESB" once="footers" id="footer-6-u6ZF78TESB">

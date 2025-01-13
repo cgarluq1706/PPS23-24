@@ -12,11 +12,11 @@ const getpublicaciones = (req, res) => {
         }
                 // Comprobar si se encontraron resultados
                 if (results.length > 0) {
-                    // Renderizar la plantilla 'publicaciones' con los datos de publicaciones 
-                    res.render('publicaciones',{ username: req.session.username, publicaciones: results});
+                    res.render('publicaciones', { username: req.session.username, publicaciones: results });
                 } else {
-                    res.status(404).send('Error al obtener publicaciones');
+                    res.render('publicaciones', { username: req.session.username, publicaciones: [] }); // Para que no muestre nada pero siga en la página
                 }
+                
             });
 
 };
