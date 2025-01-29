@@ -78,9 +78,18 @@
                         <input type="file" name="image"  accept="image/*">
                         <input type="submit" value="Modifica foto" name="submit">
                     </form>
+                    <br>
+                    
                     <% if (mensaje) { %>
                         <p class="alert alert-danger"><%= mensaje %></p>
                     <% } %>
+
+                    <form action="/actualizar-descripcion" method="post">
+                        <label for="descripcion">Descripción:</label>
+                        <textarea id="descripcion" name="descripcion" rows="4" cols="50"><%=usuario.descripcion || ''%></textarea>
+                        <button type="submit">Guardar Descripción</button>
+                    </form>
+
                     <form action="/modifica_perfil" method="post" enctype="multipart/form-data">
 
                         <label for="nombre">Nombre:</label>

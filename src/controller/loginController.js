@@ -44,7 +44,7 @@ const logout = (req, res) => {
 };
 
 const getDashboard = (req, res) => {
-    if (req.session.loggedIn) {
+    if (req.session.userId) {
      res.render('dashboard', { username: req.session.username });
  } else {
      res.render('error');
@@ -70,28 +70,26 @@ const getDashboard = (req, res) => {
 };
 
  
- const postLogin =(req, res) => {
+const postLogin = async (req, res) => {
     const username = req.body.username;
     const password = req.body.contraseña;
     const query = 'SELECT * FROM usuarios WHERE username = ?';
-   
-    connection.query(query, [username], (err, results) => {
+
+    connection.query(query, [username], async (err, results) => {
         if (err) throw err;
         if (results.length > 0) {
-            // Verificar si la contraseña coincide utilizando bcrypt.compare()
-            const validPassword = bcrypt.compare(password, results[0].contraseña);
-                if (validPassword) {
-                    req.session.loggedIn = true; // Establece la sesión como iniciada
-                    req.session.username = username; // Guarda el nombre de usuario en la sesión
-                    res.redirect('/dashboard'); // Redirige al usuario al panel de control (dashboard)
-                } else {
-                    res.render('index', { mensaje: 'Contraseña inválida' });
-                }
-   
+            const validPassword = await bcrypt.compare(password, results[0].contraseña);
+            if (validPassword) {
+                req.session.loggedIn = true; // Indicador de sesión iniciada
+                req.session.username = username; // Guardar el nombre de usuario
+                req.session.userId = results[0].id; // Guardar el ID del usuario
+                res.redirect('/dashboard');
+            } else {
+                res.render('index', { mensaje: 'Contraseña inválida' });
+            }
         } else {
-            res.render('index', { mensaje: 'Usuario no valido' }); // Redirige al usuario de vuelta al formulario de inicio de sesión con un mensaje de error
+            res.render('index', { mensaje: 'Usuario no válido' });
         }
-    
     });
 };
 
@@ -112,40 +110,50 @@ const getError = (req, res) => {
 };
 
 const getPerfil = (req, res) => {
-    const username = req.session.username;
+    const userId = req.session.userId; // Obtener el userId de la sesión
     const mensaje = req.query.mensaje;
+
+    if (!userId) {
+        return res.status(401).send('Usuario no autenticado'); // Si no hay userId, el usuario no está autenticado
+    }
+
     // Consulta SQL para obtener los datos del perfil del usuario
-    const sql = 'SELECT * FROM usuarios WHERE username = ?';
-    connection.query(sql, [username], (err, results) => {
+    const sql = 'SELECT * FROM usuarios WHERE id = ?';
+    connection.query(sql, [userId], (err, results) => {
         if (err) {
             console.error('Error al obtener datos del perfil:', err);
             res.status(500).send('Error al obtener datos del perfil');
             return;
         }
-        const usuario = results[0];
 
         // Comprobar si se encontraron resultados
         if (results.length > 0) {
-            // Renderizar la plantilla 'perfil' con los datos del usuario
-            
-            const sqlseguidores = 'select count(*) from usuarios u inner join seguimiento s on s.seguidor_id = u.id where u.username = ?';
-            connection.query(sqlseguidores, [username], (err, results) => {
-                if (err) {
-                    console.error('Error al obtener datos:', err);
-                    res.status(500).send('Error al obtener datos');
-                    return;
-                }
-                const seguidos = results[0]['count(*)'];
+            const usuario = results[0];
 
-            const sqlseguidos = 'select count(*) from usuarios u inner join seguimiento s on s.seguido_id  = u.id where u.username  = ?';
-            connection.query(sqlseguidos, [username], (err, results) => {
+            // Consulta para obtener el número de seguidores y seguidos
+            const sqlSeguidoresSeguidos = `
+                SELECT 
+                    (SELECT COUNT(*) FROM seguimiento WHERE seguido_id = ?) AS seguidores,
+                    (SELECT COUNT(*) FROM seguimiento WHERE seguidor_id = ?) AS seguidos
+            `;
+
+            connection.query(sqlSeguidoresSeguidos, [userId, userId], (err, results) => {
                 if (err) {
-                    console.error('Error al obtener datos:', err);
-                    res.status(500).send('Error al obtener datos');
+                    console.error('Error al obtener datos de seguidores y seguidos:', err);
+                    res.status(500).send('Error al obtener datos de seguidores y seguidos');
                     return;
                 }
-                const seguidores = results[0]['count(*)'];
-                res.render('perfil', { username, usuario, seguidos, seguidores, mensaje});
+
+                const seguidores = results[0].seguidores;
+                const seguidos = results[0].seguidos;
+
+                // Renderizar la plantilla 'perfil' con los datos del usuario
+                res.render('perfil', { 
+                    username: req.session.username, 
+                    usuario, 
+                    seguidos, 
+                    seguidores, 
+                    mensaje 
                 });
             });
         } else {
