@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS usuarios (
     telefono varchar(100),
     foto_perfil LONGBLOB,
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    activo boolean default 1
+    activo boolean default 1,
+    descripción VARCHAR(100) NOT NULL
 );
 -- Creación de la tabla de seguimiento
 CREATE TABLE IF NOT EXISTS seguimiento (
