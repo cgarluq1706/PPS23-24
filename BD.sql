@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     foto_perfil LONGBLOB,
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     activo boolean default 1,
-    descripción VARCHAR(100) NOT NULL
+    descripción VARCHAR(100)
 );
 -- Creación de la tabla de seguimiento
 CREATE TABLE IF NOT EXISTS seguimiento (
