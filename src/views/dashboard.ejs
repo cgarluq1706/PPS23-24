@@ -16,6 +16,212 @@
     <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj" type="text/css">
   
 </head>
+<style>
+.search-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3%;
+    width: 100%; 
+    max-width: 400px; 
+    position: relative; 
+    margin: 0 auto; 
+}
+
+.search-container.open {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background: #f5f5f5; 
+    padding: 8px; 
+    border-radius: 50px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    position: relative; 
+    border: 1px solid #e0e0e0; 
+    transition: background-color 0.3s ease, border-radius 0.3s ease; 
+}
+
+.search-input {
+    border: none;
+    outline: none;
+    padding: 8px;
+    font-size: 0.9em;
+    border-radius: 50px;
+    width: 100%;
+    background: transparent;
+}
+
+.search-button {
+    background-color: #0078a0;
+    border: none;
+    padding: 0%;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 40px; 
+    height: 36px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+    font-size: 1em; 
+    color: white;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.search-button:hover {
+    background-color: #005670;
+    box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 0px 0px 20px 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 300px;
+    overflow-y: auto;
+    display: none; 
+    z-index: 1000; 
+    opacity: 0; 
+    transform: translateY(-10px); 
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    max-width: 88.3%; 
+    border: 1px solid #e0e0e0; 
+}
+
+.search-container, .search-results, .result-item {
+    transition: background-color 0.3s ease;
+}
+
+
+.search-results.open {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.result-item {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.2s;
+    background-color: #ffffff; 
+}
+
+.result-item:hover {
+    background-color: #f0f0f0;
+}
+
+.result-item img {
+    border-radius: 50%;
+    margin-right: 10px;
+    width: 40px; 
+    height: 40px; 
+}
+
+@media (max-width: 768px) {
+    .search-wrapper {
+        max-width: 90%;
+    }
+
+    .search-container {
+        padding: 6px; 
+    }
+
+    .search-input {
+        font-size: 0.8em;
+        padding: 6px; 
+    }
+
+    .search-button {
+        width: 32px; 
+        height: 32px;
+        font-size: 0.9em;
+    }
+
+    .result-item img {
+        width: 35px; 
+        height: 35px; 
+    }
+}
+
+@media (max-width: 480px) {
+    .search-wrapper {
+        max-width: 100%; 
+    }
+
+    .search-container {
+        border-radius: 25px; 
+    }
+
+    .search-input {
+        font-size: 0.75em; 
+    }
+
+    .search-button {
+        width: 30px; 
+        height: 30px; 
+    }
+}
+</style>
+<script>
+document.getElementById("searchInput").addEventListener("input", searchUsers);
+
+async function searchUsers() {
+    const query = document.getElementById("searchInput").value.trim();
+    const resultsContainer = document.getElementById("results");
+    const searchContainer = document.querySelector(".search-container"); 
+
+    
+    resultsContainer.innerHTML = "";
+    resultsContainer.classList.remove("open");
+    searchContainer.classList.remove("open"); 
+
+    if (query === "") return;
+
+    try {
+        const response = await fetch(`/buscar?q=${query}`);
+        const users = await response.json();
+
+        if (users.length === 0) {
+            resultsContainer.innerHTML = "<p class='text-center p-2'>No se encontraron usuarios</p>";
+            resultsContainer.classList.add("open"); 
+            searchContainer.classList.add("open");
+            return;
+        }
+
+       
+        users.forEach(user => {
+            const userElement = document.createElement("div");
+            userElement.classList.add("result-item");
+            userElement.innerHTML = `
+                <img src="${user.foto || 'https://via.placeholder.com/40'}" class="me-2" width="40">
+                <span>${user.nombre} ${user.apellido} (@${user.username})</span>
+            `;
+            userElement.onclick = () => window.location.href = `/perfil/${user.username}`;
+
+            resultsContainer.appendChild(userElement);
+        });
+
+        resultsContainer.classList.add("open"); 
+        searchContainer.classList.add("open"); 
+    } catch (error) {
+        console.error("Error al buscar usuarios:", error);
+    }
+}
+</script>
+
 <body>
     <!-- Llamada al menu -->
     <section data-bs-version="5.1" class="menu menu2 cid-u6ZF78ROEn" once="menu" id="menu-5-u6ZF78ROEn">
@@ -29,6 +235,22 @@
                     </span>
                     <span class="navbar-caption-wrap"><a class="navbar-caption text-black display-4" href="/dashboard">socialTernero</a></span>
                 </div>
+
+        <!-- Barra de busqueda-->
+        <div class="search-wrapper">
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="Buscar usuarios..." aria-label="Buscar">
+            </div>
+            <button class="search-button" type="button" onclick="searchUsers()">🔍</button>
+                    <!-- Aquí se mostrarán los resultados en un pequeño desplegable debajo de la barra de búsqueda -->
+            <div class="search-results" id="results"></div>
+        </div>
+    
+       
+        
+        
+
+
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
                         <li class="nav-item">

@@ -18,6 +18,11 @@ app.use(session({
     saveUninitialized: true
 }));
 
+// buscar usuarios
+const busquedaRoutes = require("./routes/busqueda");
+app.use("/", busquedaRoutes);
+
+
 // Configuración para servir archivos estáticos
 app.use(express.static(__dirname));
 //plantillas
