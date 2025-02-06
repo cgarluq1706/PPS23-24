@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');// Añade la importación de bcrypt
 const connection = require('../conexion');
+const { use } = require('../routes/login');
 
     
 
@@ -162,6 +163,38 @@ const getPerfil = (req, res) => {
     });
 };
 
+const actualizarRedes = (req, res) => {
+    const userId = req.session.userId;  // Para obtener el userId de la sesión
+    const { twitter, instagram, linkedin, github } = req.body;  // Obtenemos las redes sociales del formulario
+
+    if (!userId) {
+        return res.status(401).send('Usuario no autenticado');  // Si no detecta un userId, el usuario no estaría autenticado en la página
+    }
+
+    // Consulta SQL para actualizar las redes sociales
+    const query = `
+        UPDATE usuarios
+        SET
+            twitter = ?,
+            instagram = ?,
+            linkedin = ?,
+            github = ?
+        WHERE id = ?
+    `;
+
+    connection.query(
+        query,
+        [twitter, instagram, linkedin, github, userId],
+        (error, results) => {
+            if (error) {
+                console.error('Error al actualizar las redes sociales:', error);
+                return res.status(500).send('Error al guardar los cambios');
+            }
+            res.redirect('/perfil');  // Redirige de vuelta al perfil
+        }
+    );
+};
+
 // Exporta las funciones y el enrutador
 module.exports = {
     getIndex,
@@ -174,6 +207,6 @@ module.exports = {
  //   getpublicaciones,
     postRegister,
     getError,
-    getPerfil
-
+    getPerfil,
+    actualizarRedes
 };
