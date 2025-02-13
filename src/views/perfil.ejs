@@ -11,132 +11,168 @@
     <link rel="stylesheet" href="assets/dropdown/css/style.css">
     <link rel="stylesheet" href="assets/socicon/css/styles.css">
     <link rel="stylesheet" href="assets/theme/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap"></noscript>
     <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj" type="text/css">
-  
+    <style>
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .description-section {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .sections-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            align-items: stretch; /* Iguala la altura de los contenedores hijos */
+        }
+
+        .profile-section {
+            width: 48%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ddd; /* Opcional: para visualizar los contenedores */
+            border-radius: 8px; /* Opcional: bordes redondeados */
+            background-color: #f9f9f9; /* Opcional: fondo claro */
+        }
+
+        .profile-section form {
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Asegura que el formulario ocupe toda la altura del contenedor */
+        }
+
+        .profile-section label {
+            margin-bottom: 5px;
+            font-weight: bold; /* Opcional: resalta las etiquetas */
+        }
+
+        .profile-section input, .profile-section textarea {
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%; /* Asegura que los inputs ocupen todo el ancho */
+        }
+
+        .profile-section button {
+            padding: 10px;
+            background-color: #0077b5;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: auto; /* Alinea el botón al final del formulario */
+        }
+
+        .profile-section button:hover {
+            background-color: #005f8b;
+        }
+    </style>
 </head>
 <body>
     <!-- Llamada al menu -->
-    <section data-bs-version="5.1" class="menu menu2 cid-u6ZF78ROEn" once="menu" id="menu-5-u6ZF78ROEn">
-        <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
-            <div class="container">
-                <div class="navbar-brand">
-                    <span class="navbar-logo">
-                        <a href="/dashboard">
-                            <img src="assets/images/mbr-206x191.png" alt="Mobirise Website Builder" style="height: 4.3rem;">
-                        </a>
-                    </span>
-                    <span class="navbar-caption-wrap"><a class="navbar-caption text-black display-4" href="/dashboard">socialTernero</a></span>
-                </div>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
-                        <li class="nav-item">
-                            <a class="nav-link link text-black text-primary display-4" href="/perfil">Mi perfil</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link link text-black text-primary display-4" href="/comentarios">Ver mis comentarios</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link link text-black text-primary display-4" href="/publicaciones">Publicaciones</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link link text-black text-primary display-4" href="/logout" aria-expanded="false">logout, <%= username %></a>
-                        </li>
-                    </ul>
-    
-                </div>
-            </div>
-        </nav>
-    </section>
+    <%- include("../routes/header.ejs") %>
     <br>
-
 
     <section data-bs-version="5.1" class="people07 cid-u7G9MjbGh4" id="people07-d">
         <p class="card-title mbr-fonts-style mt-3 display-7 justify-content-right">
-
             <div class="img-wrapper mt-4 justify-content-center">
                 <strong>Perfil de <%= usuario.nombre %></strong>
-             <!--   <img src="/imagen/<%= usuario.id %>" alt="Foto de perfil">-->
+                <img src="/imagen/<%= usuario.id %>" alt="Foto de perfil">
             </div>
             <div class="img-wrapper mt-4 justify-content-center">
-              <!--  <strong>Perfil de <%= usuario.nombre %></strong>-->
-                <img src="/imagen/<%= usuario.id %>" alt="Foto de perfil"> 
-            </div>
-            <div class="img-wrapper mt-4 justify-content-center">
-                <!--  <strong>Perfil de <%= usuario.nombre %></strong>-->
                 <a href="/siguiendo">Siguiendo: <%= seguidos %></a>
                 <a href="/seguidos" style="margin-left: 15px;">Seguidores: <%= seguidores %></a>
             </div>
-
         </p>
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-12 col-lg-8">
-
                     <form action="/modifica_foto" method="post" enctype="multipart/form-data">
-                        <input type="file" name="image"  accept="image/*">
+                        <input type="file" name="image" accept="image/*">
                         <input type="submit" value="Modifica foto" name="submit">
                     </form>
+                    <br>
+                    
                     <% if (mensaje) { %>
                         <p class="alert alert-danger"><%= mensaje %></p>
                     <% } %>
-                    <form action="/modifica_perfil" method="post" enctype="multipart/form-data">
 
-                        <label for="nombre">Nombre:</label>
-                        <input type="text" id="nombre" name="nombre" value="<%= usuario.nombre %>" required>
-                        <br>
-                        <label for="apellido">Apellido:</label>
-                        <input type="text" id="apellido" name="apellido" value="<%= usuario.apellido %>" required>
-                        <br>
-                        <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-                        <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="<%= usuario.fecha_nacimiento.toISOString().slice(0,10) %>" required>
-                        <br>
-                        <label for="telefono">Teléfono:</label>
-                        <input type="tel" id="telefono" name="telefono" value="<%= usuario.telefono %>">
-                        <br>
-                        <input type="submit" value="Actualizar">
-                    </form>
+                    <div class="profile-container">
+                        <!-- Descripción en el medio -->
+                        <div class="description-section">
+                            <form action="/actualizar-descripcion" method="post">
+                                <label for="descripcion">Descripción:</label>
+                                <textarea id="descripcion" name="descripcion" style="width: 100%;"><%=usuario.descripcion || ''%></textarea>
+                                <button type="submit">Guardar Descripción</button>
+                            </form>
+                        </div>
 
+                        <!-- Redes sociales e información personal -->
+                        <div class="sections-container">
+                            <div class="profile-section">
+                                <form action="/actualizar-redes" method="POST">
+                                    <p><b>Redes sociales</b></p>
+                                    <label for="twitter"><i class="fab fa-twitter"></i></label>
+                                    <input type="url" id="twitter" name="twitter" placeholder="https://x.com/tu_usuario" value="<%=usuario.twitter || '' %>">
+                                    <br>
+                                    <label for="instagram"><i class="fab fa-instagram"></i></label>
+                                    <input type="url" id="instagram" name="instagram" placeholder="https://www.instagram.com/tu_usuario" value="<%=usuario.instagram || '' %>">
+                                    <br>
+                                    <label for="linkedin"><i class="fab fa-linkedin-in"></i></label>
+                                    <input type="url" id="linkedin" name="linkedin" placeholder="https://www.linkedin.com/tu_usuario" value="<%=usuario.linkedin || '' %>">
+                                    <br>
+                                    <label for="github"><i class="fab fa-github"></i></label>
+                                    <input type="url" id="github" name="github" placeholder="https://github.com/tu_usuario" value="<%=usuario.github || '' %>">
+                                    <br>
+                                    <button type="submit">Guardar cambios</button>
+                                </form>
+                            </div>
+
+                            <div class="profile-section">
+                                <form action="/modifica_perfil" method="post" enctype="multipart/form-data">
+                                    <p><b>Información personal</b></p>
+                                    <label for="nombre">Nombre:</label>
+                                    <input type="text" id="nombre" name="nombre" value="<%= usuario.nombre %>" required>
+                                    <br>
+                                    <label for="apellido">Apellido:</label>
+                                    <input type="text" id="apellido" name="apellido" value="<%= usuario.apellido %>" required>
+                                    <br>
+                                    <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="<%= usuario.fecha_nacimiento.toISOString().slice(0,10) %>" required>
+                                    <br>
+                                    <label for="telefono">Teléfono:</label>
+                                    <input type="tel" id="telefono" name="telefono" value="<%= usuario.telefono %>">
+                                    <br>
+                                    <input type="submit" value="Actualizar">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <script src="../routes/footer.js"></script>
 
-    <section data-bs-version="5.1" class="footer3 cid-u6ZF78TESB" once="footers" id="footer-6-u6ZF78TESB">
-        <div class="container">
-            <div class="row">
-                <div class="row-links">
-                    <ul class="header-menu">
-    
-                    <li class="header-menu-item mbr-fonts-style display-5">
-                        <a href="#" class="text-white">Inicio</a>
-                      </li><li class="header-menu-item mbr-fonts-style display-5">
-                        <a href="#" class="text-white">Acerca</a>
-                      </li><li class="header-menu-item mbr-fonts-style display-5">
-                        <a href="#" class="text-white">Contacto</a>
-                      </li><li class="header-menu-item mbr-fonts-style display-5">
-                        <a href="#" class="text-white">Términos</a>
-                      </li></ul>
-                  </div>
-    
-                
-                <div class="col-12 mt-4">
-                    <p class="mbr-fonts-style copyright display-7">© 2024 socialTernero. Todos los derechos reservados.</p>
-                </div>
-            </div>
-        </div>
-    </section>
- 
-        <!-- Script tags from second document -->
-        <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="assets/smoothscroll/smooth-scroll.js"></script>
-        <script src="assets/ytplayer/index.js"></script>
-        <script src="assets/dropdown/js/navbar-dropdown.js"></script>
-        <script src="assets/vimeoplayer/player.js"></script>
-        <script src="assets/masonry/masonry.pkgd.min.js"></script>
-        <script src="assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
-        <script src="assets/theme/js/script.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/smoothscroll/smooth-scroll.js"></script>
+    <script src="assets/ytplayer/index.js"></script>
+    <script src="assets/dropdown/js/navbar-dropdown.js"></script>
+    <script src="assets/vimeoplayer/player.js"></script>
+    <script src="assets/masonry/masonry.pkgd.min.js"></script>
+    <script src="assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script src="assets/theme/js/script.js"></script>
 </body>
 </html>

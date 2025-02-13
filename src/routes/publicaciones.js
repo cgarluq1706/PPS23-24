@@ -1,11 +1,8 @@
 const express = require('express');
 const router = express.Router();
-//
 const publicacionesController = require('../controller/publicacionesController');
 
-router
-    //login
-    .get("/publicaciones", publicacionesController.getpublicaciones);
-    //.get("/getMispublicaciones",publicacionesController.getMispublicaciones);
+// Ruta para obtener publicaciones
+router.get("/publicaciones", publicacionesController.getpublicaciones);
 
 module.exports = router;

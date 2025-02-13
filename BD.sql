@@ -1,9 +1,7 @@
-
 drop database if exists red_social;
 create database if not exists red_social;
 
 use red_social; 
-
 
 CREATE TABLE IF NOT EXISTS usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -16,7 +14,12 @@ CREATE TABLE IF NOT EXISTS usuarios (
     telefono varchar(100),
     foto_perfil LONGBLOB,
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    activo boolean default 1
+    activo boolean default 1,
+    descripcion VARCHAR(100),
+    twitter VARCHAR(255),
+    instagram VARCHAR(255),
+    linkedin VARCHAR(255),
+    github VARCHAR(255)
 );
 -- Creación de la tabla de seguimiento
 CREATE TABLE IF NOT EXISTS seguimiento (
@@ -37,7 +40,46 @@ CREATE TABLE IF NOT EXISTS publicaciones (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
 
+
+DROP TABLE IF EXISTS `comentarios`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+CREATE TABLE `comentarios` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `publicacion_id` int(11) DEFAULT NULL,
+  `usuario_id` int(11) DEFAULT NULL,
+  `contenido` text NOT NULL,
+  `fecha_comentario` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `publicacion_id` (`publicacion_id`),
+  KEY `usuario_id` (`usuario_id`),
+  CONSTRAINT `comentarios_ibfk_1` FOREIGN KEY (`publicacion_id`) REFERENCES `publicaciones` (`id`),
+  CONSTRAINT `comentarios_ibfk_2` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+ SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `comentarios`
+--
+
+LOCK TABLES `comentarios` WRITE;
+ALTER TABLE `comentarios` DISABLE KEYS ;
+ALTER TABLE `comentarios` ENABLE KEYS ;
+UNLOCK TABLES;
+SET TIME_ZONE = '+00:00'; -- UTC
+
+SET SQL_MODE = '';
+SET FOREIGN_KEY_CHECKS = 1;
+SET UNIQUE_CHECKS = 1;
+SET CHARACTER_SET_CLIENT = 'utf8mb4';
+SET CHARACTER_SET_RESULTS = 'utf8mb4';
+SET COLLATION_CONNECTION = 'utf8mb4_general_ci';
+SET SQL_NOTES = 1;
+
+
 select * from usuarios u ;
+
+
 
 
 -- para ver desde que rutas se pueden subir archivos
@@ -82,6 +124,8 @@ insert into publicaciones (usuario_id,contenido)   values(4,'Cogito Ergo sum');
 -- Ronaldinho escribe varios post
 insert into publicaciones (usuario_id,contenido) values(3,'Dura derrota, a seguir trabajando!');
 insert into publicaciones (usuario_id,contenido) values(3,'Gran victoría!! este equipo promete');
+
+
 
 
 

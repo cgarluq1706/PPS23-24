@@ -14,116 +14,175 @@
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap"></noscript>
     <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj" type="text/css">
-
 </head>
 
 <body>
-        <!-- Llamada al menu -->
-        <section data-bs-version="5.1" class="menu menu2 cid-u6ZF78ROEn" once="menu" id="menu-5-u6ZF78ROEn">
-            <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
+    <!-- Llamada al menu -->
+    <%- include("../routes/header.ejs") %>
+   
+
+    <br>
+
+    <% if (publicaciones && publicaciones.length > 0) { %>
+        <% publicaciones.forEach(function(publicacion) { %>
+            <section data-bs-version="5.1" class="article13 cid-u6ZF78RI9e" id="call-to-action-5-u6ZF78RI9e">       
                 <div class="container">
-                    <div class="navbar-brand">
-                        <span class="navbar-logo">
-                            <a href="/dashboard">
-                                <img src="assets/images/mbr-206x191.png" alt="Mobirise Website Builder" style="height: 4.3rem;">
-                            </a>
-                        </span>
-                        <span class="navbar-caption-wrap"><a class="navbar-caption text-black display-4" href="/dashboard">socialTernero</a></span>
-                    </div>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
-                            <li class="nav-item">
-                                <a class="nav-link link text-black text-primary display-4" href="/perfil">Mi perfil</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link link text-black text-primary display-4" href="/comentarios">Ver mis comentarios</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link link text-black text-primary display-4" href="/publicaciones">Publicaciones</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link link text-black text-primary display-4" href="/logout" aria-expanded="false">logout, <%= username %></a>
-                            </li>
-                        </ul>
-        
-                    </div>
-                </div>
-            </nav>
-        </section>
-        <br>
-
-
-        <% if (publicaciones && publicaciones.length > 0) { %>
-            <% publicaciones.forEach(function(publicacion) { %>
-                <section data-bs-version="5.1" class="article13 cid-u6ZF78RI9e" id="call-to-action-5-u6ZF78RI9e">       
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="card col-md-12 col-lg-10">
-                                <div class="card-wrapper">
-                                    <div class="card-box align-center">
-                                        <section data-bs-version="5.1" class="features21 cid-u6ZF78SJlX" id="features-4-u6ZF78SJlX">
-                                            <div class="item features-without-image">
-                                                <div class="item-wrapper">
-                                                    <div class="card-box align-left">
-                                                        <div class="img-wrapper mb-3">
-                                                            <img src="/imagenID/<%= publicacion.id %>" alt="Foto de perfil de <%= publicacion.nombre %>"> 
-                                                        </div>
-                                                        <h5 class="card-title mbr-fonts-style display-5">
-                                                            <strong><%= publicacion.contenido %></strong>
-                                                        </h5>
-                                                        <p class="card-text mbr-fonts-style display-7">
-                                                            Escrito por <%= publicacion.nombre %> el <%= publicacion.fecha_publicacion %>
-                                                        </p>
+                    <div class="row justify-content-center">
+                        <div class="card col-md-12 col-lg-10">
+                            <div class="card-wrapper">
+                                <div class="card-box align-center">
+                                    <section data-bs-version="5.1" class="features21 cid-u6ZF78SJlX" id="features-4-u6ZF78SJlX">
+                                        <div class="item features-without-image">
+                                            <div class="item-wrapper">
+                                                <div class="card-box align-left">
+                                                    <div class="img-wrapper mb-3">
+                                                        <img src="/imagenes/perfil/<%= publicacion.id %>" alt="Foto de perfil de <%= publicacion.nombre %>"> 
                                                     </div>
+                                                    <h5 class="card-title mbr-fonts-style display-5">
+                                                        <strong><%= publicacion.contenido %></strong>
+                                                    </h5>
+                                                    <p class="card-text mbr-fonts-style display-7">
+                                                        Escrito por <%= publicacion.nombre %> el <%= publicacion.fecha_publicacion %>
+                                                    </p>
                                                 </div>
                                             </div>
-                                        </section>
+                                        </div>
+                                    </section>
+
+                                                                    
+                                    <div class="comentarios">
+                                        <h5>Comentarios:</h5>
+                                        <% if (publicacion.comentarios && publicacion.comentarios.length > 0) { %>
+                                            <ul id="comentarios-<%= publicacion.publicacion_id %>">
+                                                <% publicacion.comentarios.forEach(function(comentario) { %>
+                                                    <li id="comentario-<%= comentario.id %>">
+                                                        <strong><%= comentario.nombre %>:</strong> 
+                                                        <%= comentario.contenido %> 
+                                                        <small><%= comentario.fecha_comentario %></small>
+                                                    </li>
+                                                <% }); %>
+                                            </ul>
+                                        <% } else { %>
+                                            <ul id="comentarios-<%= publicacion.publicacion_id %>">
+                                                <p>No hay comentarios aún.</p>
+                                            </ul>
+                                        <% } %>
                                     </div>
+
+
+                                    <!-- Formulario para agregar un comentario -->
+                                    <form class="comentario-form" data-publicacion-id="<%= publicacion.publicacion_id %>">
+                                        <input type="hidden" name="publicacion_id" value="<%= publicacion.publicacion_id %>">
+                                        <textarea name="contenido" placeholder="Escribe tu comentario..." required></textarea>
+                                        <button type="submit">Comentar</button>
+                                    </form>
+                                    <script>
+                                        // Función para formatear la fecha
+                                    function formatearFecha(fechaISO) {
+                                        const fecha = new Date(fechaISO);
+                                        const hoy = new Date();
+
+                                        if (
+                                            fecha.getDate() === hoy.getDate() &&
+                                            fecha.getMonth() === hoy.getMonth() &&
+                                            fecha.getFullYear() === hoy.getFullYear()
+                                        ) {
+                                            // Si es el mismo día, solo mostrar la hora
+                                            return fecha.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+                                        } else {
+                                            // Si es otro día, mostrar solo el día y el mes
+                                            return fecha.toLocaleDateString("es-ES", { day: "2-digit", month: "long" });
+                                        }
+                                    }
+
+                                    // Formatear las fechas de los comentarios existentes al cargar la página
+                                    document.querySelectorAll(".comentarios li").forEach(comentario => {
+                                        const fechaElemento = comentario.querySelector("small");
+                                        if (fechaElemento) {
+                                            const fechaOriginal = fechaElemento.textContent;
+                                            try {
+                                                const fechaFormateada = formatearFecha(fechaOriginal);
+                                                fechaElemento.textContent = fechaFormateada;
+                                            } catch (error) {
+                                                console.error("Error formateando fecha:", error);
+                                                fechaElemento.textContent = "Fecha inválida";
+                                            }
+                                        }
+                                    });
+
+                                    // Manejar el envío de nuevos comentarios
+                                    document.querySelectorAll(".comentario-form").forEach(form => {
+                                        // Verificar si el evento ya está registrado
+                                        if (!form.dataset.listenerAdded) {
+                                            form.addEventListener("submit", function(event) {
+                                                event.preventDefault();
+                                                event.stopPropagation(); // Evita que el evento se propague
+
+                                                const publicacionId = this.getAttribute("data-publicacion-id");
+                                                const contenido = this.querySelector("textarea").value.trim();
+                                                const comentariosContainer = document.querySelector(`#comentarios-${publicacionId}`);
+
+                                                if (!contenido) {
+                                                    alert("No puedes enviar un comentario vacío");
+                                                    return;
+                                                }
+
+                                                fetch("/comentarios", {
+                                                    method: "POST",
+                                                    headers: { "Content-Type": "application/json" },
+                                                    body: JSON.stringify({ publicacion_id: publicacionId, contenido })
+                                                })
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    if (data.error) {
+                                                        alert(data.error);
+                                                    } else {
+                                                        // Verificar si el comentario ya existe antes de agregarlo
+                                                        if (!document.getElementById(`comentario-${data.id}`)) {
+                                                            // Formatear la fecha antes de agregarla
+                                                            const fechaFormateada = formatearFecha(data.fecha_comentario);
+
+                                                            // Crear un nuevo comentario en la vista en tiempo real
+                                                            const nuevoComentario = document.createElement("li");
+                                                            nuevoComentario.id = `comentario-${data.id}`; // Evita duplicados
+                                                            nuevoComentario.innerHTML = `<strong>${data.nombre}:</strong> ${data.contenido} <small>${fechaFormateada}</small>`;
+                                                            comentariosContainer.appendChild(nuevoComentario);
+                                                        }
+
+                                                        // Limpiar el campo de texto
+                                                        this.querySelector("textarea").value = "";
+                                                    }
+                                                })
+                                                .catch(error => console.error("Error:", error));
+                                            });
+
+                                            // Marcar el formulario como "con evento registrado"
+                                            form.dataset.listenerAdded = "true";
+                                        }
+                                    });
+                                    </script>
                                 </div>
                             </div>
-                        </div>     
-                    </div>
-                </section>
-            <% }); %>
-        <% } else { %>
-            <p>No tenemos nada que mostrarte</p>
-        <% } %>
-        
-
-        
-    <section data-bs-version="5.1" class="footer3 cid-u6ZF78TESB" once="footers" id="footer-6-u6ZF78TESB">
-        <div class="container">
-            <div class="row">
-                <div class="row-links">
-                    <ul class="header-menu">
-    
-                    <li class="header-menu-item mbr-fonts-style display-5">
-                        <a href="#" class="text-white">Inicio</a>
-                      </li><li class="header-menu-item mbr-fonts-style display-5">
-                        <a href="#" class="text-white">Acerca</a>
-                      </li><li class="header-menu-item mbr-fonts-style display-5">
-                        <a href="#" class="text-white">Contacto</a>
-                      </li><li class="header-menu-item mbr-fonts-style display-5">
-                        <a href="#" class="text-white">Términos</a>
-                      </li></ul>
-                  </div>
-    
-                
-                <div class="col-12 mt-4">
-                    <p class="mbr-fonts-style copyright display-7">© 2024 socialTernero. Todos los derechos reservados.</p>
+                        </div>
+                    </div>     
                 </div>
-            </div>
-        </div>
-    </section>
- 
-        <!-- Script tags from second document -->
-        <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="assets/smoothscroll/smooth-scroll.js"></script>
-        <script src="assets/ytplayer/index.js"></script>
-        <script src="assets/dropdown/js/navbar-dropdown.js"></script>
-        <script src="assets/vimeoplayer/player.js"></script>
-        <script src="assets/masonry/masonry.pkgd.min.js"></script>
-        <script src="assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
-        <script src="assets/theme/js/script.js"></script>
+            </section>
+        <% }); %>
+    <% } else { %>
+        <p>No tenemos nada que mostrarte</p>
+    <% } %>
+
+    <!-- Pie de página -->
+    <script src="../routes/footer.js"></script>
+
+    <!-- Scripts aquí... -->
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/smoothscroll/smooth-scroll.js"></script>
+    <script src="assets/ytplayer/index.js"></script>
+    <script src="assets/dropdown/js/navbar-dropdown.js"></script>
+    <script src="assets/vimeoplayer/player.js"></script>
+    <script src="assets/masonry/masonry.pkgd.min.js"></script>
+    <script src="assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script src="assets/theme/js/script.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs');// Añade la importación de bcrypt
+const bcrypt = require('bcryptjs'); // Importamos bcrypt
 const connection = require('../conexion');
 
     
@@ -10,7 +10,7 @@ const getIndex = (req, res) => {
 const login = (req, res) => {
     const username = req.body.username;
     const password = req.body.contraseña;
-    const query = 'SELECT * FROM usuarios WHERE username = ?';
+    const query = 'SELECT * FROM usuarios WHERE BINARY username = ?';
    
     connection.query(query, [username], (err, results) => {
         if (err) throw err;
@@ -70,28 +70,42 @@ const getDashboard = (req, res) => {
 };
 
  
- const postLogin =(req, res) => {
+const postLogin = (req, res) => {
     const username = req.body.username;
     const password = req.body.contraseña;
-    const query = 'SELECT * FROM usuarios WHERE username = ?';
-   
+    const query = 'SELECT * FROM usuarios WHERE BINARY username = ?';
+
     connection.query(query, [username], (err, results) => {
-        if (err) throw err;
+        if (err) {
+            console.error("Error en la consulta:", err);
+            return res.render('index', { mensaje: 'Error en el servidor' });
+        }
+
         if (results.length > 0) {
-            // Verificar si la contraseña coincide utilizando bcrypt.compare()
-            const validPassword = bcrypt.compare(password, results[0].contraseña);
+            // Verificamos si la contraseña coincide con la de la base de datos usando bcrypt
+            bcrypt.compare(password, results[0].contraseña, (err, validPassword) => {
+                if (err) {
+                    console.error("Error al comparar la contraseña:", err);
+                    return res.render('index', { mensaje: 'Error en el login' });
+                }
+
                 if (validPassword) {
-                    req.session.loggedIn = true; // Establece la sesión como iniciada
-                    req.session.username = username; // Guarda el nombre de usuario en la sesión
-                    res.redirect('/dashboard'); // Redirige al usuario al panel de control (dashboard)
+                    // Si la contraseña es válida, establecemos la sesión
+                    req.session.loggedIn = true;
+                    req.session.username = username; // Guardamos el nombre de usuario en la sesión
+                    req.session.userId = results[0].id; // Guardamos el ID del usuario
+
+                    console.log('Usuario autenticado, ID:', req.session.userId);
+
+                    // Redirigimos al dashboard
+                    res.redirect('/dashboard');
                 } else {
                     res.render('index', { mensaje: 'Contraseña inválida' });
                 }
-   
+            });
         } else {
-            res.render('index', { mensaje: 'Usuario no valido' }); // Redirige al usuario de vuelta al formulario de inicio de sesión con un mensaje de error
+            res.render('index', { mensaje: 'Usuario no válido' });
         }
-    
     });
 };
 
@@ -115,7 +129,7 @@ const getPerfil = (req, res) => {
     const username = req.session.username;
     const mensaje = req.query.mensaje;
     // Consulta SQL para obtener los datos del perfil del usuario
-    const sql = 'SELECT * FROM usuarios WHERE username = ?';
+    const sql = 'SELECT * FROM usuarios WHERE BINARY username = ?';
     connection.query(sql, [username], (err, results) => {
         if (err) {
             console.error('Error al obtener datos del perfil:', err);
