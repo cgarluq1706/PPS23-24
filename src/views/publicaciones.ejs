@@ -11,16 +11,44 @@
     <link rel="stylesheet" href="assets/dropdown/css/style.css">
     <link rel="stylesheet" href="assets/socicon/css/styles.css">
     <link rel="stylesheet" href="assets/theme/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap"></noscript>
     <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj" type="text/css">
 </head>
+<script>
+    //Script para manejar los me gusta con una petición post al servidor con la información del usuario y la publicación
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll('.like').forEach(button => {
+        button.addEventListener('click', async () => {
+            const id_publicacion = button.id; // Usamos el ID del botón como ID de la publicación
+            const id_usuario = button.name;
+            const response = await fetch('/like', {
+                method: 'POST',
+                credentials: 'include', //Esto envía cookies al servidor
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id_publicacion, id_usuario})
+            });
 
+            const data = await response.json();
+
+            if (response.ok) {
+                // Actualizar el icono de "Me Gusta"
+                button.innerHTML = data.text;
+
+                // Actualizar el contador de likes
+                document.getElementById(`likes_${id_publicacion}`).innerText = data.likes;
+            } else {
+                console.error('Error al procesar el like:', data.error);
+            }
+        });
+    });
+});
+
+</script>
 <body>
     <!-- Llamada al menu -->
     <%- include("../routes/header.ejs") %>
-   
-
     <br>
 
     <% if (publicaciones && publicaciones.length > 0) { %>
@@ -48,7 +76,17 @@
                                             </div>
                                         </div>
                                     </section>
-
+                                    <!--LIKES :O -->
+                                    <div class="like-section">
+                                        <button class="like" id="<%= publicacion.publicacion_id %>" name="<%= userid %>">
+                                            <% if (publicacion.dio_like) { %>
+                                                <i class="fa-solid fa-thumbs-up fa-2x"></i>
+                                            <% } else { %>
+                                                <i class="fa-regular fa-thumbs-up fa-2x"></i>
+                                            <% } %>
+                                        </button>
+                                        <span id="likes_<%= publicacion.publicacion_id %>"><%= publicacion.num_like %></span>
+                                    </div>                                    
                                                                     
                                     <div class="comentarios">
                                         <h5>Comentarios:</h5>
@@ -184,5 +222,6 @@
     <script src="assets/masonry/masonry.pkgd.min.js"></script>
     <script src="assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
     <script src="assets/theme/js/script.js"></script>
+
 </body>
 </html>

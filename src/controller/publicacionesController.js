@@ -3,18 +3,26 @@ const connection = require('../conexion');
 // Obtener publicaciones con comentarios
 const getpublicaciones = (req, res) => {
     const username = req.session.username;
+    const userid = req.session.userId;
 
     console.log("Sesión al obtener publicaciones:", req.session);
 
-    const sql = `SELECT u.id, u.nombre, u.foto_perfil, p.id AS publicacion_id, p.contenido, p.fecha_publicacion 
-                 FROM publicaciones p 
-                 INNER JOIN usuarios u ON p.usuario_id = u.id 
-                 INNER JOIN seguimiento s ON u.id = s.seguido_id 
-                 INNER JOIN usuarios u2 ON s.seguidor_id = u2.id 
-                 WHERE u2.username = ? 
-                 ORDER BY p.fecha_publicacion DESC`;
+    const sql = `
+    SELECT u.id, u.nombre, u.foto_perfil, 
+           p.id AS publicacion_id, p.contenido, 
+           p.fecha_publicacion, p.num_like,
+           (SELECT COUNT(*) FROM like_publicacion lp 
+            WHERE lp.id_publicacion = p.id AND lp.id_usuario = ?) AS dio_like
+    FROM publicaciones p 
+    INNER JOIN usuarios u ON p.usuario_id = u.id 
+    INNER JOIN seguimiento s ON u.id = s.seguido_id 
+    INNER JOIN usuarios u2 ON s.seguidor_id = u2.id 
+    WHERE u2.username = ? 
+    ORDER BY p.fecha_publicacion DESC;
+`;
 
-    connection.query(sql, [username], (err, results) => {
+
+    connection.query(sql, [userid,username], (err, results) => {
         if (err) {
             console.error('Error al obtener publicaciones', err);
             res.status(500).send('Error al obtener publicaciones');
@@ -43,7 +51,7 @@ const getpublicaciones = (req, res) => {
                 publicacionesConComentarios.push(publicacion);
 
                 if (publicacionesConComentarios.length === results.length) {
-                    res.render('publicaciones', { username: req.session.username, publicaciones: publicacionesConComentarios });
+                    res.render('publicaciones', { username: req.session.username, userid,publicaciones: publicacionesConComentarios });
                 }
             });
         });

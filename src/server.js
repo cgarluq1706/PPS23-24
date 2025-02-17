@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const loginRoutes = require('./routes/login');
 const imageRoutes = require('./routes/image');
 const publicacionesRoutes = require('./routes/publicaciones');
+const likeRoutes = require("./routes/like");
 const connection = require('./conexion');
 
 
@@ -35,10 +36,18 @@ app.set('views', './src/views');
 app.use('/', loginRoutes);
 app.use('/', imageRoutes);
 app.use('/', publicacionesRoutes);
+app.use('/', likeRoutes);
 
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
 });
+
+app.use((req, res, next) => {
+    console.log("Sesión activa:", req.session);
+    console.log("Usuario autenticado:", req.session.userId);
+    next();
+});
+
 const comentariosRoutes = require('./routes/comentarios'); // Importa la ruta de comentarios
 app.use("/", comentariosRoutes); // Activa la ruta de comentarios
 

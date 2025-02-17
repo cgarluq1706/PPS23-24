@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS publicaciones (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT,
     contenido TEXT,
+    num_like INT  DEFAULT 0,
     fecha_publicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
@@ -75,6 +76,15 @@ SET CHARACTER_SET_CLIENT = 'utf8mb4';
 SET CHARACTER_SET_RESULTS = 'utf8mb4';
 SET COLLATION_CONNECTION = 'utf8mb4_general_ci';
 SET SQL_NOTES = 1;
+
+CREATE TABLE IF NOT EXISTS like_publicacion (
+    id_like INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT,
+    id_publicacion INT,
+    UNIQUE (id_usuario, id_publicacion),
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_publicacion) REFERENCES publicaciones(id) ON DELETE CASCADE
+);
 
 
 select * from usuarios u ;

@@ -20,6 +20,8 @@ const login = (req, res) => {
                 if (validPassword) {
                     req.session.loggedIn = true; // Establece la sesión como iniciada
                     req.session.username = username; // Guarda el nombre de usuario en la sesión
+                    req.session.userId = results[0].id; // Guardamos el ID del usuario
+
                     res.redirect('/dashboard'); // Redirige al usuario al panel de control (dashboard)
                 } else {
                     res.render('index', { mensaje: 'Contraseña inválida' });
