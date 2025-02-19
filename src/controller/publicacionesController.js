@@ -25,12 +25,13 @@ const getpublicaciones = (req, res) => {
 
         results.forEach((publicacion) => {
             const sqlComentarios = `SELECT c.id, c.contenido, 
-                                    DATE_FORMAT(c.fecha_comentario, '%Y-%m-%dT%H:%i:%s') AS fecha_comentario, 
-                                    u.nombre 
-                                FROM comentarios c
-                                INNER JOIN usuarios u ON c.usuario_id = u.id
-                                WHERE c.id = ?
-`;
+            DATE_FORMAT(c.fecha_comentario, '%Y-%m-%d %H:%i:%s') AS fecha_comentario, 
+            u.nombre 
+            FROM comentarios c
+            INNER JOIN usuarios u ON c.usuario_id = u.id
+            WHERE c.publicacion_id = ?`;
+
+
 
             connection.query(sqlComentarios, [publicacion.publicacion_id], (err, comentarios) => {
                 if (err) {
@@ -108,7 +109,11 @@ const agregarComentario = (req, res) => {
             }
 
             // Devolver el comentario insertado
+            if (!comentario.length) {
+                return res.json({ error: "No se pudo recuperar el comentario" });
+            }
             res.json(comentario[0]);
+            
         });
     });
 };
