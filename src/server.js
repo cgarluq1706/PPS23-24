@@ -6,6 +6,7 @@ const loginRoutes = require('./routes/login');
 const imageRoutes = require('./routes/image');
 const publicacionesRoutes = require('./routes/publicaciones');
 const likeRoutes = require("./routes/like");
+const guardadoRoutes = require("./routes/elementoguardado");
 const connection = require('./conexion');
 
 
@@ -37,6 +38,7 @@ app.use('/', loginRoutes);
 app.use('/', imageRoutes);
 app.use('/', publicacionesRoutes);
 app.use('/', likeRoutes);
+app.use('/', guardadoRoutes);
 
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);

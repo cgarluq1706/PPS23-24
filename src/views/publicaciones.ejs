@@ -46,6 +46,35 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll('.guarda').forEach(button => {
+        button.addEventListener('click', async () => {
+            const id_publicacion = button.id;
+            const id_usuario = button.name;
+            const response = await fetch('/elementoguardado', {
+                method: 'POST',
+                credentials: 'include', //Esto envía cookies al servidor
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id_publicacion, id_usuario})
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Actualizar el icono de "Me Gusta"
+                button.innerHTML = data.text;
+
+                // Actualizar el contador de likes
+                document.getElementById(`guardados_${id_publicacion}`).innerText = data.guardados2;
+            } else {
+                console.error('Error al procesar el like:', data.error);
+            }
+        });
+    });
+});
+
+</script>
 <body>
     <!-- Llamada al menu -->
     <%- include("../routes/header.ejs") %>
@@ -86,7 +115,17 @@ document.addEventListener("DOMContentLoaded", function() {
                                             <% } %>
                                         </button>
                                         <span id="likes_<%= publicacion.publicacion_id %>"><%= publicacion.num_like %></span>
-                                    </div>                                    
+                                    </div>          
+                                    <div class="save-section">
+                                        <button class="guarda" id="<%= publicacion.publicacion_id %>" name="<%= userid %>">
+                                            <% if (publicacion.loguardo) { %>
+                                                <i class="fa-solid fa-bookmark fa-2x"></i>
+                                            <% } else { %>
+                                                <i class="fa-regular fa-bookmark fa-2x"></i>
+                                            <% } %>
+                                        </button>
+                                        <span id="guardados_<%= publicacion.publicacion_id %>"><%= publicacion.num_guardado %></span>
+                                    </div>                             
                                                                     
                                     <div class="comentarios">
                                         <h5>Comentarios:</h5>

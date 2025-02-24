@@ -4,15 +4,19 @@ const connection = require('../conexion');
 const getpublicaciones = (req, res) => {
     const username = req.session.username;
     const userid = req.session.userId;
-
+    console.log("UserID:", userid, typeof userid);
+    console.log("Username:", username, typeof username);
+    
     console.log("Sesión al obtener publicaciones:", req.session);
 
     const sql = `
     SELECT u.id, u.nombre, u.foto_perfil, 
            p.id AS publicacion_id, p.contenido, 
-           p.fecha_publicacion, p.num_like,
+           p.fecha_publicacion, p.num_like, p.num_guardado,
            (SELECT COUNT(*) FROM like_publicacion lp 
-            WHERE lp.id_publicacion = p.id AND lp.id_usuario = ?) AS dio_like
+            WHERE lp.id_publicacion = p.id AND lp.id_usuario = ?) AS dio_like,
+            (SELECT COUNT(*) FROM guardar_publicacion gp 
+            WHERE gp.id_publicacion = p.id AND gp.id_usuario = ?) AS loguardo
     FROM publicaciones p 
     INNER JOIN usuarios u ON p.usuario_id = u.id 
     INNER JOIN seguimiento s ON u.id = s.seguido_id 
@@ -22,7 +26,7 @@ const getpublicaciones = (req, res) => {
 `;
 
 
-    connection.query(sql, [userid,username], (err, results) => {
+    connection.query(sql, [userid,userid,username], (err, results) => {
         if (err) {
             console.error('Error al obtener publicaciones', err);
             res.status(500).send('Error al obtener publicaciones');
