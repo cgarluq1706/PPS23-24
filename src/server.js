@@ -9,6 +9,9 @@ const likeRoutes = require("./routes/like");
 const guardadoRoutes = require("./routes/elementoguardado");
 const connection = require('./conexion');
 
+const terminosRoutes = require('./routes/terminos'); 
+const acercaRoutes = require('./routes/acerca'); 
+const contactoRoutes = require('./routes/contacto'); 
 
 const app = express();
 const port = 3000;
@@ -38,7 +41,13 @@ app.use('/', loginRoutes);
 app.use('/', imageRoutes);
 app.use('/', publicacionesRoutes);
 app.use('/', likeRoutes);
+<<<<<<< HEAD
 app.use('/', guardadoRoutes);
+=======
+app.use('/', terminosRoutes); 
+app.use('/', acercaRoutes); 
+app.use('/', contactoRoutes);
+>>>>>>> 64aaac1ece4dd053ccbecad0559b0497d291b90b
 
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);

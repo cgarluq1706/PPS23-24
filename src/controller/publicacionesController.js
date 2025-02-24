@@ -1,15 +1,24 @@
 const connection = require('../conexion');
 
+
 // Obtener publicaciones con comentarios
 const getpublicaciones = (req, res) => {
     const username = req.session.username;
     const userid = req.session.userId;
+<<<<<<< HEAD
     console.log("UserID:", userid, typeof userid);
     console.log("Username:", username, typeof username);
     
+=======
+
+
+>>>>>>> 64aaac1ece4dd053ccbecad0559b0497d291b90b
     console.log("Sesión al obtener publicaciones:", req.session);
 
+
+    // Consulta para obtener las publicaciones
     const sql = `
+<<<<<<< HEAD
     SELECT u.id, u.nombre, u.foto_perfil, 
            p.id AS publicacion_id, p.contenido, 
            p.fecha_publicacion, p.num_like, p.num_guardado,
@@ -22,27 +31,52 @@ const getpublicaciones = (req, res) => {
     INNER JOIN seguimiento s ON u.id = s.seguido_id 
     INNER JOIN usuarios u2 ON s.seguidor_id = u2.id 
     WHERE u2.username = ? 
+=======
+    SELECT u.id, u.nombre, u.foto_perfil,
+           p.id AS publicacion_id, p.contenido,
+           p.fecha_publicacion, p.num_like,
+           (SELECT COUNT(*) FROM like_publicacion lp
+            WHERE lp.id_publicacion = p.id AND lp.id_usuario = ?) AS dio_like
+    FROM publicaciones p
+    INNER JOIN usuarios u ON p.usuario_id = u.id
+    INNER JOIN seguimiento s ON u.id = s.seguido_id
+    INNER JOIN usuarios u2 ON s.seguidor_id = u2.id
+    WHERE u2.username = ?
+>>>>>>> 64aaac1ece4dd053ccbecad0559b0497d291b90b
     ORDER BY p.fecha_publicacion DESC;
 `;
 
 
+<<<<<<< HEAD
     connection.query(sql, [userid,userid,username], (err, results) => {
+=======
+    connection.query(sql, [userid, username], (err, results) => {
+>>>>>>> 64aaac1ece4dd053ccbecad0559b0497d291b90b
         if (err) {
             console.error('Error al obtener publicaciones', err);
             res.status(500).send('Error al obtener publicaciones');
             return;
         }
 
+
+        if (results.length === 0) {
+            // Si no hay publicaciones, enviar una respuesta vacía o con un mensaje adecuado
+            return res.render('publicaciones', { username: req.session.username, publicaciones: [] });
+        }
+
+
         const publicacionesConComentarios = [];
+
 
         results.forEach((publicacion) => {
             const sqlComentarios = `SELECT c.id, c.contenido, 
-                                    DATE_FORMAT(c.fecha_comentario, '%Y-%m-%dT%H:%i:%s') AS fecha_comentario, 
-                                    u.nombre 
-                                FROM comentarios c
-                                INNER JOIN usuarios u ON c.usuario_id = u.id
-                                WHERE c.id = ?
-`;
+            DATE_FORMAT(c.fecha_comentario, '%Y-%m-%d %H:%i:%s') AS fecha_comentario, 
+            u.nombre 
+            FROM comentarios c
+            INNER JOIN usuarios u ON c.usuario_id = u.id
+            WHERE c.publicacion_id = ?`;
+
+
 
             connection.query(sqlComentarios, [publicacion.publicacion_id], (err, comentarios) => {
                 if (err) {
@@ -51,26 +85,32 @@ const getpublicaciones = (req, res) => {
                     return;
                 }
 
+
                 publicacion.comentarios = comentarios;
                 publicacionesConComentarios.push(publicacion);
 
+
+                // Al haber procesado todas las publicaciones, se renderiza la página
                 if (publicacionesConComentarios.length === results.length) {
-                    res.render('publicaciones', { username: req.session.username, userid,publicaciones: publicacionesConComentarios });
+                    res.render('publicaciones', { username: req.session.username, userid, publicaciones: publicacionesConComentarios });
                 }
             });
         });
     });
 };
 
+
 // Obtener comentarios de una publicación
 const getComentarios = (req, res) => {
     const { publicacion_id } = req.params;
 
-    const sql = `SELECT c.id, c.contenido, c.fecha_comentario, u.nombre 
+
+    const sql = `SELECT c.id, c.contenido, c.fecha_comentario, u.nombre
                  FROM comentarios c
                  INNER JOIN usuarios u ON c.usuario_id = u.id
-                 WHERE c.publicacion_id = ? 
+                 WHERE c.publicacion_id = ?
                  ORDER BY c.fecha_comentario ASC`;
+
 
     connection.query(sql, [publicacion_id], (err, results) => {
         if (err) {
@@ -83,17 +123,21 @@ const getComentarios = (req, res) => {
 };
 
 
+// Agregar un comentario a una publicación
 const agregarComentario = (req, res) => {
     const { publicacion_id, contenido } = req.body;
     const usuario_id = req.session.userId; // Tomar el ID del usuario desde la sesión
+
 
     if (!usuario_id) {
         return res.json({ error: "Usuario no autenticado" });
     }
 
+
     if (!publicacion_id || !contenido) {
         return res.json({ error: "Faltan datos en la solicitud" });
     }
+
 
     // Insertar el comentario en la base de datos
     const sql = `INSERT INTO comentarios (publicacion_id, usuario_id, contenido) VALUES (?, ?, ?)`;
@@ -103,15 +147,16 @@ const agregarComentario = (req, res) => {
             return res.json({ error: "Error al insertar comentario" });
         }
 
+
         // Recuperar el comentario recién insertado para devolverlo al frontend
         const sqlComentarios = `
-        SELECT c.id, c.contenido, 
-               DATE_FORMAT(c.fecha_comentario, '%Y-%m-%d %H:%i:%s') AS fecha_comentario, 
-               u.nombre 
+        SELECT c.id, c.contenido,
+               DATE_FORMAT(c.fecha_comentario, '%Y-%m-%d %H:%i:%s') AS fecha_comentario,
+               u.nombre
         FROM comentarios c
         INNER JOIN usuarios u ON c.usuario_id = u.id
-        WHERE c.id = ?
-    `;
+        WHERE c.id = ?`;
+
 
         connection.query(sqlComentarios, [result.insertId], (err, comentario) => {
             if (err) {
@@ -119,11 +164,17 @@ const agregarComentario = (req, res) => {
                 return res.json({ error: "Error al obtener el comentario insertado" });
             }
 
+
             // Devolver el comentario insertado
+            if (!comentario.length) {
+                return res.json({ error: "No se pudo recuperar el comentario" });
+            }
             res.json(comentario[0]);
+            
         });
     });
 };
+
 
 module.exports = {
     getpublicaciones,

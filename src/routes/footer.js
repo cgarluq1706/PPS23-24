@@ -7,16 +7,16 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="row-links">
               <ul class="header-menu">
                 <li class="header-menu-item mbr-fonts-style display-5">
-                  <a href="#" class="text-white">Inicio</a>
+                  <a href="/dashboard" class="text-white">Inicio</a>
                 </li>
                 <li class="header-menu-item mbr-fonts-style display-5">
-                  <a href="#" class="text-white">Acerca</a>
+                  <a href="/acerca" class="text-white">Acerca</a>
                 </li>
                 <li class="header-menu-item mbr-fonts-style display-5">
-                  <a href="#" class="text-white">Contacto</a>
+                  <a href="/contacto" class="text-white">Contacto</a>
                 </li>
                 <li class="header-menu-item mbr-fonts-style display-5">
-                  <a href="#" class="text-white">Términos</a>
+                  <a href="/terminos" class="text-white">Términos</a>
                 </li>
               </ul>
             </div>

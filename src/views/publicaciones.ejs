@@ -15,7 +15,14 @@
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap"></noscript>
     <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj" type="text/css">
-</head>
+</head><style>
+    .fecha-comentario {
+        font-size: 12px; /* Letra más pequeña */
+        color: rgb(238, 216, 216); /* Color gris */
+        margin-left: 10px; /* Espacio entre el comentario y la fecha */
+        display: inline-block;
+    }
+    </style>
 <script>
     //Script para manejar los me gusta con una petición post al servidor con la información del usuario y la publicación
 document.addEventListener("DOMContentLoaded", function() {
@@ -135,13 +142,12 @@ document.addEventListener("DOMContentLoaded", function() {
                                                     <li id="comentario-<%= comentario.id %>">
                                                         <strong><%= comentario.nombre %>:</strong> 
                                                         <%= comentario.contenido %> 
-                                                        <small><%= comentario.fecha_comentario %></small>
+                                                        <small class="fecha-comentario"><%= comentario.fecha_comentario %></small>
                                                     </li>
                                                 <% }); %>
                                             </ul>
                                         <% } else { %>
                                             <ul id="comentarios-<%= publicacion.publicacion_id %>">
-                                                <p>No hay comentarios aún.</p>
                                             </ul>
                                         <% } %>
                                     </div>
@@ -154,90 +160,83 @@ document.addEventListener("DOMContentLoaded", function() {
                                         <button type="submit">Comentar</button>
                                     </form>
                                     <script>
-                                        // Función para formatear la fecha
-                                    function formatearFecha(fechaISO) {
-                                        const fecha = new Date(fechaISO);
-                                        const hoy = new Date();
+                                    function formatearFecha(fechaTexto) {
+                                    if (!fechaTexto) return "";
 
-                                        if (
-                                            fecha.getDate() === hoy.getDate() &&
-                                            fecha.getMonth() === hoy.getMonth() &&
-                                            fecha.getFullYear() === hoy.getFullYear()
-                                        ) {
-                                            // Si es el mismo día, solo mostrar la hora
-                                            return fecha.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
-                                        } else {
-                                            // Si es otro día, mostrar solo el día y el mes
-                                            return fecha.toLocaleDateString("es-ES", { day: "2-digit", month: "long" });
-                                        }
-                                    }
+                                    // Verifica si la fecha ya está en formato "18/02" y la deja igual
+                                    if (/^\d{2}\/\d{2}$/.test(fechaTexto)) return fechaTexto;
 
-                                    // Formatear las fechas de los comentarios existentes al cargar la página
-                                    document.querySelectorAll(".comentarios li").forEach(comentario => {
-                                        const fechaElemento = comentario.querySelector("small");
-                                        if (fechaElemento) {
-                                            const fechaOriginal = fechaElemento.textContent;
-                                            try {
-                                                const fechaFormateada = formatearFecha(fechaOriginal);
-                                                fechaElemento.textContent = fechaFormateada;
-                                            } catch (error) {
-                                                console.error("Error formateando fecha:", error);
-                                                fechaElemento.textContent = "Fecha inválida";
-                                            }
-                                        }
-                                    });
+                                    // Extraer solo el día y el mes de "YYYY-MM-DD HH:MM:SS"
+                                    const partes = fechaTexto.split(" "); // Separa fecha y hora
+                                    if (partes.length < 1) return "";
 
-                                    // Manejar el envío de nuevos comentarios
-                                    document.querySelectorAll(".comentario-form").forEach(form => {
-                                        // Verificar si el evento ya está registrado
-                                        if (!form.dataset.listenerAdded) {
-                                            form.addEventListener("submit", function(event) {
-                                                event.preventDefault();
-                                                event.stopPropagation(); // Evita que el evento se propague
+                                    const [anio, mes, dia] = partes[0].split("-"); // Separa en año, mes, día
 
-                                                const publicacionId = this.getAttribute("data-publicacion-id");
-                                                const contenido = this.querySelector("textarea").value.trim();
-                                                const comentariosContainer = document.querySelector(`#comentarios-${publicacionId}`);
+                                    return `${parseInt(dia)}/${mes.padStart(2, "0")}`; // Asegura que el mes tenga dos dígitos
+                                }
 
-                                                if (!contenido) {
-                                                    alert("No puedes enviar un comentario vacío");
-                                                    return;
+                                    
+                                        // ✅ Formatear las fechas de los comentarios existentes al cargar la página
+                                        document.addEventListener("DOMContentLoaded", () => {
+                                            document.querySelectorAll(".comentarios li").forEach(comentario => {
+                                                const fechaElemento = comentario.querySelector("small");
+                                                if (fechaElemento) {
+                                                    const fechaOriginal = fechaElemento.textContent.trim();
+                                                    if (fechaOriginal) {
+                                                        fechaElemento.textContent = formatearFecha(fechaOriginal);
+                                                    }
                                                 }
-
-                                                fetch("/comentarios", {
-                                                    method: "POST",
-                                                    headers: { "Content-Type": "application/json" },
-                                                    body: JSON.stringify({ publicacion_id: publicacionId, contenido })
-                                                })
-                                                .then(response => response.json())
-                                                .then(data => {
+                                            });
+                                        });
+                                    
+                                        // ✅ Manejar el envío de nuevos comentarios
+                                        document.querySelectorAll(".comentario-form").forEach(form => {
+                                            if (!form.dataset.listenerAdded) {
+                                                form.addEventListener("submit", function(event) {
+                                                    event.preventDefault();
+                                                    event.stopPropagation(); // Evita que el evento se propague
+                                    
+                                                    const publicacionId = this.getAttribute("data-publicacion-id");
+                                                    const contenido = this.querySelector("textarea").value.trim();
+                                                    const comentariosContainer = document.querySelector(`#comentarios-${publicacionId}`);
+                                    
+                                                    if (!contenido) {
+                                                        alert("No puedes enviar un comentario vacío");
+                                                        return;
+                                                    }
+                                    
+                                                    fetch("/comentarios", {
+                                                        method: "POST",
+                                                        headers: { "Content-Type": "application/json" },
+                                                        body: JSON.stringify({ publicacion_id: publicacionId, contenido })
+                                                    })
+                                                    .then(response => response.json())
+                                                    .then(data => {
                                                     if (data.error) {
                                                         alert(data.error);
                                                     } else {
-                                                        // Verificar si el comentario ya existe antes de agregarlo
                                                         if (!document.getElementById(`comentario-${data.id}`)) {
-                                                            // Formatear la fecha antes de agregarla
                                                             const fechaFormateada = formatearFecha(data.fecha_comentario);
 
-                                                            // Crear un nuevo comentario en la vista en tiempo real
                                                             const nuevoComentario = document.createElement("li");
-                                                            nuevoComentario.id = `comentario-${data.id}`; // Evita duplicados
-                                                            nuevoComentario.innerHTML = `<strong>${data.nombre}:</strong> ${data.contenido} <small>${fechaFormateada}</small>`;
+                                                            nuevoComentario.id = `comentario-${data.id}`;
+                                                            nuevoComentario.innerHTML = `<strong>${data.nombre}:</strong> ${data.contenido} <small class="fecha-comentario">${fechaFormateada}</small>`;
                                                             comentariosContainer.appendChild(nuevoComentario);
                                                         }
 
-                                                        // Limpiar el campo de texto
-                                                        this.querySelector("textarea").value = "";
+                                                        this.querySelector("textarea").value = ""; // Limpiar el campo de texto
                                                     }
                                                 })
-                                                .catch(error => console.error("Error:", error));
-                                            });
 
-                                            // Marcar el formulario como "con evento registrado"
-                                            form.dataset.listenerAdded = "true";
-                                        }
-                                    });
+                                                    .catch(error => console.error("Error:", error));
+                                                });
+                                    
+                                                // Marcar el formulario como "con evento registrado"
+                                                form.dataset.listenerAdded = "true";
+                                            }
+                                        });
                                     </script>
+                                    
                                 </div>
                             </div>
                         </div>
