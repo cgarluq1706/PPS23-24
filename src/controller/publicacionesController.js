@@ -5,20 +5,14 @@ const connection = require('../conexion');
 const getpublicaciones = (req, res) => {
     const username = req.session.username;
     const userid = req.session.userId;
-<<<<<<< HEAD
     console.log("UserID:", userid, typeof userid);
     console.log("Username:", username, typeof username);
     
-=======
-
-
->>>>>>> 64aaac1ece4dd053ccbecad0559b0497d291b90b
     console.log("Sesión al obtener publicaciones:", req.session);
 
 
     // Consulta para obtener las publicaciones
     const sql = `
-<<<<<<< HEAD
     SELECT u.id, u.nombre, u.foto_perfil, 
            p.id AS publicacion_id, p.contenido, 
            p.fecha_publicacion, p.num_like, p.num_guardado,
@@ -31,27 +25,11 @@ const getpublicaciones = (req, res) => {
     INNER JOIN seguimiento s ON u.id = s.seguido_id 
     INNER JOIN usuarios u2 ON s.seguidor_id = u2.id 
     WHERE u2.username = ? 
-=======
-    SELECT u.id, u.nombre, u.foto_perfil,
-           p.id AS publicacion_id, p.contenido,
-           p.fecha_publicacion, p.num_like,
-           (SELECT COUNT(*) FROM like_publicacion lp
-            WHERE lp.id_publicacion = p.id AND lp.id_usuario = ?) AS dio_like
-    FROM publicaciones p
-    INNER JOIN usuarios u ON p.usuario_id = u.id
-    INNER JOIN seguimiento s ON u.id = s.seguido_id
-    INNER JOIN usuarios u2 ON s.seguidor_id = u2.id
-    WHERE u2.username = ?
->>>>>>> 64aaac1ece4dd053ccbecad0559b0497d291b90b
     ORDER BY p.fecha_publicacion DESC;
 `;
 
 
-<<<<<<< HEAD
     connection.query(sql, [userid,userid,username], (err, results) => {
-=======
-    connection.query(sql, [userid, username], (err, results) => {
->>>>>>> 64aaac1ece4dd053ccbecad0559b0497d291b90b
         if (err) {
             console.error('Error al obtener publicaciones', err);
             res.status(500).send('Error al obtener publicaciones');

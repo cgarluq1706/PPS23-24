@@ -41,13 +41,10 @@ app.use('/', loginRoutes);
 app.use('/', imageRoutes);
 app.use('/', publicacionesRoutes);
 app.use('/', likeRoutes);
-<<<<<<< HEAD
 app.use('/', guardadoRoutes);
-=======
 app.use('/', terminosRoutes); 
 app.use('/', acercaRoutes); 
 app.use('/', contactoRoutes);
->>>>>>> 64aaac1ece4dd053ccbecad0559b0497d291b90b
 
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
