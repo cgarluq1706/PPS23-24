@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS publicaciones (
     usuario_id INT,
     contenido TEXT,
     num_like INT  DEFAULT 0,
+	num_guardado INT  DEFAULT 0,
     fecha_publicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
@@ -79,6 +80,15 @@ SET SQL_NOTES = 1;
 
 CREATE TABLE IF NOT EXISTS like_publicacion (
     id_like INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT,
+    id_publicacion INT,
+    UNIQUE (id_usuario, id_publicacion),
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_publicacion) REFERENCES publicaciones(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS guardar_publicacion (
+    id_elemento_guardado INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT,
     id_publicacion INT,
     UNIQUE (id_usuario, id_publicacion),
