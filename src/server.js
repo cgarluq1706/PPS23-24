@@ -8,6 +8,9 @@ const publicacionesRoutes = require('./routes/publicaciones');
 const likeRoutes = require("./routes/like");
 const connection = require('./conexion');
 
+const terminosRoutes = require('./routes/terminos'); 
+const acercaRoutes = require('./routes/acerca'); 
+const contactoRoutes = require('./routes/contacto'); 
 
 const app = express();
 const port = 3000;
@@ -37,6 +40,9 @@ app.use('/', loginRoutes);
 app.use('/', imageRoutes);
 app.use('/', publicacionesRoutes);
 app.use('/', likeRoutes);
+app.use('/', terminosRoutes); 
+app.use('/', acercaRoutes); 
+app.use('/', contactoRoutes);
 
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
