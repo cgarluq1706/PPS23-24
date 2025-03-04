@@ -123,8 +123,47 @@ const getError = (req, res) => {
 
 const getPerfil = (req, res) => {
     const username = req.session.username;
-    res.render('perfil', { username });
+    const mensaje = req.query.mensaje;
+    // Consulta SQL para obtener los datos del perfil del usuario
+    const sql = 'SELECT * FROM usuarios WHERE BINARY username = ?';
+    connection.query(sql, [username], (err, results) => {
+        if (err) {
+            console.error('Error al obtener datos del perfil:', err);
+            res.status(500).send('Error al obtener datos del perfil');
+            return;
+        }
+        const usuario = results[0];
+
+        // Comprobar si se encotraron resultados
+        if (results.length > 0) {
+            // Renderizar a plantilla 'perfil' con los datos del usuario
+
+            const sqlseguidores = 'select count(*) from usuarios u inner join seguimiento s on s.seguidor_id = u.id where u.username = ?';
+            connection.query(sqlseguidores, [username], (err, results) => {
+                if (err) {
+                    console.error('Error al obtener datos:', err);
+                    res.status(500).send('Error al obtener datos');
+                    return;
+                }
+                const seguidos = results[0]['count(*)'];
+
+            const sqlseguidos = 'select count(*) from usuarios u inner join seguimiento s on s.seguido_id = u.id where u.username = ?';
+            connection.query(sqlseguidos, [username], (err, results) => {
+                if (err) {
+                    console.error('Error al obtener datos:', err);
+                    res.status(500).send('Error al obtener datos');
+                    return;
+                }
+                const seguidores = results[0]['count(*)'];
+                res.render('perfil', { username, usuario, seguidos, seguidores, mensaje});
+            });
+        });
+    } else {
+        res.status(404).send('Usuario no encontrado');
+    }
+});
 };
+
 
 module.exports = {
     getIndex,
