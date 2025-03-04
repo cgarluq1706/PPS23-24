@@ -54,34 +54,62 @@ document.addEventListener("DOMContentLoaded", function() {
 
 </script>
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+   document.addEventListener("DOMContentLoaded", function() {
+    // Obtener 'tipo' desde la URL (query string)
+    const urlParams = new URLSearchParams(window.location.search);
+    const tipo = urlParams.get('tipo');  // Obtiene el valor de 'tipo'
+
     document.querySelectorAll('.guarda').forEach(button => {
         button.addEventListener('click', async () => {
             const id_publicacion = button.id;
             const id_usuario = button.name;
+
             const response = await fetch('/elementoguardado', {
                 method: 'POST',
-                credentials: 'include', //Esto envía cookies al servidor
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id_publicacion, id_usuario})
+                body: JSON.stringify({ id_publicacion, id_usuario })
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                // Actualizar el icono de "Me Gusta"
                 button.innerHTML = data.text;
-
-                // Actualizar el contador de likes
                 document.getElementById(`guardados_${id_publicacion}`).innerText = data.guardados2;
+
+                // Eliminar la publicación si no está guardada y estamos en la página de guardados
+                if (!data.esta_guardado && tipo === "guardados") {
+                    console.log(`Publicación ${id_publicacion} ya no está guardada. Eliminando...`);
+
+                    const publicacionElemento = document.getElementById(`publicacion-${id_publicacion}`);
+                    if (publicacionElemento) {
+                        publicacionElemento.remove();
+                        console.log("Publicación eliminada del DOM.");
+                    } else {
+                        console.warn("Elemento no encontrado en el DOM.");
+                    }
+
+                    // Verificar si ya no hay más publicaciones guardadas
+                    const publicacionesGuardadas = document.querySelectorAll('.guarda').length;
+                    if (publicacionesGuardadas === 0) {
+                        // Mostrar el mensaje de que ya no hay publicaciones guardadas
+                        const mensaje = document.getElementById("mensaje-sin-publicaciones");
+                        if (mensaje) {
+                            mensaje.style.display = 'block';
+                        }
+                    }
+                }
             } else {
-                console.error('Error al procesar el like:', data.error);
+                console.error('Error al procesar el guardado:', data.error);
             }
         });
     });
 });
 
+
 </script>
+
+
 <body>
     <!-- Llamada al menu -->
     <%- include("../routes/header.ejs") %>
@@ -89,8 +117,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     <% if (publicaciones && publicaciones.length > 0) { %>
         <% publicaciones.forEach(function(publicacion) { %>
-            <section data-bs-version="5.1" class="article13 cid-u6ZF78RI9e" id="call-to-action-5-u6ZF78RI9e">       
-                <div class="container">
+            <section data-bs-version="5.1" class="article13 cid-u6ZF78RI9e" id="publicacion-<%= publicacion.publicacion_id %>">       
+                <div class="container" >
                     <div class="row justify-content-center">
                         <div class="card col-md-12 col-lg-10">
                             <div class="card-wrapper">
@@ -247,6 +275,11 @@ document.addEventListener("DOMContentLoaded", function() {
     <% } else { %>
         <p>No tenemos nada que mostrarte</p>
     <% } %>
+    <div id="mensaje-sin-publicaciones" style="display: none; text-align: center; margin-top: 20px;">
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <p>Eliminaste tanto que te quedaste sin nada...</p>
+    </div>
+    
 
     <!-- Pie de página -->
     <script src="../routes/footer.js"></script>

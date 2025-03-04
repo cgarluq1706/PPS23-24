@@ -5,70 +5,81 @@ const connection = require('../conexion');
 const getpublicaciones = (req, res) => {
     const username = req.session.username;
     const userid = req.session.userId;
+    const tipo = req.query.tipo; // Recibe el parámetro tipo=guardados desde la URL
+
     console.log("UserID:", userid, typeof userid);
     console.log("Username:", username, typeof username);
-    
     console.log("Sesión al obtener publicaciones:", req.session);
 
+    let sql;
+    let params = [userid, userid, username];
 
-    // Consulta para obtener las publicaciones
-    const sql = `
-    SELECT u.id, u.nombre, u.foto_perfil, 
-           p.id AS publicacion_id, p.contenido, 
-           p.fecha_publicacion, p.num_like, p.num_guardado,
-           (SELECT COUNT(*) FROM like_publicacion lp 
-            WHERE lp.id_publicacion = p.id AND lp.id_usuario = ?) AS dio_like,
-            (SELECT COUNT(*) FROM guardar_publicacion gp 
-            WHERE gp.id_publicacion = p.id AND gp.id_usuario = ?) AS loguardo
-    FROM publicaciones p 
-    INNER JOIN usuarios u ON p.usuario_id = u.id 
-    INNER JOIN seguimiento s ON u.id = s.seguido_id 
-    INNER JOIN usuarios u2 ON s.seguidor_id = u2.id 
-    WHERE u2.username = ? 
-    ORDER BY p.fecha_publicacion DESC;
-`;
+    if (tipo === "guardados") {
+        sql = `
+            SELECT u.id, u.nombre, u.foto_perfil, 
+                   p.id AS publicacion_id, p.contenido, 
+                   p.fecha_publicacion, p.num_like, p.num_guardado,
+                   (SELECT COUNT(*) FROM like_publicacion lp 
+                    WHERE lp.id_publicacion = p.id AND lp.id_usuario = ?) AS dio_like,
+                   (SELECT COUNT(*) FROM guardar_publicacion gp 
+                    WHERE gp.id_publicacion = p.id AND gp.id_usuario = ?) AS loguardo
+            FROM publicaciones p
+            INNER JOIN guardar_publicacion gp ON p.id = gp.id_publicacion
+            INNER JOIN usuarios u ON p.usuario_id = u.id
+            WHERE gp.id_usuario = ?
+            ORDER BY p.fecha_publicacion DESC;
+        `;
+        params = [userid, userid, userid]; // Solo necesita filtrar por el usuario que guardó
+    } else {
+        // Consulta normal para obtener publicaciones de usuarios seguidos
+        sql = `
+            SELECT u.id, u.nombre, u.foto_perfil, 
+                   p.id AS publicacion_id, p.contenido, 
+                   p.fecha_publicacion, p.num_like, p.num_guardado,
+                   (SELECT COUNT(*) FROM like_publicacion lp 
+                    WHERE lp.id_publicacion = p.id AND lp.id_usuario = ?) AS dio_like,
+                   (SELECT COUNT(*) FROM guardar_publicacion gp 
+                    WHERE gp.id_publicacion = p.id AND gp.id_usuario = ?) AS loguardo
+            FROM publicaciones p 
+            INNER JOIN usuarios u ON p.usuario_id = u.id 
+            INNER JOIN seguimiento s ON u.id = s.seguido_id 
+            INNER JOIN usuarios u2 ON s.seguidor_id = u2.id 
+            WHERE u2.username = ?
+            ORDER BY p.fecha_publicacion DESC;
+        `;
+    }
 
-
-    connection.query(sql, [userid,userid,username], (err, results) => {
+    connection.query(sql, params, (err, results) => {
         if (err) {
             console.error('Error al obtener publicaciones', err);
-            res.status(500).send('Error al obtener publicaciones');
-            return;
+            return res.status(500).send('Error al obtener publicaciones');
         }
 
-
         if (results.length === 0) {
-            // Si no hay publicaciones, enviar una respuesta vacía o con un mensaje adecuado
             return res.render('publicaciones', { username: req.session.username, publicaciones: [] });
         }
 
-
         const publicacionesConComentarios = [];
 
-
         results.forEach((publicacion) => {
-            const sqlComentarios = `SELECT c.id, c.contenido, 
-            DATE_FORMAT(c.fecha_comentario, '%Y-%m-%d %H:%i:%s') AS fecha_comentario, 
-            u.nombre 
-            FROM comentarios c
-            INNER JOIN usuarios u ON c.usuario_id = u.id
-            WHERE c.publicacion_id = ?`;
-
-
+            const sqlComentarios = `
+                SELECT c.id, c.contenido, 
+                       DATE_FORMAT(c.fecha_comentario, '%Y-%m-%d %H:%i:%s') AS fecha_comentario, 
+                       u.nombre 
+                FROM comentarios c
+                INNER JOIN usuarios u ON c.usuario_id = u.id
+                WHERE c.publicacion_id = ?
+            `;
 
             connection.query(sqlComentarios, [publicacion.publicacion_id], (err, comentarios) => {
                 if (err) {
                     console.error('Error al obtener comentarios', err);
-                    res.status(500).send('Error al obtener comentarios');
-                    return;
+                    return res.status(500).send('Error al obtener comentarios');
                 }
-
 
                 publicacion.comentarios = comentarios;
                 publicacionesConComentarios.push(publicacion);
 
-
-                // Al haber procesado todas las publicaciones, se renderiza la página
                 if (publicacionesConComentarios.length === results.length) {
                     res.render('publicaciones', { username: req.session.username, userid, publicaciones: publicacionesConComentarios });
                 }

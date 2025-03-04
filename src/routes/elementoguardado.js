@@ -70,23 +70,24 @@ router.post("/elementoguardado", (req, res) => {
 
 function obtenerNumguardado(id_publicacion, res, guardadod) {
   db.query(
-      "SELECT COUNT(*) AS num_guardado FROM guardar_publicacion WHERE id_publicacion = ?",
-      [id_publicacion],
-      (err, result) => {
-          if (err) {
-              console.error("Error al obtener número de guardados:", err);
-              return res.status(500).json({ error: "Error en el servidor" });
-          }
-
-          const guardados2 = result[0].num_guardado;
-          const loguardo = guardadod
-              ? "<i class='fa-solid fa-bookmark fa-2x'></i>"
-              : "<i class='fa-regular fa-bookmark fa-2x'></i>";
-
-          res.json({ guardados2, text: loguardo });
+    "SELECT COUNT(*) AS num_guardado FROM guardar_publicacion WHERE id_publicacion = ?",
+    [id_publicacion],
+    (err, result) => {
+      if (err) {
+        console.error("Error al obtener número de guardados:", err);
+        return res.status(500).json({ error: "Error en el servidor" });
       }
+
+      const guardados2 = result[0].num_guardado;
+      const loguardo = guardadod
+        ? "<i class='fa-solid fa-bookmark fa-2x'></i>"
+        : "<i class='fa-regular fa-bookmark fa-2x'></i>";
+
+      res.json({ guardados2, text: loguardo, esta_guardado: guardadod });
+    }
   );
 }
+
 
 
 module.exports = router;
