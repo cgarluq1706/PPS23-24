@@ -159,7 +159,7 @@ app.get('/perfil', (req, res) => {
             return res.status(500).send('Error al cargar el perfil');
         }
 
-        const usuario = results[0] || {};
+        const usuario = results[0] || {}; // Aquí se corrigió el error
 
         // Asegurar formato de fecha válido
         if (usuario.fecha_nacimiento) {
