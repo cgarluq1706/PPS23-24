@@ -23,11 +23,13 @@
             margin: 0 auto;
         }
 
+
         .description-section {
             text-align: center;
             margin-bottom: 20px;
             width: 100%;
         }
+
 
         .sections-container {
             display: flex;
@@ -35,6 +37,7 @@
             width: 100%;
             align-items: stretch; /* Iguala la altura de los contenedores hijos */
         }
+
 
         .profile-section {
             width: 48%;
@@ -45,16 +48,19 @@
             background-color: #f9f9f9; /* Opcional: fondo claro */
         }
 
+
         .profile-section form {
             display: flex;
             flex-direction: column;
             height: 100%; /* Asegura que el formulario ocupe toda la altura del contenedor */
         }
 
+
         .profile-section label {
             margin-bottom: 5px;
             font-weight: bold; /* Opcional: resalta las etiquetas */
         }
+
 
         .profile-section input, .profile-section textarea {
             margin-bottom: 10px;
@@ -64,6 +70,7 @@
             width: 100%; /* Asegura que los inputs ocupen todo el ancho */
         }
 
+
         .btn-guardar {
             padding: 12px 25px;
             background-color: #28a745;
@@ -71,9 +78,11 @@
             transition: background-color 0.3s ease;
         }
 
+
         .btn-guardar:hover {
             background-color: #218838;
         }
+
 
     </style>
 </head>
@@ -81,6 +90,7 @@
     <!-- Llamada al menu -->
     <%- include("../routes/header.ejs") %>
     <br>
+
 
     <section data-bs-version="5.1" class="people07 cid-u7G9MjbGh4" id="people07-d">
         <p class="card-title mbr-fonts-style mt-3 display-7 justify-content-right">
@@ -93,80 +103,85 @@
                 <a href="/seguidos" style="margin-left: 15px;">Seguidores: <%= seguidores %></a>
             </div>
         </p>
+
+
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-12 col-lg-8">
+
+
+                    <% if (mensaje) { %>
+                        <div class="alert alert-<%= mensaje === 'exito' ? 'success' : 'danger' %> alert-dismissible fade show" role="alert">
+                            <%= mensaje === 'exito' ? 'Perfil actualizado con éxito.' : 'Ha ocurrido un error al actualizar el perfil.' %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <% } %>
+                                      
+
+
                     <form action="/modifica_foto" method="post" enctype="multipart/form-data">
                         <input type="file" name="image" accept="image/*">
                         <input type="submit" value="Modifica foto" name="submit">
                     </form>
                     <br>
-                    
-                    <% if (mensaje) { %>
-                        <p class="alert alert-danger"><%= mensaje %></p>
-                    <% } %>
-
+                   
+               
                     <div class="profile-container">
                         <!-- Descripción en el medio -->
-                        <div class="description-section">
-                            <form action="/actualizar-descripcion" method="post">
-                                <label for="descripcion">Descripción:</label>
-                                <textarea id="descripcion" name="descripcion" style="width: 100%;"><%=usuario.descripcion || ''%></textarea>
-                                <button type="submit">Guardar Descripción</button>
-                            </form>
-                        </div>
+                        <form action="/actualizar-perfil" method="post">
+                            <div class="profile-container">
+                                <div class="description-section">
+                                    <label for="descripcion">Descripción:</label>
+                                    <textarea id="descripcion" name="descripcion" style="width: 100%;"><%= usuario.descripcion || '' %></textarea>
+                                </div>
+
 
                         <!-- Redes sociales e información personal -->
-                    <form action="/actualizar-perfil" method="post">
                         <div class="sections-container">
                             <div class="profile-section">
-                                    <p><b>Redes sociales</b></p>
-                                    <label for="twitter"><i class="fab fa-twitter"></i></label>
-                                    <input type="url" id="twitter" name="twitter" placeholder="https://x.com/tu_usuario" value="<%=usuario.twitter || '' %>">
-                                    <br>
-                                    <label for="instagram"><i class="fab fa-instagram"></i></label>
-                                    <input type="url" id="instagram" name="instagram" placeholder="https://www.instagram.com/tu_usuario" value="<%=usuario.instagram || '' %>">
-                                    <br>
-                                    <label for="linkedin"><i class="fab fa-linkedin-in"></i></label>
-                                    <input type="url" id="linkedin" name="linkedin" placeholder="https://www.linkedin.com/tu_usuario" value="<%=usuario.linkedin || '' %>">
-                                    <br>
-                                    <label for="github"><i class="fab fa-github"></i></label>
-                                    <input type="url" id="github" name="github" placeholder="https://github.com/tu_usuario" value="<%=usuario.github || '' %>">
-                                    <br>
+                                <p><b>Redes sociales</b></p>
+                                <label for="twitter"><i class="fab fa-twitter"></i></label>
+                                <input type="url" id="twitter" name="twitter" placeholder="https://x.com/tu_usuario" value="<%= usuario.twitter || '' %>">
+                                <br>
+                                <label for="instagram"><i class="fab fa-instagram"></i></label>
+                                <input type="url" id="instagram" name="instagram" placeholder="https://www.instagram.com/tu_usuario" value="<%= usuario.instagram || '' %>">
+                                <br>
+                                <label for="linkedin"><i class="fab fa-linkedin-in"></i></label>
+                                <input type="url" id="linkedin" name="linkedin" placeholder="https://www.linkedin.com/tu_usuario" value="<%= usuario.linkedin || '' %>">
+                                <br>
+                                <label for="github"><i class="fab fa-github"></i></label>
+                                <input type="url" id="github" name="github" placeholder="https://github.com/tu_usuario" value="<%= usuario.github || '' %>">
                             </div>
 
+
                             <div class="profile-section">
-                                    <p><b>Información personal</b></p>
-                                    <label for="nombre">Nombre:</label>
-                                    <input type="text" id="nombre" name="nombre" value="<%= usuario.nombre %>" required>
-                                    <br>
-                                    <label for="apellido">Apellido:</label>
-                                    <input type="text" id="apellido" name="apellido" value="<%= usuario.apellido %>" required>
-                                    <br>
-                                    <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-                                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="<%= usuario.fecha_nacimiento ? new Date(usuario.fecha_nacimiento).toISOString().slice(0,10) : '' %>" required>
-                                    <br>
-                                    <label for="telefono">Teléfono:</label>
-                                    <input type="tel" id="telefono" name="telefono" value="<%= usuario.telefono %>">
+                                <p><b>Información personal</b></p>
+                                <label for="nombre">Nombre:</label>
+                                <input type="text" id="nombre" name="nombre" value="<%= usuario.nombre %>" required>
+                                <br>
+                                <label for="apellido">Apellido:</label>
+                                <input type="text" id="apellido" name="apellido" value="<%= usuario.apellido %>" required>
+                                <br>
+                                <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="<%= usuario.fecha_nacimiento ? new Date(usuario.fecha_nacimiento).toISOString().slice(0,10) : '' %>" required>
+                                <br>
+                                <label for="telefono">Teléfono:</label>
+                                <input type="tel" id="telefono" name="telefono" value="<%= usuario.telefono %>">
                             </div>
                         </div>
                         <!-- Botón unico de gurdado -->
                          <div style="text-align: center; margin-top: 20px;">
                             <button type="submit" class="btn-guardar">Guardar todos los cambios</button>
-                        <br>
-                        <br>
-                        <a href="/publicaciones?tipo=guardados">Ver elementos guardados</a>
+                            <br><br>
+                            <a href="/publicaciones?tipo=guardados">Ver elementos guardados</a>
                          </div>
-                        <br>
-                    </form>
                     </div>
+                </form>
                 </div>
             </div>
         </div>
     </section>
-
-    <script src="../routes/footer.js"></script>
-
+   
     <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/smoothscroll/smooth-scroll.js"></script>
     <script src="assets/ytplayer/index.js"></script>
@@ -175,5 +190,7 @@
     <script src="assets/masonry/masonry.pkgd.min.js"></script>
     <script src="assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
     <script src="assets/theme/js/script.js"></script>
+    <script src="../routes/footer.js"></script>
 </body>
 </html>
+
