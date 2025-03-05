@@ -76,7 +76,7 @@ app.post('/actualizar-perfil', (req, res) => {
 
 
     //Recoger todos los campos del formulario
-    const {
+    const{
         nombre,
         apellido,
         fecha_nacimiento,
@@ -176,7 +176,7 @@ app.get('/perfil', (req, res) => {
 
 
         const mensaje = req.query.mensaje;
-        
+
        
         res.render('perfil', {
             usuario,

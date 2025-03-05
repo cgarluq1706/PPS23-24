@@ -140,17 +140,26 @@
                         <div class="sections-container">
                             <div class="profile-section">
                                 <p><b>Redes sociales</b></p>
-                                <label for="twitter"><i class="fab fa-twitter"></i></label>
-                                <input type="url" id="twitter" name="twitter" placeholder="https://x.com/tu_usuario" value="<%= usuario.twitter || '' %>">
+                                <% const redes = [
+                                    { nombre: "Twitter", icono: "fab fa-twitter", url: "https://twitter.com/" },
+                                    { nombre: "Instagram", icono: "fab fa-instagram", url: "https://www.instagram.com/" },
+                                    { nombre: "LinkedIn", icono: "fab fa-linkedin-in", url: "https://www.linkedin.com/in/" },
+                                    { nombre: "GitHub", icono: "fab fa-github", url: "https://github.com/" }
+                                ]; %>
+
+                            <% redes.forEach(red => { %>
+                                <label for="<%= red.nombre.toLowerCase() %>">
+                                    <i class="<%= red.icono %>"></i> <%= red.nombre %>
+                                </label>
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <a href="<%= red.url + (usuario[red.nombre.toLowerCase()] || '') %>" target="_blank">
+                                        <i class="<%= red.icono %>"></i> <%= red.nombre %>
+                                    </a>
+                                    <input type="text" id="<%= red.nombre.toLowerCase() %>" name="<%= red.nombre.toLowerCase() %>" placeholder="Tu usuario en <%= red.nombre %>"
+                                        value="<%= usuario[red.nombre.toLowerCase()] || '' %>">
+                                </div>
                                 <br>
-                                <label for="instagram"><i class="fab fa-instagram"></i></label>
-                                <input type="url" id="instagram" name="instagram" placeholder="https://www.instagram.com/tu_usuario" value="<%= usuario.instagram || '' %>">
-                                <br>
-                                <label for="linkedin"><i class="fab fa-linkedin-in"></i></label>
-                                <input type="url" id="linkedin" name="linkedin" placeholder="https://www.linkedin.com/tu_usuario" value="<%= usuario.linkedin || '' %>">
-                                <br>
-                                <label for="github"><i class="fab fa-github"></i></label>
-                                <input type="url" id="github" name="github" placeholder="https://github.com/tu_usuario" value="<%= usuario.github || '' %>">
+                                <% }) %>
                             </div>
 
 
