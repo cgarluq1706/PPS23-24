@@ -1,5 +1,5 @@
 const express = require("express");
-const connection = require("../conexion.js"); // Importamos la conexión a MySQL
+const connection = require("../conexion");
 const router = express.Router();
 
 router.get("/buscar", (req, res) => {
@@ -20,13 +20,17 @@ router.get("/buscar", (req, res) => {
             return res.status(500).json({ error: "Error en el servidor" });
         }
 
-        // Convertimos la imagen en base64 si existe
-        const users = results.map(user => ({
-            ...user,
-            foto: user.foto_perfil ? `data:image/jpeg;base64,${user.foto_perfil.toString("base64")}` : null
+        const usuarios = results.map(user => ({
+            id: user.id,
+            nombre: user.nombre,
+            apellido: user.apellido,
+            username: user.username,
+            foto: user.foto_perfil
+                ? `data:image/jpeg;base64,${user.foto_perfil.toString("base64")}`
+                : null
         }));
 
-        res.json(users);
+        res.json(usuarios);
     });
 });
 

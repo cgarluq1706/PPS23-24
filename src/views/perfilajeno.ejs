@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de <%= usuario.nombre %></title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/theme/css/style.css">
+    <link rel="stylesheet" href="/assets/dropdown/css/style.css">
+    <link rel="stylesheet" href="/assets/socicon/css/styles.css">
+    <link rel="stylesheet" href="/assets/mobirise/css/mbr-additional.css">
+    <script src="/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/theme/js/script.js"></script>
+    
+    
+<style>
+    .profile-container {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        max-width: 800px !important;
+        margin: 0 auto !important;
+    }
+
+    .description-section {
+        text-align: center !important;
+        margin-bottom: 20px !important;
+        width: 100% !important;
+    }
+
+    .sections-container {
+        display: flex !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        align-items: stretch !important;
+    }
+
+    .profile-section {
+        width: 48% !important;
+        padding: 10px !important;
+        box-sizing: border-box !important;
+        border: 1px solid #ddd !important;
+        border-radius: 8px !important;
+        background-color: #f9f9f9 !important;
+    }
+
+    .profile-section button {
+        padding: 10px !important;
+        background-color: #0077b5 !important;
+        color: white !important;
+        border: none !important;
+        cursor: pointer !important;
+    }
+
+    .profile-section button:hover {
+        background-color: #005f8b !important;
+    }
+</style>
+
+    </style>
+</head>
+<body>
+    <%- include("../routes/header.ejs") %>
+    <br>
+
+    <section class="people07" id="people07-d">
+        <div class="profile-container">
+            <div class="img-wrapper mt-4">
+                <strong>Perfil de <%= usuario.nombre %></strong>
+                <img src="/imagen/<%= usuario.id %>" alt="Foto de perfil">
+            </div>
+            <div class="img-wrapper mt-4">
+                <a href="/siguiendo">Siguiendo: <%= seguidos %></a>
+                <a href="/seguidos" style="margin-left: 15px;">Seguidores: <%= seguidores %></a>
+            </div>
+            
+            <div class="description-section">
+                <p><b>Descripción:</b></p>
+                <p><%= usuario.descripcion || 'Sin descripción' %></p>
+            </div>
+
+            <div class="sections-container">
+                <div class="profile-section">
+                    <p><b>Redes sociales</b></p>
+                    <% if (usuario.twitter) { %>
+                        <p><i class="fab fa-twitter"></i> <a href="<%= usuario.twitter %>" target="_blank">Twitter</a></p>
+                    <% } %>
+                    <% if (usuario.instagram) { %>
+                        <p><i class="fab fa-instagram"></i> <a href="<%= usuario.instagram %>" target="_blank">Instagram</a></p>
+                    <% } %>
+                    <% if (usuario.linkedin) { %>
+                        <p><i class="fab fa-linkedin-in"></i> <a href="<%= usuario.linkedin %>" target="_blank">LinkedIn</a></p>
+                    <% } %>
+                    <% if (usuario.github) { %>
+                        <p><i class="fab fa-github"></i> <a href="<%= usuario.github %>" target="_blank">GitHub</a></p>
+                    <% } %>
+                </div>
+
+                <div class="profile-section">
+                    <p><b>Información personal</b></p>
+                    <p>Nombre: <%= usuario.nombre %></p>
+                    <p>Apellido: <%= usuario.apellido %></p>
+                    <p>Fecha de Nacimiento: <%= usuario.fecha_nacimiento.toISOString().slice(0,10) %></p>
+                    <p>Teléfono: <%= usuario.telefono || 'No disponible' %></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/theme/js/script.js"></script>
+</body>
+</html>

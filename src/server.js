@@ -29,6 +29,87 @@ app.use(session({
 }));
 
 
+// Buscar usuarios
+app.get('/buscar', (req, res) => {
+    const query = req.query.q;
+
+    if (!query) {
+        return res.json([]); // Si no hay consulta, devuelve una lista vacía
+    }
+
+    const searchQuery = `
+        SELECT id, nombre, apellido, username, foto_perfil 
+        FROM usuarios 
+        WHERE nombre LIKE ? OR apellido LIKE ? OR username LIKE ?
+        LIMIT 5
+    `;
+
+    connection.query(searchQuery, [`%${query}%`, `%${query}%`, `%${query}%`], (error, results) => {
+        if (error) {
+            console.error("Error al buscar usuarios:", error);
+            return res.status(500).json({ error: "Error en la búsqueda" });
+        }
+
+        const users = results.map(user => ({
+            id: user.id,
+            nombre: user.nombre,
+            apellido: user.apellido,
+            username: user.username,
+            foto: user.foto_perfil ? `data:image/jpeg;base64,${user.foto_perfil.toString("base64")}` : "https://via.placeholder.com/40"
+        }));
+
+        res.json(users);
+    });
+});
+
+app.get("/perfilajeno/:username", (req, res) => {
+    const username = req.params.username;
+
+    const queryUsuario = `SELECT * FROM usuarios WHERE username = ?`;
+    const querySeguidos = `
+        SELECT COUNT(*) as seguidos
+        FROM seguimiento s
+        INNER JOIN usuarios u ON s.seguidor_id = u.id
+        WHERE u.username = ?`;
+
+    const querySeguidores = `
+        SELECT COUNT(*) as seguidores
+        FROM seguimiento s
+        INNER JOIN usuarios u ON s.seguido_id = u.id
+        WHERE u.username = ?`;
+
+    connection.query(queryUsuario, [username], (err, result) => {
+        if (err) {
+            console.error("Error al obtener perfil ajeno:", err);
+            res.status(500).send("Error interno del servidor");
+        } else if (result.length === 0) {
+            res.status(404).send("Usuario no encontrado");
+        } else {
+            connection.query(querySeguidos, [username], (errSeguidos, resultSeguidos) => {
+                if (errSeguidos) {
+                    console.error("Error al obtener seguidos:", errSeguidos);
+                    return res.status(500).send("Error interno del servidor");
+                }
+
+                connection.query(querySeguidores, [username], (errSeguidores, resultSeguidores) => {
+                    if (errSeguidores) {
+                        console.error("Error al obtener seguidores:", errSeguidores);
+                        return res.status(500).send("Error interno del servidor");
+                    }
+                    res.render("perfilAjeno", { 
+                        usuario: result[0], 
+                        seguidos: resultSeguidos[0].seguidos, 
+                        seguidores: resultSeguidores[0].seguidores,
+                        username: req.session.username,
+                        mensaje: null // 👈 Evita el error si no hay mensaje
+                    });
+                });
+            });
+        }
+    });
+});
+
+
 // buscar usuarios
 const busquedaRoutes = require("./routes/busqueda");
 app.use("/", busquedaRoutes);
@@ -38,6 +119,8 @@ app.use("/", busquedaRoutes);
 
 // Configuración para servir archivos estáticos
 app.use(express.static(__dirname));
+
+
 //plantillas
 app.set('view engine', 'ejs');
 app.set('views', './src/views');
