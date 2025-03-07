@@ -1,4 +1,20 @@
 <style>
+
+    .dark-mode {
+        background-color: #121212;
+        color: #white;
+    }
+    /*Ajusta los enlaces y el navbar en modo oscuro */
+    .dark-mode .navbar, 
+    .dark-mode .navbar-nav .nav-link {
+        background-color: #222;
+        color: white !important;
+    }
+
+    /* Cambia el color de los enlaces */
+    .dark-mode a {
+        color: lightgray !important;
+    }
     .search-wrapper {
         display: flex;
         align-items: center;
@@ -169,8 +185,31 @@
         const searchInput = document.getElementById("searchInput");
         const searchToggle = document.getElementById("searchToggle");
         const resultsContainer = document.getElementById("results");
+        const toggleButton = document.getElementById("theme-toggle");
+        const body = document.body;
     
+        // Cargar el estado del tema desde localStorage
+        if (localStorage.getItem("theme") === "dark") {
+            body.classList.add("dark-mode");
+            toggleButton.textContent = "☀️"; // Muestra el icono del sol en modo oscuro
+        } else {
+            toggleButton.textContent = "🌙"; // Muestra la luna en modo claro
+        }
+
+        // Alternar entre los modos cuando se hace clic
+        toggleButton.addEventListener("click", function () {
+            body.classList.toggle("dark-mode");
+
+            if (body.classList.contains("dark-mode")) {
+                localStorage.setItem("theme", "dark");
+                toggleButton.textContent = "☀️"; // Cambia el icono al sol
+            } else {
+                localStorage.setItem("theme", "light");
+                toggleButton.textContent = "🌙"; // Cambia el icono a la luna
+            }
+        });
     
+
         function toggleSearch() {
             searchContainer.classList.toggle("open");
             if (searchContainer.classList.contains("open")) {
@@ -267,9 +306,15 @@
                             <li class="nav-item">
                                 <a class="nav-link link text-black text-primary display-4" href="/publicaciones">Publicaciones</a>
                             </li>
+                            <!-- Botón modo día/noche -->
+                            <li class="nav-item">
+                                <button id="theme-toggle" class="btn p-1">🌙 / ☀️</button>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link link text-black text-primary display-4" href="/logout" aria-expanded="false">logout, <%= username %></a>
                             </li>
+                             
+
                         </ul>
         
                     </div>
