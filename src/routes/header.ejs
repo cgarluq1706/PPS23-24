@@ -179,73 +179,7 @@
     }
     
     </style>
-    <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const searchContainer = document.getElementById("searchContainer");
-    const searchInput = document.getElementById("searchInput");
-    const searchToggle = document.getElementById("searchToggle");
-    const resultsContainer = document.getElementById("results");
-
-    function toggleSearch() {
-        searchContainer.classList.toggle("open");
-        if (searchContainer.classList.contains("open")) {
-            searchInput.focus();
-        } else {
-            searchInput.value = "";
-            resultsContainer.classList.remove("open");
-        }
-    }
-
-    searchToggle.addEventListener("click", toggleSearch);
-
-    document.addEventListener("click", (event) => {
-        if (!searchContainer.contains(event.target) && !searchToggle.contains(event.target)) {
-            searchContainer.classList.remove("open");
-            resultsContainer.classList.remove("open");
-        }
-    });
-
-    document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-            searchContainer.classList.remove("open");
-            resultsContainer.classList.remove("open");
-        }
-    });
-
-    searchInput.addEventListener("input", async () => {
-        const query = searchInput.value.trim();
-        resultsContainer.innerHTML = "";
-        resultsContainer.classList.remove("open");
-
-        if (query === "") return;
-
-        try {
-            const response = await fetch(`/buscar?q=${query}`);
-            const users = await response.json();
-
-            console.log("Resultados de búsqueda:", users); // Para depurar
-
-            if (users.length === 0) {
-                resultsContainer.innerHTML = "<p class='text-center p-2'>No se encontraron usuarios</p>";
-            } else {
-                users.forEach(user => {
-                    const userElement = document.createElement("div");
-                    userElement.classList.add("result-item");
-                    userElement.innerHTML = `
-                        <img src="${user.foto}" alt="Foto de ${user.nombre}" width="40" height="40">
-                        <span>${user.nombre} ${user.apellido} (@${user.username})</span>
-                    `;
-                    userElement.onclick = () => window.location.href = `/perfilajeno/${user.username}`;
-                    resultsContainer.appendChild(userElement);
-                });
-            }
-            resultsContainer.classList.add("open");
-        } catch (error) {
-            console.error("Error al buscar usuarios:", error);
-        }
-    });
-});
-
+<script>
     document.addEventListener("DOMContentLoaded", () => {
         const searchContainer = document.getElementById("searchContainer");
         const searchInput = document.getElementById("searchInput");
@@ -257,38 +191,35 @@ document.addEventListener("DOMContentLoaded", () => {
         // Cargar el estado del tema desde localStorage
         if (localStorage.getItem("theme") === "dark") {
             body.classList.add("dark-mode");
-            toggleButton.textContent = "☀️"; // Muestra el icono del sol en modo oscuro
+            toggleButton.textContent = "☀️"; // Modo oscuro
         } else {
-            toggleButton.textContent = "🌙"; // Muestra la luna en modo claro
+            toggleButton.textContent = "🌙"; // Modo claro
         }
-
+    
         // Alternar entre los modos cuando se hace clic
         toggleButton.addEventListener("click", function () {
             body.classList.toggle("dark-mode");
-
+    
             if (body.classList.contains("dark-mode")) {
                 localStorage.setItem("theme", "dark");
-                toggleButton.textContent = "☀️"; // Cambia el icono al sol
+                toggleButton.textContent = "☀️";
             } else {
                 localStorage.setItem("theme", "light");
-                toggleButton.textContent = "🌙"; // Cambia el icono a la luna
+                toggleButton.textContent = "🌙";
             }
         });
     
-
         function toggleSearch() {
             searchContainer.classList.toggle("open");
             if (searchContainer.classList.contains("open")) {
-                searchInput.focus(); 
+                searchInput.focus();
             } else {
-                searchInput.value = ""; 
+                searchInput.value = "";
                 resultsContainer.classList.remove("open");
             }
         }
     
-    
         searchToggle.addEventListener("click", toggleSearch);
-    
     
         document.addEventListener("click", (event) => {
             if (!searchContainer.contains(event.target) && !searchToggle.contains(event.target)) {
@@ -297,14 +228,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     
-     
         document.addEventListener("keydown", (event) => {
             if (event.key === "Escape") {
                 searchContainer.classList.remove("open");
                 resultsContainer.classList.remove("open");
             }
         });
-    
     
         searchInput.addEventListener("input", async () => {
             const query = searchInput.value.trim();
@@ -320,15 +249,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (users.length === 0) {
                     resultsContainer.innerHTML = "<p class='text-center p-2'>No se encontraron usuarios</p>";
                 } else {
+                    const usernames = new Set(); // Evita duplicados
+    
                     users.forEach(user => {
-                        const userElement = document.createElement("div");
-                        userElement.classList.add("result-item");
-                        userElement.innerHTML = `
-                            <img src="${user.foto || 'https://via.placeholder.com/40'}" class="me-2" width="40">
-                            <span>${user.nombre} ${user.apellido} (@${user.username})</span>
-                        `;
-                        userElement.onclick = () => window.location.href = `/perfil/${user.username}`;
-                        resultsContainer.appendChild(userElement);
+                        if (!usernames.has(user.username)) { // Verifica si ya se agregó
+                            usernames.add(user.username);
+    
+                            const userElement = document.createElement("div");
+                            userElement.classList.add("result-item");
+                            userElement.innerHTML = `
+                                <img src="${user.foto || 'https://via.placeholder.com/40'}" class="me-2" width="40">
+                                <span>${user.nombre} ${user.apellido} (@${user.username})</span>
+                            `;
+                            userElement.onclick = () => window.location.href = `/perfilajeno/${user.username}`;
+                            resultsContainer.appendChild(userElement);
+                        }
                     });
                 }
                 resultsContainer.classList.add("open");
@@ -338,7 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
     </script>
-
+    
         <!-- Llamada al menu -->
         <section data-bs-version="5.1" class="menu menu2 cid-u6ZF78ROEn" once="menu" id="menu-5-u6ZF78ROEn">
             <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
