@@ -71,7 +71,7 @@
             </div>
             <div class="img-wrapper mt-4">
                 <a href="/siguiendo">Siguiendo: <%= seguidos %></a>
-                <a href="/seguidos" style="margin-left: 15px;">Seguidores: <%= seguidores %></a>
+                <a href="/seguidos" style="margin-left: 15px;"><span id="seguidos_<%= usuario.id %>">Seguidores: <%= seguidores %></span></a>
             </div>
             
             <div class="description-section">
@@ -105,9 +105,61 @@
                 </div>
             </div>
         </div>
+        <div class="follow-section">
+            <button class="seguir" id="<%= usuario.id %>" name="<%= userId %>">
+                <% if (seguido) { %>
+                    <p>Dejar de seguir</p>
+                <% } else { %>
+                    <p>Seguir</p>
+                <% } %>
+            </button>
+
+        </div>      
     </section>
+    <script>
+        //Script para manejar los me gusta con una petición post al servidor con la información del usuario y la publicación
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('.seguir').forEach(button => {
+            button.addEventListener('click', async () => {
+                const id_seguido = button.id; // Usamos el ID del botón como ID de la publicación
+                const id_usuario = button.name;
+                console.log({ id_seguido, id_usuario });
+
+                const response = await fetch('/seguir', {
+                    method: 'POST',
+                    credentials: 'include', //Esto envía cookies al servidor
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_seguido, id_usuario})
+                });
+    
+                const data = await response.json();
+    
+                if (response.ok) {
+    // Actualizar el texto del botón
+    button.innerHTML = data.text;
+    
+document.getElementById(`seguidos_${id_seguido}`).innerText = "Seguidores: " + data.seguidores;
+} else {
+    console.error('Error al procesar el follow:', data.error);
+    // Mostrar un mensaje de error en la UI
+    alert("Hubo un error al intentar seguir al usuario. Intenta nuevamente.");
+}
+
+
+            });
+        });
+    });
+    
+    </script>
 
     <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/smoothscroll/smooth-scroll.js"></script>
+    <script src="assets/ytplayer/index.js"></script>
+    <script src="assets/dropdown/js/navbar-dropdown.js"></script>
+    <script src="assets/vimeoplayer/player.js"></script>
+    <script src="assets/masonry/masonry.pkgd.min.js"></script>
+    <script src="assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
     <script src="assets/theme/js/script.js"></script>
+    <script src="../routes/footer.js"></script>
 </body>
 </html>

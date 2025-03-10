@@ -114,6 +114,39 @@ INSERT INTO usuarios (nombre, apellido, username, contraseña, fecha_nacimiento,
 VALUES ('Ronaldo', 'de Assis Moreira', 'Ronaldinho1', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1985-10-20', '987654321', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\Ronaldinho.png'));
 INSERT INTO usuarios (nombre, apellido, username, contraseña, fecha_nacimiento, telefono, foto_perfil)
 VALUES ('Linda', 'Onotanto', 'officialLinda1', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1985-10-20', '987654321', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36268.jpg'));
+INSERT INTO usuarios (nombre, apellido, username, contraseña, fecha_nacimiento, telefono, foto_perfil) VALUES
+('Luis', 'Ramírez Sánchez', 'luis_rs', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1991-04-12', '968975321', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36505.jpg')),
+('Ana', 'Herrera Díaz', 'ana_hd', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1994-09-17', '934665432', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36506.jpg')),
+('Miguel', 'Moreno Aguilar', 'miguel_ma', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1989-06-20', '921234567', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36507.jpg')),
+('Laura', 'Pérez Sánchez', 'laura_ps', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1993-11-25', '912345678', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36508.jpg')),
+('Pedro', 'Hernández García', 'pedro_hg', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1985-07-09', '934567890', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36509.jpg')),
+('Marta', 'Gómez Fernández', 'marta_gf', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1992-03-15', '945678901', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36510.jpg')),
+('Juan', 'Martínez López', 'juan_ml', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1987-10-22', '956789012', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36511.jpg')),
+('Isabel', 'Ruiz Torres', 'isabel_rt', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1990-01-28', '968975321', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36512.jpg')),
+('Alberto', 'López Gómez', 'alberto_lg', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1989-05-18', '934665432', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36513.jpg')),
+('Alberta', 'Lpez Gmez', 'alberta_lg', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1982-05-18', '934365432', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36513.jpg')),
+('Pepe', '`pepin` popon', 'pepe_pp', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1982-05-18', '934665432', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36513.jpg')),
+('Pepa', 'Pa Pi', 'pepo_pp', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1981-05-18', '934665432', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36513.jpg')),
+('Jisus', 'Cristo Pipi', 'jisus_cristo', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1989-01-18', '934665422', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36513.jpg')),
+('Losus', 'Losus Pipi', 'losus', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1939-01-18', '934665422', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36513.jpg')),
+('Terne', 'Terne Terne', 'terne_pipo', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1911-04-12', '962975321', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36505.jpg')),
+('Ana', 'Maria Díaz', 'ana_mm', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1994-01-17', '934665432', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36506.jpg')),
+('Kola', 'pepe pepe', 'kolapep', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1999-06-20', '921234567', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36507.jpg')),
+('Julio', 'Mari Pep', 'julio_kol', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1993-11-25', '912315678', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36508.jpg')),
+('Popo', 'Pipi Caca', 'poo', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1925-07-09', '940567890', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36509.jpg')),
+('Popi', 'POPO Popi', 'popo', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1912-03-15', '945676901', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36510.jpg')),
+('Yuyu', 'Yaya López', 'Yuyu', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1947-10-22', '956749012', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36511.jpg')),
+('Isabel', 'Pantoja nose', 'isabel_pantoja', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1990-01-18', '958975321', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36512.jpg')),
+('Killo', 'Pepe Koko', 'pedro_pp', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1929-05-18', '933665432', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36513.jpg')),
+('Alberte', 'Lpez Gmez', 'alberte_lg', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1980-05-18', '904365432', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36513.jpg')),
+('Lolo', '`Lolito` Lolon', 'Lolo', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1922-05-18', '934635432', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36513.jpg')),
+('Puedo', 'Pa Pi', 'puedo', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1982-05-18', '934665431', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36513.jpg')),
+('Koko', 'Dc Pipi', 'koko', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1982-01-18', '934265422', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36513.jpg')),
+('Juju', 'Jojo Pipi', 'jojo', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1929-01-18', '934615422', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36513.jpg')),
+('Nono', 'Noni Pérez', 'noni', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1992-12-11', '921134567', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36514.jpg'));
+
+
+
 
 
 -- Miguel sigue a ...
@@ -138,6 +171,18 @@ insert into publicaciones (usuario_id,contenido)   values(2,'Soy nuevo en Social
 insert into publicaciones (usuario_id,contenido)   values(2,'Seguidme!! please');
 insert into publicaciones (usuario_id,contenido)   values(2,'Divide et impera ');
 insert into publicaciones (usuario_id,contenido)   values(2,'Esta red funciona');
+insert into publicaciones (usuario_id,contenido)   values(8,'XD');
+insert into publicaciones (usuario_id,contenido)   values(8,'MADRID MIERDA');
+insert into publicaciones (usuario_id,contenido)   values(8,'BARCA EL MEJOR ');
+insert into publicaciones (usuario_id,contenido)   values(8,'HOLAAA');
+insert into publicaciones (usuario_id,contenido)   values(7,'FORTNITE');
+insert into publicaciones (usuario_id,contenido)   values(7,'ME ENCANTA');
+insert into publicaciones (usuario_id,contenido)   values(7,'CRISTIN EL MEJOR');
+insert into publicaciones (usuario_id,contenido)   values(7,'SOY DEL BETIS');
+insert into publicaciones (usuario_id,contenido)   values(9,'VIVA EL SEVILLA');
+insert into publicaciones (usuario_id,contenido)   values(9,'EL DEL BETIS CABRON');
+insert into publicaciones (usuario_id,contenido)   values(9,'JAJAJA');
+insert into publicaciones (usuario_id,contenido)   values(9,'MÁQUINA');
 -- Linda escribe varios post
 insert into publicaciones (usuario_id,contenido)   values(4,'Hola Red social');
 insert into publicaciones (usuario_id,contenido)   values(4,'Cogito Ergo sum');

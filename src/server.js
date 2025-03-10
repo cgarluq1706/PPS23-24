@@ -6,6 +6,7 @@ const loginRoutes = require('./routes/login');
 const imageRoutes = require('./routes/image');
 const publicacionesRoutes = require('./routes/publicaciones');
 const likeRoutes = require("./routes/like");
+const seguirRoutes = require("./routes/seguir");
 const guardadoRoutes = require("./routes/elementoguardado");
 const connection = require('./conexion');
 
@@ -64,49 +65,76 @@ app.get('/buscar', (req, res) => {
 
 app.get("/perfilajeno/:username", (req, res) => {
     const username = req.params.username;
-
+    const userId = req.session.userId;
+    
     const queryUsuario = `SELECT * FROM usuarios WHERE username = ?`;
+    
     const querySeguidos = `
-        SELECT COUNT(*) as seguidos
+        SELECT COUNT(*) AS seguidos
         FROM seguimiento s
         INNER JOIN usuarios u ON s.seguidor_id = u.id
         WHERE u.username = ?`;
-
+    
     const querySeguidores = `
-        SELECT COUNT(*) as seguidores
+        SELECT COUNT(*) AS seguidores
         FROM seguimiento s
         INNER JOIN usuarios u ON s.seguido_id = u.id
         WHERE u.username = ?`;
-
-    connection.query(queryUsuario, [username], (err, result) => {
+    
+    const querySeguido = `
+        SELECT COUNT(*) AS seguido
+        FROM seguimiento
+        WHERE seguidor_id = ? AND seguido_id = ?`;
+    
+    // 1️⃣ Obtener el perfilId a partir del username
+    connection.query(queryUsuario, [username], (err, resultUsuario) => {
         if (err) {
-            console.error("Error al obtener perfil ajeno:", err);
-            res.status(500).send("Error interno del servidor");
-        } else if (result.length === 0) {
-            res.status(404).send("Usuario no encontrado");
-        } else {
-            connection.query(querySeguidos, [username], (errSeguidos, resultSeguidos) => {
-                if (errSeguidos) {
-                    console.error("Error al obtener seguidos:", errSeguidos);
+            console.error("Error al obtener usuario:", err);
+            return res.status(500).send("Error interno del servidor");
+        }
+        if (resultUsuario.length === 0) {
+            return res.status(404).send("Usuario no encontrado");
+        }
+    
+        const perfilId = resultUsuario[0].id; // Obtenemos el ID del perfil visitado (seguido_id)
+    
+        // 2️⃣ Obtener la cantidad de seguidos
+        connection.query(querySeguidos, [username], (errSeguidos, resultSeguidos) => {
+            if (errSeguidos) {
+                console.error("Error al obtener seguidos:", errSeguidos);
+                return res.status(500).send("Error interno del servidor");
+            }
+    
+            // 3️⃣ Obtener la cantidad de seguidores
+            connection.query(querySeguidores, [username], (errSeguidores, resultSeguidores) => {
+                if (errSeguidores) {
+                    console.error("Error al obtener seguidores:", errSeguidores);
                     return res.status(500).send("Error interno del servidor");
                 }
-
-                connection.query(querySeguidores, [username], (errSeguidores, resultSeguidores) => {
-                    if (errSeguidores) {
-                        console.error("Error al obtener seguidores:", errSeguidores);
+    
+                // 4️⃣ Verificar si el usuario logueado sigue a este perfil
+                connection.query(querySeguido, [userId, perfilId], (errSeguido, resultSeguido) => {
+                    if (errSeguido) {
+                        console.error("Error al obtener estado de seguimiento:", errSeguido);
                         return res.status(500).send("Error interno del servidor");
                     }
-                    res.render("perfilAjeno", { 
-                        usuario: result[0], 
-                        seguidos: resultSeguidos[0].seguidos, 
+    
+                    const seguido = resultSeguido[0].seguido > 0; // true si lo sigue, false si no
+    
+                    // 5️⃣ Renderizar la vista con los datos obtenidos
+                    res.render("perfilAjeno", {
+                        usuario: resultUsuario[0],
+                        seguidos: resultSeguidos[0].seguidos,
                         seguidores: resultSeguidores[0].seguidores,
-                        username: req.session.username,
-                        mensaje: null // 👈 Evita el error si no hay mensaje
+                        seguido, // true si lo sigue, false si no
+                        userId,
+                        username: req.session.username
                     });
                 });
             });
-        }
+        });
     });
+    
 });
 
 
@@ -131,6 +159,7 @@ app.use('/', loginRoutes);
 app.use('/', imageRoutes);
 app.use('/', publicacionesRoutes);
 app.use('/', likeRoutes);
+app.use('/', seguirRoutes);
 app.use('/', guardadoRoutes);
 app.use('/', terminosRoutes);
 app.use('/', acercaRoutes);
