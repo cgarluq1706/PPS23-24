@@ -61,9 +61,12 @@ const postRegister = async (req, res) => {
     //Calculamos edad
     const edad = calcularEdad(fecha_nacimiento);
     if (edad < 16 || edad > 99) {
-        return res.send("<script>alert('La edad debe estar entre 16 y 99 años.'); window.location.href='/registro';</script>");
+        return res.status(400).render('registro', { 
+            errorEdad: 'Debes tener entre 16 y 99 años.',
+            datosPrevios: req.body
+        });
     }
-
+      
     const hashedPassword = await bcrypt.hash(password, 10);
     const insertQuery ='INSERT INTO usuarios (nombre, apellido, username, contraseña, fecha_nacimiento, telefono) VALUES (?, ?, ?, ?, ?, ?)';
     const values = [name, apellido, username, hashedPassword, fecha_nacimiento, phone];
@@ -110,7 +113,8 @@ const postLogin = (req, res) => {
 };
 
 const getRegistro = (req, res) => {
-    res.render('registro');
+    const errorEdad = req.query.errorEdad || null; // Define errorEdad
+    res.render('registro', { errorEdad });
 };
 
 const getComentarios = (req, res) => {
@@ -163,7 +167,6 @@ const getPerfil = (req, res) => {
     }
 });
 };
-
 
 module.exports = {
     getIndex,
