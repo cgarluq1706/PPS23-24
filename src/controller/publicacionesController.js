@@ -164,9 +164,49 @@ const agregarComentario = (req, res) => {
     });
 };
 
+// Crear publicaciones
+const crearPublicacion = (req, res) => {
+    const { contenido } = req.body;
+    const usuario_id = req.session.userId;
+
+    if (!usuario_id) {
+        return res.status(401).json({ error: "Usuario no autenticado"});
+    }
+
+    const sql = `INSERT INTO publicaciones (usuario_id, contenido) VALUES (?, ?)`;
+    connection.query(sql, [usuario_id, contenido], (err, result) => {
+        if (err) {
+            console.error('Error al crear publicación', err);
+            return res.status(500).json({ error: "Error al crear publicación"});
+        }
+        res.status(201).json({ message: "Publicación creada correctamente" });
+    });
+};
+
+// Eliminar publicaciones
+const eliminarPublicacion = (req, res) => {
+    const { id } = req.params;
+    const usuario_id = req.session.userId;
+
+    if (!usuario_id) {
+        return res.status(401).json({ error: "Usuario no autenticado" });
+    }
+
+    const sql = `UPDATE publicaciones SET oculto = TRUE WHERE id = ? AND usuario_id = ?`;
+    connection.query(sql, [id, usuario_id], (err, result) => {
+        if (err) {
+            console.error('Error al eliminar publicación', err);
+            return res.status(500).json({ error: "Error al eliminar publicación" });
+        }
+        res.status(200).json({ message: "Publicación eliminada correctamente" });
+    });
+};
+
 
 module.exports = {
     getpublicaciones,
     getComentarios,
-    agregarComentario
+    agregarComentario,
+    crearPublicacion,
+    eliminarPublicacion
 };

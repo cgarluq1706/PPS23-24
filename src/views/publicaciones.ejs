@@ -15,105 +15,62 @@
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap"></noscript>
     <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj" type="text/css">
-</head><style>
-    .fecha-comentario {
-        font-size: 12px; /* Letra más pequeña */
-        color: rgb(238, 216, 216); /* Color gris */
-        margin-left: 10px; /* Espacio entre el comentario y la fecha */
-        display: inline-block;
-    }
+    <style>
+        .fecha-comentario {
+            font-size: 12px; /* Letra más pequeña */
+            color: rgb(238, 216, 216); /* Color gris */
+            margin-left: 10px; /* Espacio entre el comentario y la fecha */
+            display: inline-block;
+        }
+        .formulario-publicacion {
+            margin-top: 150px; /* Añade más espacio entre el menú y el formulario */
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto; /* Centra el formulario horizontalmente */
+        }
+        .formulario-publicacion textarea {
+            width: 100%; /* Asegura que el textarea ocupe todo el ancho disponible */
+            height: 100px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+            margin-bottom: 10px;
+            resize: none;
+        }
+        .formulario-publicacion button {
+            margin-top: 10px; /* Añade espacio entre el textarea y el botón */
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .formulario-publicacion button:hover {
+            background-color: #0056b3;
+        }
+        .header-spacing {
+            margin-top: 150px; /* Ajusta este valor según sea necesario */
+        }
     </style>
-<script>
-    //Script para manejar los me gusta con una petición post al servidor con la información del usuario y la publicación
-document.addEventListener("DOMContentLoaded", function() {
-    document.querySelectorAll('.like').forEach(button => {
-        button.addEventListener('click', async () => {
-            const id_publicacion = button.id; // Usamos el ID del botón como ID de la publicación
-            const id_usuario = button.name;
-            const response = await fetch('/like', {
-                method: 'POST',
-                credentials: 'include', //Esto envía cookies al servidor
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id_publicacion, id_usuario})
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                // Actualizar el icono de "Me Gusta"
-                button.innerHTML = data.text;
-
-                // Actualizar el contador de likes
-                document.getElementById(`likes_${id_publicacion}`).innerText = data.likes;
-            } else {
-                console.error('Error al procesar el like:', data.error);
-            }
-        });
-    });
-});
-
-</script>
-<script>
-   document.addEventListener("DOMContentLoaded", function() {
-    // Obtener 'tipo' desde la URL (query string)
-    const urlParams = new URLSearchParams(window.location.search);
-    const tipo = urlParams.get('tipo');  // Obtiene el valor de 'tipo'
-
-    document.querySelectorAll('.guarda').forEach(button => {
-        button.addEventListener('click', async () => {
-            const id_publicacion = button.id;
-            const id_usuario = button.name;
-
-            const response = await fetch('/elementoguardado', {
-                method: 'POST',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id_publicacion, id_usuario })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                button.innerHTML = data.text;
-                document.getElementById(`guardados_${id_publicacion}`).innerText = data.guardados2;
-
-                // Eliminar la publicación si no está guardada y estamos en la página de guardados
-                if (!data.esta_guardado && tipo === "guardados") {
-                    console.log(`Publicación ${id_publicacion} ya no está guardada. Eliminando...`);
-
-                    const publicacionElemento = document.getElementById(`publicacion-${id_publicacion}`);
-                    if (publicacionElemento) {
-                        publicacionElemento.remove();
-                        console.log("Publicación eliminada del DOM.");
-                    } else {
-                        console.warn("Elemento no encontrado en el DOM.");
-                    }
-
-                    // Verificar si ya no hay más publicaciones guardadas
-                    const publicacionesGuardadas = document.querySelectorAll('.guarda').length;
-                    if (publicacionesGuardadas === 0) {
-                        // Mostrar el mensaje de que ya no hay publicaciones guardadas
-                        const mensaje = document.getElementById("mensaje-sin-publicaciones");
-                        if (mensaje) {
-                            mensaje.style.display = 'block';
-                        }
-                    }
-                }
-            } else {
-                console.error('Error al procesar el guardado:', data.error);
-            }
-        });
-    });
-});
-
-
-</script>
-
-
+</head>
 <body>
     <!-- Llamada al menu -->
     <%- include("../routes/header.ejs") %>
-    <br>
+    <div class="header-spacing"></div>
+
+    <!-- Formulario para crear una nueva publicación -->
+    <div class="formulario-publicacion">
+        <form id="crear-publicacion-form">
+            <textarea id="contenido" name="contenido" placeholder="¿Que esta pasando?" required></textarea>
+            <button type="submit" class="btn btn-primary">Crear Publicación</button>
+        </form>
+    </div>
 
     <% if (publicaciones && publicaciones.length > 0) { %>
         <% publicaciones.forEach(function(publicacion) { %>
@@ -180,7 +137,6 @@ document.addEventListener("DOMContentLoaded", function() {
                                         <% } %>
                                     </div>
 
-
                                     <!-- Formulario para agregar un comentario -->
                                     <form class="comentario-form" data-publicacion-id="<%= publicacion.publicacion_id %>">
                                         <input type="hidden" name="publicacion_id" value="<%= publicacion.publicacion_id %>">
@@ -189,57 +145,56 @@ document.addEventListener("DOMContentLoaded", function() {
                                     </form>
                                     <script>
                                     function formatearFecha(fechaTexto) {
-                                    if (!fechaTexto) return "";
+                                        if (!fechaTexto) return "";
 
-                                    // Verifica si la fecha ya está en formato "18/02" y la deja igual
-                                    if (/^\d{2}\/\d{2}$/.test(fechaTexto)) return fechaTexto;
+                                        // Verifica si la fecha ya está en formato "18/02" y la deja igual
+                                        if (/^\d{2}\/\d{2}$/.test(fechaTexto)) return fechaTexto;
 
-                                    // Extraer solo el día y el mes de "YYYY-MM-DD HH:MM:SS"
-                                    const partes = fechaTexto.split(" "); // Separa fecha y hora
-                                    if (partes.length < 1) return "";
+                                        // Extraer solo el día y el mes de "YYYY-MM-DD HH:MM:SS"
+                                        const partes = fechaTexto.split(" "); // Separa fecha y hora
+                                        if (partes.length < 1) return "";
 
-                                    const [anio, mes, dia] = partes[0].split("-"); // Separa en año, mes, día
+                                        const [anio, mes, dia] = partes[0].split("-"); // Separa en año, mes, día
 
-                                    return `${parseInt(dia)}/${mes.padStart(2, "0")}`; // Asegura que el mes tenga dos dígitos
-                                }
+                                        return `${parseInt(dia)}/${mes.padStart(2, "0")}`; // Asegura que el mes tenga dos dígitos
+                                    }
 
-                                    
-                                        // ✅ Formatear las fechas de los comentarios existentes al cargar la página
-                                        document.addEventListener("DOMContentLoaded", () => {
-                                            document.querySelectorAll(".comentarios li").forEach(comentario => {
-                                                const fechaElemento = comentario.querySelector("small");
-                                                if (fechaElemento) {
-                                                    const fechaOriginal = fechaElemento.textContent.trim();
-                                                    if (fechaOriginal) {
-                                                        fechaElemento.textContent = formatearFecha(fechaOriginal);
-                                                    }
+                                    // ✅ Formatear las fechas de los comentarios existentes al cargar la página
+                                    document.addEventListener("DOMContentLoaded", () => {
+                                        document.querySelectorAll(".comentarios li").forEach(comentario => {
+                                            const fechaElemento = comentario.querySelector("small");
+                                            if (fechaElemento) {
+                                                const fechaOriginal = fechaElemento.textContent.trim();
+                                                if (fechaOriginal) {
+                                                    fechaElemento.textContent = formatearFecha(fechaOriginal);
                                                 }
-                                            });
+                                            }
                                         });
-                                    
-                                        // ✅ Manejar el envío de nuevos comentarios
-                                        document.querySelectorAll(".comentario-form").forEach(form => {
-                                            if (!form.dataset.listenerAdded) {
-                                                form.addEventListener("submit", function(event) {
-                                                    event.preventDefault();
-                                                    event.stopPropagation(); // Evita que el evento se propague
-                                    
-                                                    const publicacionId = this.getAttribute("data-publicacion-id");
-                                                    const contenido = this.querySelector("textarea").value.trim();
-                                                    const comentariosContainer = document.querySelector(`#comentarios-${publicacionId}`);
-                                    
-                                                    if (!contenido) {
-                                                        alert("No puedes enviar un comentario vacío");
-                                                        return;
-                                                    }
-                                    
-                                                    fetch("/comentarios", {
-                                                        method: "POST",
-                                                        headers: { "Content-Type": "application/json" },
-                                                        body: JSON.stringify({ publicacion_id: publicacionId, contenido })
-                                                    })
-                                                    .then(response => response.json())
-                                                    .then(data => {
+                                    });
+
+                                    // ✅ Manejar el envío de nuevos comentarios
+                                    document.querySelectorAll(".comentario-form").forEach(form => {
+                                        if (!form.dataset.listenerAdded) {
+                                            form.addEventListener("submit", function(event) {
+                                                event.preventDefault();
+                                                event.stopPropagation(); // Evita que el evento se propague
+
+                                                const publicacionId = this.getAttribute("data-publicacion-id");
+                                                const contenido = this.querySelector("textarea").value.trim();
+                                                const comentariosContainer = document.querySelector(`#comentarios-${publicacionId}`);
+
+                                                if (!contenido) {
+                                                    alert("No puedes enviar un comentario vacío");
+                                                    return;
+                                                }
+
+                                                fetch("/comentarios", {
+                                                    method: "POST",
+                                                    headers: { "Content-Type": "application/json" },
+                                                    body: JSON.stringify({ publicacion_id: publicacionId, contenido })
+                                                })
+                                                .then(response => response.json())
+                                                .then(data => {
                                                     if (data.error) {
                                                         alert(data.error);
                                                     } else {
@@ -255,14 +210,13 @@ document.addEventListener("DOMContentLoaded", function() {
                                                         this.querySelector("textarea").value = ""; // Limpiar el campo de texto
                                                     }
                                                 })
+                                                .catch(error => console.error("Error:", error));
+                                            });
 
-                                                    .catch(error => console.error("Error:", error));
-                                                });
-                                    
-                                                // Marcar el formulario como "con evento registrado"
-                                                form.dataset.listenerAdded = "true";
-                                            }
-                                        });
+                                            // Marcar el formulario como "con evento registrado"
+                                            form.dataset.listenerAdded = "true";
+                                        }
+                                    });
                                     </script>
                                     
                                 </div>
@@ -293,6 +247,131 @@ document.addEventListener("DOMContentLoaded", function() {
     <script src="assets/masonry/masonry.pkgd.min.js"></script>
     <script src="assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
     <script src="assets/theme/js/script.js"></script>
+
+    <!-- Script para manejar la creación y eliminación de publicaciones -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Lógica para crear una nueva publicación
+        document.getElementById('crear-publicacion-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const contenido = document.getElementById('contenido').value;
+
+            const response = await fetch('/publicaciones', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contenido })
+            });
+
+            if (response.ok) {
+                location.reload();
+            } else {
+                console.error('Error al crear publicación');
+            }
+        });
+
+        // Lógica para eliminar una publicación
+        document.querySelectorAll('.eliminar-publicacion').forEach(button => {
+            button.addEventListener('click', async function() {
+                const id = this.dataset.id;
+
+                const response = await fetch(`/publicaciones/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    console.error('Error al eliminar publicación');
+                }
+            });
+        });
+    });
+    </script>
+
+    <!-- Script para manejar los likes -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('.like').forEach(button => {
+            button.addEventListener('click', async () => {
+                const id_publicacion = button.id; // Usamos el ID del botón como ID de la publicación
+                const id_usuario = button.name;
+                const response = await fetch('/like', {
+                    method: 'POST',
+                    credentials: 'include', // Esto envía cookies al servidor
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_publicacion, id_usuario })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Actualizar el icono de "Me Gusta"
+                    button.innerHTML = data.text;
+
+                    // Actualizar el contador de likes
+                    document.getElementById(`likes_${id_publicacion}`).innerText = data.likes;
+                } else {
+                    console.error('Error al procesar el like:', data.error);
+                }
+            });
+        });
+    });
+    </script>
+
+    <!-- Script para manejar los elementos guardados -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Obtener 'tipo' desde la URL (query string)
+        const urlParams = new URLSearchParams(window.location.search);
+        const tipo = urlParams.get('tipo');  // Obtiene el valor de 'tipo'
+
+        document.querySelectorAll('.guarda').forEach(button => {
+            button.addEventListener('click', async () => {
+                const id_publicacion = button.id;
+                const id_usuario = button.name;
+
+                const response = await fetch('/elementoguardado', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_publicacion, id_usuario })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    button.innerHTML = data.text;
+                    document.getElementById(`guardados_${id_publicacion}`).innerText = data.guardados2;
+
+                    // Eliminar la publicación si no está guardada y estamos en la página de guardados
+                    if (!data.esta_guardado && tipo === "guardados") {
+                        console.log(`Publicación ${id_publicacion} ya no está guardada. Eliminando...`);
+
+                        const publicacionElemento = document.getElementById(`publicacion-${id_publicacion}`);
+                        if (publicacionElemento) {
+                            publicacionElemento.remove();
+                            console.log("Publicación eliminada del DOM.");
+                        } else {
+                            console.warn("Elemento no encontrado en el DOM.");
+                        }
+
+                        // Verificar si ya no hay más publicaciones guardadas
+                        const publicacionesGuardadas = document.querySelectorAll('.guarda').length;
+                        if (publicacionesGuardadas === 0) {
+                            // Mostrar el mensaje de que ya no hay publicaciones guardadas
+                            const mensaje = document.getElementById("mensaje-sin-publicaciones");
+                            if (mensaje) {
+                                mensaje.style.display = 'block';
+                            }
+                        }
+                    }
+                } else {
+                    console.error('Error al procesar el guardado:', data.error);
+                }
+            });
+        });
+    });
+    </script>
 
 </body>
 </html>
