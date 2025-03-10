@@ -41,6 +41,7 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+src/conexion.js
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
@@ -129,6 +130,3 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-
-# Ignorar conexion
-./src/conexion.js
