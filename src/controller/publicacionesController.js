@@ -1,5 +1,32 @@
 const connection = require('../conexion');
 
+// Obtener publicaciones del usuario actual
+const getMisPublicaciones = (req, res) => {
+    const usuario_id = req.session.userId;
+
+    if (!usuario_id) {
+        return res.status(401).json({ error: "Usuario no autenticado" });
+    }
+
+    const sql = `
+        SELECT p.id AS publicacion_id, p.contenido, p.fecha_publicacion, p.num_like, p.num_guardado,
+               u.nombre, u.foto_perfil,
+               (SELECT COUNT(*) FROM like_publicacion lp WHERE lp.id_publicacion = p.id AND lp.id_usuario = ?) AS dio_like,
+               (SELECT COUNT(*) FROM guardar_publicacion gp WHERE gp.id_publicacion = p.id AND gp.id_usuario = ?) AS loguardo
+        FROM publicaciones p
+        INNER JOIN usuarios u ON p.usuario_id = u.id
+        WHERE p.usuario_id = ?
+        ORDER BY p.fecha_publicacion DESC;
+    `;
+
+    connection.query(sql, [usuario_id, usuario_id, usuario_id], (err, results) => {
+        if (err) {
+            console.error('Error al obtener publicaciones del usuario', err);
+            return res.status(500).send('Error al obtener publicaciones del usuario');
+        }
+        res.render('publicaciones', { username: req.session.username, userid: usuario_id, publicaciones: results, tipo: 'mis_publicaciones' });
+    });
+};
 
 // Obtener publicaciones con comentarios
 const getpublicaciones = (req, res) => {
@@ -208,5 +235,6 @@ module.exports = {
     getComentarios,
     agregarComentario,
     crearPublicacion,
-    eliminarPublicacion
+    eliminarPublicacion,
+    getMisPublicaciones
 };
