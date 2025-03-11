@@ -34,6 +34,7 @@ const getpublicaciones = (req, res) => {
     const userid = req.session.userId;
     const tipo = req.query.tipo; // Recibe el parámetro tipo=guardados desde la URL
 
+
     let sql;
     let params = [userid, userid, username];
 
@@ -103,7 +104,7 @@ const getpublicaciones = (req, res) => {
                 publicacionesConComentarios.push(publicacion);
 
                 if (publicacionesConComentarios.length === results.length) {
-                    res.render('publicaciones', { username: req.session.username, userid, publicaciones: publicacionesConComentarios });
+                    res.render('publicaciones', { tipo: 'publicaciones', username: req.session.username, userid, publicaciones: publicacionesConComentarios });
                 }
             });
         });

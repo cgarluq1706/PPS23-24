@@ -252,7 +252,7 @@ app.get('/perfil', (req, res) => {
     }
 
 
-    // Consulta actualizada para obtener todos los campos necesarios
+    // Consulta actualizada para obtener todos los campos necesarioss
     const query = `
         SELECT
             nombre,

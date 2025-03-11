@@ -78,17 +78,19 @@
     <div class="header-spacing"></div>
 
     <!-- Formulario para crear una nueva publicación -->
+    <% if (typeof tipo !== 'undefined' && tipo === 'publicaciones') { %>
     <div class="formulario-publicacion">
         <form id="crear-publicacion-form">
             <textarea id="contenido" name="contenido" placeholder="Escribe tu publicación aquí..." required></textarea>
             <button type="submit" class="btn btn-primary">Crear Publicación</button>
         </form>
     </div>
-
-    <!-- Botón para ver las publicaciones del usuario -->
-    <div class="text-center mt-4">
-        <a href="/mis_publicaciones" class="btn btn-secondary">Mis publicaciones</a>
-    </div>
+        <!-- Botón para ver las publicaciones del usuario -->
+        <div class="text-center mt-4">
+            <a href="/mis_publicaciones" class="btn btn-secondary">Mis publicaciones</a>
+        </div>
+    
+    <% } %>
 
     <% if (publicaciones && publicaciones.length > 0) { %>
         <% publicaciones.forEach(function(publicacion) { %>
@@ -290,6 +292,10 @@
             }
         });
 
+    });
+    </script>
+      <script>
+            document.addEventListener("DOMContentLoaded", function() {
         // Lógica para eliminar una publicación
         document.querySelectorAll('.eliminar-publicacion').forEach(button => {
             button.addEventListener('click', async function() {
@@ -307,8 +313,7 @@
             });
         });
     });
-    </script>
-
+        </script>
     <!-- Script para manejar los likes -->
     <script>
     document.addEventListener("DOMContentLoaded", function() {
