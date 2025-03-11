@@ -15,14 +15,14 @@ const getMisPublicaciones = (req, res) => {
                (SELECT COUNT(*) FROM guardar_publicacion gp WHERE gp.id_publicacion = p.id AND gp.id_usuario = ?) AS loguardo
         FROM publicaciones p
         INNER JOIN usuarios u ON p.usuario_id = u.id
-        WHERE p.usuario_id = ?
+        WHERE p.usuario_id = ? AND p.oculto = FALSE
         ORDER BY p.fecha_publicacion DESC;
     `;
 
     connection.query(sql, [usuario_id, usuario_id, usuario_id], (err, results) => {
         if (err) {
-            console.error('Error al obtener publicaciones del usuario', err);
-            return res.status(500).send('Error al obtener publicaciones del usuario');
+            console.error('Error al obtener publicaciones', err);
+            return res.status(500).json({ error: "Error al obtener publicaciones" });
         }
         res.render('publicaciones', { username: req.session.username, userid: usuario_id, publicaciones: results, tipo: 'mis_publicaciones' });
     });
@@ -33,10 +33,6 @@ const getpublicaciones = (req, res) => {
     const username = req.session.username;
     const userid = req.session.userId;
     const tipo = req.query.tipo; // Recibe el parámetro tipo=guardados desde la URL
-
-    console.log("UserID:", userid, typeof userid);
-    console.log("Username:", username, typeof username);
-    console.log("Sesión al obtener publicaciones:", req.session);
 
     let sql;
     let params = [userid, userid, username];
@@ -53,7 +49,7 @@ const getpublicaciones = (req, res) => {
             FROM publicaciones p
             INNER JOIN guardar_publicacion gp ON p.id = gp.id_publicacion
             INNER JOIN usuarios u ON p.usuario_id = u.id
-            WHERE gp.id_usuario = ?
+            WHERE gp.id_usuario = ? AND p.oculto = FALSE
             ORDER BY p.fecha_publicacion DESC;
         `;
         params = [userid, userid, userid]; // Solo necesita filtrar por el usuario que guardó
@@ -71,19 +67,18 @@ const getpublicaciones = (req, res) => {
             INNER JOIN usuarios u ON p.usuario_id = u.id 
             INNER JOIN seguimiento s ON u.id = s.seguido_id 
             INNER JOIN usuarios u2 ON s.seguidor_id = u2.id 
-            WHERE u2.username = ?
+            WHERE u2.username = ? AND p.oculto = FALSE
             ORDER BY p.fecha_publicacion DESC;
         `;
     }
 
     connection.query(sql, params, (err, results) => {
         if (err) {
-            console.error('Error al obtener publicaciones', err);
-            return res.status(500).send('Error al obtener publicaciones');
+            return res.status(500).json({ error: "Error al obtener publicaciones" });
         }
 
         if (results.length === 0) {
-            return res.render('publicaciones', { username: req.session.username, publicaciones: [] });
+            return res.status(404).json({ error: "No se encontraron publicaciones" });
         }
 
         const publicacionesConComentarios = [];
@@ -219,13 +214,27 @@ const eliminarPublicacion = (req, res) => {
         return res.status(401).json({ error: "Usuario no autenticado" });
     }
 
-    const sql = `UPDATE publicaciones SET oculto = TRUE WHERE id = ? AND usuario_id = ?`;
-    connection.query(sql, [id, usuario_id], (err, result) => {
+    // Verificar que la publicación pertenece al usuario autenticado
+    const sqlVerificar = `SELECT * FROM publicaciones WHERE id = ? AND usuario_id = ?`;
+    connection.query(sqlVerificar, [id, usuario_id], (err, results) => {
         if (err) {
-            console.error('Error al eliminar publicación', err);
-            return res.status(500).json({ error: "Error al eliminar publicación" });
+            console.error('Error al verificar publicación', err);
+            return res.status(500).json({ error: "Error al verificar publicación" });
         }
-        res.status(200).json({ message: "Publicación eliminada correctamente" });
+
+        if (results.length === 0) {
+            return res.status(404).json({ error: "Publicación no encontrada o no pertenece al usuario" });
+        }
+
+        // Ocultar la publicación
+        const sqlOcultar = `UPDATE publicaciones SET oculto = TRUE WHERE id = ? AND usuario_id = ?`;
+        connection.query(sqlOcultar, [id, usuario_id], (err, result) => {
+            if (err) {
+                console.error('Error al ocultar publicación', err);
+                return res.status(500).json({ error: "Error al ocultar publicación" });
+            }
+            res.status(200).json({ message: "Publicación ocultada correctamente" });
+        });
     });
 };
 

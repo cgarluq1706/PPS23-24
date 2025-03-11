@@ -57,6 +57,19 @@
         .header-spacing {
             margin-top: 150px; /* Ajusta este valor según sea necesario */
         }
+        .eliminar-publicacion {
+            margin-bottom: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #dc3545;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .eliminar-publicacion:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 <body>
@@ -64,18 +77,18 @@
     <%- include("../routes/header.ejs") %>
     <div class="header-spacing"></div>
 
-        <!-- Formulario para crear una nueva publicación -->
-        <div class="formulario-publicacion">
-            <form id="crear-publicacion-form">
-                <textarea id="contenido" name="contenido" placeholder="Escribe tu publicación aquí..." required></textarea>
-                <button type="submit" class="btn btn-primary">Crear Publicación</button>
-            </form>
-        </div>
+    <!-- Formulario para crear una nueva publicación -->
+    <div class="formulario-publicacion">
+        <form id="crear-publicacion-form">
+            <textarea id="contenido" name="contenido" placeholder="Escribe tu publicación aquí..." required></textarea>
+            <button type="submit" class="btn btn-primary">Crear Publicación</button>
+        </form>
+    </div>
 
     <!-- Botón para ver las publicaciones del usuario -->
-     <div class="text-center mt-4">
+    <div class="text-center mt-4">
         <a href="/mis_publicaciones" class="btn btn-secondary">Mis publicaciones</a>
-     </div>
+    </div>
 
     <% if (publicaciones && publicaciones.length > 0) { %>
         <% publicaciones.forEach(function(publicacion) { %>
@@ -85,6 +98,9 @@
                         <div class="card col-md-12 col-lg-10">
                             <div class="card-wrapper">
                                 <div class="card-box align-center">
+                                    <% if (typeof tipo !== 'undefined' && tipo === 'mis_publicaciones') { %>
+                                        <button class="eliminar-publicacion" data-id="<%= publicacion.publicacion_id %>">Eliminar</button>
+                                    <% } %>
                                     <section data-bs-version="5.1" class="features21 cid-u6ZF78SJlX" id="features-4-u6ZF78SJlX">
                                         <div class="item features-without-image">
                                             <div class="item-wrapper">

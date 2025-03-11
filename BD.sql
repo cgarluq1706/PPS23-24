@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS publicaciones (
     num_like INT  DEFAULT 0,
 	num_guardado INT  DEFAULT 0,
     fecha_publicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    oculto BOOLEAN DEFAULT FALSE, -- Ocultar publicaciones
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
 
