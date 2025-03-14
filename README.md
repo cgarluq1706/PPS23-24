@@ -11,13 +11,17 @@
 Se encuentra el script de la BD en el proyecto en formato .sql
 
 **2º Clonar el repositorio Ejemplo4 en local**
-git clone https://github.com/ProfeMiguelTernero/Ejemplo4
+*git clone https://github.com/ProfeMiguelTernero/Ejemplo4*
 
 **3º Abrir con visual estudio code y descargar los modulos**
-npm install
+*npm install*
 
-**4º ejecutar el proyecto**
-node --watch ./src/server.js
+**4º Ejecutar el proyecto**
+*node --watch ./src/server.js*
+
+**5º Si fallara al ejecutar el servidor** por faltar alguna libreria, como por ejemplo express, instalar con: *npm install express*
+
+![](https://i.imgur.com/eN9mLl4.png)
 
 ### **Historico de cambios:**
 
