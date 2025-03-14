@@ -3,6 +3,7 @@
 Instrucciones para ejecutar el proyecto:
 
 1º En primer lugar necesitamos la base de datos
+
 #############################################################
 Se encuentra el script de la BD en el proyecto
 
