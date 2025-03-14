@@ -30,6 +30,8 @@ Se encuentra el script de la BD en el proyecto en formato .sql
 
 ![](https://i.imgur.com/eN9mLl4.png)
 
+**6ºSi falla al conectarse a la BBDD**, tengase en cuenta deben coincidir host, puerto, usuario, contraseña y basedatos tal como tenemos especificados en /src/conexion.js
+![](https://i.imgur.com/YiqAQVj.png)
 
 ------------
 
