@@ -5,6 +5,7 @@ Instrucciones para ejecutar el proyecto:
 1º En primer lugar necesitamos la base de datos
 
 #############################################################
+
 Se encuentra el script de la BD en el proyecto
 
 2º Clonar el repositorio Ejemplo4 en local 
