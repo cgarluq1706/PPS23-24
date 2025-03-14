@@ -1,8 +1,8 @@
-# ### **CASUAL FRYDAYS**
+### **CASUAL FRYDAYS**
 
 ![](https://i.imgur.com/2iJH0rG.png)
 
-Release 001 disponible en
+**Release 001 disponible en**
 ****https://github.com/mteralg186/PPS23-24/releases/tag/Version001
 
 ### **Instrucciones para ejecutar el proyecto**
