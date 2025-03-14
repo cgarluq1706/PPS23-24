@@ -19,7 +19,7 @@ Se encuentra el script de la BD en el proyecto en formato .sql
 **4º Ejecutar el proyecto**
 *node --watch ./src/server.js*
 
-**5º Si fallara al ejecutar el servidor** por faltar alguna libreria, como por ejemplo express, instalar con: *npm install express*
+**5º Si fallara al ejecutar el servidor por faltar alguna libreria**, como por ejemplo express, instalar con: *npm install express*
 
 ![](https://i.imgur.com/eN9mLl4.png)
 
