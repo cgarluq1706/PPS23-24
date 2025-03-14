@@ -5,6 +5,10 @@
 **Release 001 disponible en**
 ****https://github.com/mteralg186/PPS23-24/releases/tag/Version001
 
+
+------------
+
+
 ### **Instrucciones para ejecutar el proyecto**
 
 **1º En primer lugar necesitamos la base de datos**
@@ -22,6 +26,17 @@ Se encuentra el script de la BD en el proyecto en formato .sql
 **5º Si fallara al ejecutar el servidor por faltar alguna libreria**, como por ejemplo express, instalar con: *npm install express*
 
 ![](https://i.imgur.com/eN9mLl4.png)
+
+
+------------
+
+
+**EDR actualizado a 14/03/2025**
+![](https://i.imgur.com/MhYiCwx.png)
+
+
+------------
+
 
 ### **Historico de cambios:**
 
@@ -57,6 +72,9 @@ Se encuentra el script de la BD en el proyecto en formato .sql
 - VER TUS PROPIAS PUBLICACIONES
 
 
+
+
+------------
 
 
 
