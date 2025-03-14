@@ -1,3 +1,4 @@
+:slightly_smiling_face:
 ### **CASUAL FRYDAYS**
 
 ![](https://i.imgur.com/2iJH0rG.png)
