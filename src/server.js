@@ -487,10 +487,6 @@ app.get("/perfil/:username/siguiendo", (req, res) => {
     });
 });
 
-// buscar usuarios
-const busquedaRoutes = require("./routes/busqueda");
-app.use("/", busquedaRoutes);
-
 // Ruta para mostrar la página de borrar cuenta
 app.get('/borrar', (req, res) => {
     if (req.session.loggedIn) {
@@ -510,6 +506,8 @@ app.post('/desactivar', deactivateAccount);
 app.get('/recovery', (req, res) => {
     res.render('recovery');
   });
+
+  app.post('/restore-account', restoreAccount);
   
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);

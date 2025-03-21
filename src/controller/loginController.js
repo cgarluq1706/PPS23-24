@@ -246,7 +246,7 @@ const deactivateAccount = (req, res) => {
 
         // 1️⃣ Insertar los datos del usuario en la tabla `recovery`
         const queryRecovery = `
-            INSERT INTO recovery (id, nombre, apellido, username, foto_perfil, fecha_nacimiento, telefono, descripcion, twitter, instagram, linkedin, github)
+            INSERT INTO reco (id, nombre, apellido, username, foto_perfil, fecha_nacimiento, telefono, descripcion, twitter, instagram, linkedin, github)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
         connection.query(queryRecovery, [
@@ -309,7 +309,7 @@ const restoreAccount = (req, res) => {
     }
 
     // Verificar si el usuario existe en la tabla `recovery`
-    const queryRecovery = 'SELECT * FROM recovery WHERE username = ?';
+    const queryRecovery = 'SELECT * FROM reco WHERE username = ?';
     connection.query(queryRecovery, [username], (err, results) => {
         if (err) {
             console.error('Error al buscar el usuario en recovery:', err);
@@ -358,7 +358,7 @@ const restoreAccount = (req, res) => {
                 console.log('Usuario restaurado en la tabla usuarios con éxito');
 
                 // Eliminar el usuario de la tabla `recovery` después de restaurarlo
-                const deleteQuery = 'DELETE FROM recovery WHERE username = ?';
+                const deleteQuery = 'DELETE FROM reco WHERE username = ?';
                 connection.query(deleteQuery, [username], (errDelete, resultsDelete) => {
                     if (errDelete) {
                         console.error('Error al eliminar el usuario de recovery:', errDelete);

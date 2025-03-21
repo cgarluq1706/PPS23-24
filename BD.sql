@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS seguimiento (
     FOREIGN KEY (seguidor_id) REFERENCES usuarios(id),
     FOREIGN KEY (seguido_id) REFERENCES usuarios(id)
 );
-CREATE TABLE IF NOT EXISTS recovery (
+CREATE TABLE IF NOT EXISTS reco (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) not null,
