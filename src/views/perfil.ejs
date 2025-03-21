@@ -99,8 +99,8 @@
                 <img src="/imagen/<%= usuario.id %>" alt="Foto de perfil">
             </div>
             <div class="img-wrapper mt-4 justify-content-center">
-                <a href="/siguiendo">Siguiendo: <%= seguidos %></a>
-                <a href="/seguidos" style="margin-left: 15px;">Seguidores: <%= seguidores %></a>
+                <a href="/perfil/<%= username %>/siguiendo">>Siguiendo: <%= seguidos %></a>
+                <a href="/perfil/<%= username %>/seguidores" style="margin-left: 15px;">Seguidores: <%= seguidores %></a>
             </div>
         </p>
 
@@ -200,7 +200,7 @@
     <script src="assets/masonry/masonry.pkgd.min.js"></script>
     <script src="assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
     <script src="assets/theme/js/script.js"></script>
-    <script src="../routes/footer.js"></script>
+    <%- include("../routes/footer.ejs") %>
 </body>
 </html>
 

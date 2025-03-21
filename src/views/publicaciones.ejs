@@ -11,119 +11,404 @@
     <link rel="stylesheet" href="assets/dropdown/css/style.css">
     <link rel="stylesheet" href="assets/socicon/css/styles.css">
     <link rel="stylesheet" href="assets/theme/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap"></noscript>
     <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj" type="text/css">
-
+    <style>
+        .fecha-comentario {
+            font-size: 12px; /* Letra más pequeña */
+            color: rgb(238, 216, 216); /* Color gris */
+            margin-left: 10px; /* Espacio entre el comentario y la fecha */
+            display: inline-block;
+        }
+        .formulario-publicacion {
+            margin-top: 150px; /* Añade más espacio entre el menú y el formulario */
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto; /* Centra el formulario horizontalmente */
+        }
+        .formulario-publicacion textarea {
+            width: 100%; /* Asegura que el textarea ocupe todo el ancho disponible */
+            height: 100px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+            margin-bottom: 10px;
+            resize: none;
+        }
+        .formulario-publicacion button {
+            margin-top: 10px; /* Añade espacio entre el textarea y el botón */
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .formulario-publicacion button:hover {
+            background-color: #0056b3;
+        }
+        .header-spacing {
+            margin-top: 150px; /* Ajusta este valor según sea necesario */
+        }
+        .eliminar-publicacion {
+            margin-bottom: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #dc3545;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .eliminar-publicacion:hover {
+            background-color: #c82333;
+        }
+    </style>
 </head>
-
 <body>
-        <!-- Llamada al menu -->
-        <section data-bs-version="5.1" class="menu menu2 cid-u6ZF78ROEn" once="menu" id="menu-5-u6ZF78ROEn">
-            <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
-                <div class="container">
-                    <div class="navbar-brand">
-                        <span class="navbar-logo">
-                            <a href="/dashboard">
-                                <img src="assets/images/mbr-206x191.png" alt="Mobirise Website Builder" style="height: 4.3rem;">
-                            </a>
-                        </span>
-                        <span class="navbar-caption-wrap"><a class="navbar-caption text-black display-4" href="/dashboard">socialTernero</a></span>
-                    </div>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
-                            <li class="nav-item">
-                                <a class="nav-link link text-black text-primary display-4" href="/perfil">Mi perfil</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link link text-black text-primary display-4" href="/comentarios">Ver mis comentarios</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link link text-black text-primary display-4" href="/publicaciones">Publicaciones</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link link text-black text-primary display-4" href="/logout" aria-expanded="false">logout, <%= username %></a>
-                            </li>
-                        </ul>
-        
-                    </div>
-                </div>
-            </nav>
-        </section>
-        <br>
+    <!-- Llamada al menu -->
+    <%- include("../routes/header.ejs") %>
+    <div class="header-spacing"></div>
 
-
-        <% if (publicaciones && publicaciones.length > 0) { %>
-            <% publicaciones.forEach(function(publicacion) { %>
-                <section data-bs-version="5.1" class="article13 cid-u6ZF78RI9e" id="call-to-action-5-u6ZF78RI9e">       
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="card col-md-12 col-lg-10">
-                                <div class="card-wrapper">
-                                    <div class="card-box align-center">
-                                        <section data-bs-version="5.1" class="features21 cid-u6ZF78SJlX" id="features-4-u6ZF78SJlX">
-                                            <div class="item features-without-image">
-                                                <div class="item-wrapper">
-                                                    <div class="card-box align-left">
-                                                        <div class="img-wrapper mb-3">
-                                                            <img src="/imagenID/<%= publicacion.id %>" alt="Foto de perfil de <%= publicacion.nombre %>"> 
-                                                        </div>
-                                                        <h5 class="card-title mbr-fonts-style display-5">
-                                                            <strong><%= publicacion.contenido %></strong>
-                                                        </h5>
-                                                        <p class="card-text mbr-fonts-style display-7">
-                                                            Escrito por <%= publicacion.nombre %> el <%= publicacion.fecha_publicacion %>
-                                                        </p>
+    <!-- Formulario para crear una nueva publicación -->
+    <% if (typeof tipo !== 'undefined' && tipo === 'publicaciones') { %>
+    <div class="formulario-publicacion" id="formularioPublicacion">
+        <form id="crear-publicacion-form">
+            <textarea id="contenido" name="contenido" placeholder="Escribe tu publicación aquí..." required></textarea>
+            <button type="submit" class="btn btn-primary">Crear Publicación</button>
+        </form>
+    </div>
+        <!-- Botón para ver las publicaciones del usuario -->
+        <div class="text-center mt-4" id="misPublicaciones">
+            <a href="/mis_publicaciones" class="btn btn-secondary">Mis publicaciones</a>
+        </div>
+    
+    <% } %>
+    <script>
+        // Obtener los parámetros de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const tipo = urlParams.get('tipo'); // Obtener el valor de 'tipo'
+    
+        // Verificar si 'tipo' es igual a 'guardados'
+        if (tipo === 'guardados') {
+            // Si es 'guardados', ocultamos los elementos
+            document.getElementById('formularioPublicacion').style.display = 'none';
+            document.getElementById('misPublicaciones').style.display = 'none';
+        }
+    </script>
+<% if (resultado === 0) { %>
+    <p>No sigues a nadie weon</p>
+<% } else if (publicaciones && publicaciones.length > 0 && resultado === 1) { %>
+    <% publicaciones.forEach(function(publicacion) { %>
+            <section data-bs-version="5.1" class="article13 cid-u6ZF78RI9e" id="publicacion-<%= publicacion.publicacion_id %>">       
+                <div class="container" >
+                    <div class="row justify-content-center">
+                        <div class="card col-md-12 col-lg-10">
+                            <div class="card-wrapper">
+                                <div class="card-box align-center">
+                                    <% if (typeof tipo !== 'undefined' && tipo === 'mis_publicaciones') { %>
+                                        <button class="eliminar-publicacion" data-id="<%= publicacion.publicacion_id %>">Eliminar</button>
+                                    <% } %>
+                                    <section data-bs-version="5.1" class="features21 cid-u6ZF78SJlX" id="features-4-u6ZF78SJlX">
+                                        <div class="item features-without-image">
+                                            <div class="item-wrapper">
+                                                <div class="card-box align-left">
+                                                    <div class="img-wrapper mb-3">
+                                                        <img src="/imagenes/perfil/<%= publicacion.id %>" alt="Foto de perfil de <%= publicacion.nombre %>"> 
                                                     </div>
+                                                    <h5 class="card-title mbr-fonts-style display-5">
+                                                        <strong><%= publicacion.contenido %></strong>
+                                                    </h5>
+                                                    <p class="card-text mbr-fonts-style display-7">
+                                                        Escrito por <%= publicacion.nombre %> el <%= publicacion.fecha_publicacion %>
+                                                    </p>
                                                 </div>
                                             </div>
-                                        </section>
+                                        </div>
+                                    </section>
+                                    <!--LIKES :O -->
+                                    <div class="like-section">
+                                        <button class="like" id="<%= publicacion.publicacion_id %>" name="<%= userid %>">
+                                            <% if (publicacion.dio_like) { %>
+                                                <i class="fa-solid fa-thumbs-up fa-2x"></i>
+                                            <% } else { %>
+                                                <i class="fa-regular fa-thumbs-up fa-2x"></i>
+                                            <% } %>
+                                        </button>
+                                        <span id="likes_<%= publicacion.publicacion_id %>"><%= publicacion.num_like %></span>
+                                    </div>          
+                                    <div class="save-section">
+                                        <button class="guarda" id="<%= publicacion.publicacion_id %>" name="<%= userid %>">
+                                            <% if (publicacion.loguardo) { %>
+                                                <i class="fa-solid fa-bookmark fa-2x"></i>
+                                            <% } else { %>
+                                                <i class="fa-regular fa-bookmark fa-2x"></i>
+                                            <% } %>
+                                        </button>
+                                        <span id="guardados_<%= publicacion.publicacion_id %>"><%= publicacion.num_guardado %></span>
+                                    </div>                             
+                                                                    
+                                    <div class="comentarios">
+                                        <h5>Comentarios:</h5>
+                                        <% if (publicacion.comentarios && publicacion.comentarios.length > 0) { %>
+                                            <ul id="comentarios-<%= publicacion.publicacion_id %>">
+                                                <% publicacion.comentarios.forEach(function(comentario) { %>
+                                                    <li id="comentario-<%= comentario.id %>">
+                                                        <strong><%= comentario.nombre %>:</strong> 
+                                                        <%= comentario.contenido %> 
+                                                        <small class="fecha-comentario"><%= comentario.fecha_comentario %></small>
+                                                    </li>
+                                                <% }); %>
+                                            </ul>
+                                        <% } else { %>
+                                            <ul id="comentarios-<%= publicacion.publicacion_id %>">
+                                            </ul>
+                                        <% } %>
                                     </div>
+
+                                    <!-- Formulario para agregar un comentario -->
+                                    <form class="comentario-form" data-publicacion-id="<%= publicacion.publicacion_id %>">
+                                        <input type="hidden" name="publicacion_id" value="<%= publicacion.publicacion_id %>">
+                                        <textarea name="contenido" placeholder="Escribe tu comentario..." required></textarea>
+                                        <button type="submit">Comentar</button>
+                                    </form>
+                                    <script>
+                                    function formatearFecha(fechaTexto) {
+                                        if (!fechaTexto) return "";
+
+                                        // Verifica si la fecha ya está en formato "18/02" y la deja igual
+                                        if (/^\d{2}\/\d{2}$/.test(fechaTexto)) return fechaTexto;
+
+                                        // Extraer solo el día y el mes de "YYYY-MM-DD HH:MM:SS"
+                                        const partes = fechaTexto.split(" "); // Separa fecha y hora
+                                        if (partes.length < 1) return "";
+
+                                        const [anio, mes, dia] = partes[0].split("-"); // Separa en año, mes, día
+
+                                        return `${parseInt(dia)}/${mes.padStart(2, "0")}`; // Asegura que el mes tenga dos dígitos
+                                    }
+
+                                    // ✅ Formatear las fechas de los comentarios existentes al cargar la página
+                                    document.addEventListener("DOMContentLoaded", () => {
+                                        document.querySelectorAll(".comentarios li").forEach(comentario => {
+                                            const fechaElemento = comentario.querySelector("small");
+                                            if (fechaElemento) {
+                                                const fechaOriginal = fechaElemento.textContent.trim();
+                                                if (fechaOriginal) {
+                                                    fechaElemento.textContent = formatearFecha(fechaOriginal);
+                                                }
+                                            }
+                                        });
+                                    });
+
+                                    // ✅ Manejar el envío de nuevos comentarios
+                                    document.querySelectorAll(".comentario-form").forEach(form => {
+                                        if (!form.dataset.listenerAdded) {
+                                            form.addEventListener("submit", function(event) {
+                                                event.preventDefault();
+                                                event.stopPropagation(); // Evita que el evento se propague
+
+                                                const publicacionId = this.getAttribute("data-publicacion-id");
+                                                const contenido = this.querySelector("textarea").value.trim();
+                                                const comentariosContainer = document.querySelector(`#comentarios-${publicacionId}`);
+
+                                                if (!contenido) {
+                                                    alert("No puedes enviar un comentario vacío");
+                                                    return;
+                                                }
+
+                                                fetch("/comentarios", {
+                                                    method: "POST",
+                                                    headers: { "Content-Type": "application/json" },
+                                                    body: JSON.stringify({ publicacion_id: publicacionId, contenido })
+                                                })
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    if (data.error) {
+                                                        alert(data.error);
+                                                    } else {
+                                                        if (!document.getElementById(`comentario-${data.id}`)) {
+                                                            const fechaFormateada = formatearFecha(data.fecha_comentario);
+
+                                                            const nuevoComentario = document.createElement("li");
+                                                            nuevoComentario.id = `comentario-${data.id}`;
+                                                            nuevoComentario.innerHTML = `<strong>${data.nombre}:</strong> ${data.contenido} <small class="fecha-comentario">${fechaFormateada}</small>`;
+                                                            comentariosContainer.appendChild(nuevoComentario);
+                                                        }
+
+                                                        this.querySelector("textarea").value = ""; // Limpiar el campo de texto
+                                                    }
+                                                })
+                                                .catch(error => console.error("Error:", error));
+                                            });
+
+                                            // Marcar el formulario como "con evento registrado"
+                                            form.dataset.listenerAdded = "true";
+                                        }
+                                    });
+                                    </script>
+                                    
                                 </div>
                             </div>
-                        </div>     
-                    </div>
-                </section>
-            <% }); %>
-        <% } else { %>
-            <p>No tenemos nada que mostrarte</p>
-        <% } %>
-        
-
-        
-    <section data-bs-version="5.1" class="footer3 cid-u6ZF78TESB" once="footers" id="footer-6-u6ZF78TESB">
-        <div class="container">
-            <div class="row">
-                <div class="row-links">
-                    <ul class="header-menu">
-    
-                    <li class="header-menu-item mbr-fonts-style display-5">
-                        <a href="#" class="text-white">Inicio</a>
-                      </li><li class="header-menu-item mbr-fonts-style display-5">
-                        <a href="#" class="text-white">Acerca</a>
-                      </li><li class="header-menu-item mbr-fonts-style display-5">
-                        <a href="#" class="text-white">Contacto</a>
-                      </li><li class="header-menu-item mbr-fonts-style display-5">
-                        <a href="#" class="text-white">Términos</a>
-                      </li></ul>
-                  </div>
-    
-                
-                <div class="col-12 mt-4">
-                    <p class="mbr-fonts-style copyright display-7">© 2024 socialTernero. Todos los derechos reservados.</p>
+                        </div>
+                    </div>     
                 </div>
-            </div>
-        </div>
-    </section>
- 
-        <!-- Script tags from second document -->
-        <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="assets/smoothscroll/smooth-scroll.js"></script>
-        <script src="assets/ytplayer/index.js"></script>
-        <script src="assets/dropdown/js/navbar-dropdown.js"></script>
-        <script src="assets/vimeoplayer/player.js"></script>
-        <script src="assets/masonry/masonry.pkgd.min.js"></script>
-        <script src="assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
-        <script src="assets/theme/js/script.js"></script>
+            </section>
+        <% }); %>
+    <% } %>
+    <div id="mensaje-sin-publicaciones" style="display: none; text-align: center; margin-top: 20px;">
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <p>Eliminaste tanto que te quedaste sin nada...</p>
+    </div>
+    
+
+    <!-- Pie de página -->
+        <%- include("../routes/footer.ejs") %>
+
+    <!-- Scripts aquí... -->
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/smoothscroll/smooth-scroll.js"></script>
+    <script src="assets/ytplayer/index.js"></script>
+    <script src="assets/dropdown/js/navbar-dropdown.js"></script>
+    <script src="assets/vimeoplayer/player.js"></script>
+    <script src="assets/masonry/masonry.pkgd.min.js"></script>
+    <script src="assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script src="assets/theme/js/script.js"></script>
+
+    <!-- Script para manejar la creación y eliminación de publicaciones -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Lógica para crear una nueva publicación
+        document.getElementById('crear-publicacion-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const contenido = document.getElementById('contenido').value;
+
+            const response = await fetch('/publicaciones', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contenido })
+            });
+
+            if (response.ok) {
+                location.reload();
+            } else {
+                console.error('Error al crear publicación');
+            }
+        });
+
+    });
+    </script>
+      <script>
+            document.addEventListener("DOMContentLoaded", function() {
+        // Lógica para eliminar una publicación
+        document.querySelectorAll('.eliminar-publicacion').forEach(button => {
+            button.addEventListener('click', async function() {
+                const id = this.dataset.id;
+
+                const response = await fetch(`/publicaciones/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    console.error('Error al eliminar publicación');
+                }
+            });
+        });
+    });
+        </script>
+    <!-- Script para manejar los likes -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('.like').forEach(button => {
+            button.addEventListener('click', async () => {
+                const id_publicacion = button.id; // Usamos el ID del botón como ID de la publicación
+                const id_usuario = button.name;
+                const response = await fetch('/like', {
+                    method: 'POST',
+                    credentials: 'include', // Esto envía cookies al servidor
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_publicacion, id_usuario })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Actualizar el icono de "Me Gusta"
+                    button.innerHTML = data.text;
+
+                    // Actualizar el contador de likes
+                    document.getElementById(`likes_${id_publicacion}`).innerText = data.likes;
+                } else {
+                    console.error('Error al procesar el like:', data.error);
+                }
+            });
+        });
+    });
+    </script>
+
+    <!-- Script para manejar los elementos guardados -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Obtener 'tipo' desde la URL (query string)
+        const urlParams = new URLSearchParams(window.location.search);
+        const tipo = urlParams.get('tipo');  // Obtiene el valor de 'tipo'
+
+        document.querySelectorAll('.guarda').forEach(button => {
+            button.addEventListener('click', async () => {
+                const id_publicacion = button.id;
+                const id_usuario = button.name;
+
+                const response = await fetch('/elementoguardado', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_publicacion, id_usuario })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    button.innerHTML = data.text;
+                    document.getElementById(`guardados_${id_publicacion}`).innerText = data.guardados2;
+
+                    // Eliminar la publicación si no está guardada y estamos en la página de guardados
+                    if (!data.esta_guardado && tipo === "guardados") {
+                        console.log(`Publicación ${id_publicacion} ya no está guardada. Eliminando...`);
+
+                        const publicacionElemento = document.getElementById(`publicacion-${id_publicacion}`);
+                        if (publicacionElemento) {
+                            publicacionElemento.remove();
+                            console.log("Publicación eliminada del DOM.");
+                        } else {
+                            console.warn("Elemento no encontrado en el DOM.");
+                        }
+
+                        // Verificar si ya no hay más publicaciones guardadas
+                        const publicacionesGuardadas = document.querySelectorAll('.guarda').length;
+                        if (publicacionesGuardadas === 0) {
+                            // Mostrar el mensaje de que ya no hay publicaciones guardadas
+                            const mensaje = document.getElementById("mensaje-sin-publicaciones");
+                            if (mensaje) {
+                                mensaje.style.display = 'block';
+                            }
+                        }
+                    }
+                } else {
+                    console.error('Error al procesar el guardado:', data.error);
+                }
+            });
+        });
+    });
+    </script>
+
 </body>
 </html>

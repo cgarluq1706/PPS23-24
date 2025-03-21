@@ -66,10 +66,12 @@
                                     <input type="password" name="password" placeholder="Password" data-form-field="url" class="form-control" value="" id="url-form02-3" required>
                                 </div>
                                 <div class="col-12 form-group mb-3 mb-3" data-for="url">
-                                    <input type="date" name="fecha_nacimiento" placeholder="fecha_nacimiento" data-form-field="url" class="form-control" value="" id="url-form02-3">
-                                </div>
-                                <div class="col-12 form-group mb-3 mb-3" data-for="url">
-                                    <input type="text" name="phone" placeholder="phone" data-form-field="url" class="form-control" value="" id="url-form02-3" >
+                                    <input type="date" name="fecha_nacimiento" class="form-control">
+                                        <% if (errorEdad) { %>
+                                        <div class="text-danger"><%= errorEdad %></div>
+                                        <% } %>
+
+                                    <input type="text" name="phone" placeholder="phone" data-form-field="url" class="form-control" value="" id="url-form02-3"  maxlength="9" pattern="\d{9}" title="Debe introducir un nº de teléfono válido" >
                                 </div>
                                 
                                 <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
