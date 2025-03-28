@@ -32,6 +32,7 @@ Se encuentra el script de la BD en el proyecto en formato .sql
 
 **5º Si fallara al ejecutar el servidor por faltar alguna libreria**, como por ejemplo express ó websockets, instalar con:
 *npm install express*
+
 *npm install ws*
 
 
