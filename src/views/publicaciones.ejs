@@ -16,6 +16,29 @@
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap"></noscript>
     <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj" type="text/css">
     <style>
+            .card-footer {
+      display: flex;
+      justify-content: space-between; 
+      gap: 10px; 
+    }
+    .colfoot {
+      flex: 1;
+    }
+            .container-publi{
+                width: 100vw;
+                margin-bottom: 20px;
+            }
+            .card-container {
+      position: relative;
+    }
+    .card-img-top {
+      position: absolute;  
+        margin-right: 20px;
+      width: 100px;
+      height: auto;
+      border-radius: 50%;  
+      border: 2px solid #fff;
+    }
         .fecha-comentario {
             font-size: 12px; /* Letra más pequeña */
             color: rgb(238, 216, 216); /* Color gris */
@@ -89,8 +112,9 @@
         <div class="text-center mt-4" id="misPublicaciones">
             <a href="/mis_publicaciones" class="btn btn-secondary">Mis publicaciones</a>
         </div>
-    
+
     <% } %>
+
     <script>
         // Obtener los parámetros de la URL
         const urlParams = new URLSearchParams(window.location.search);
@@ -107,168 +131,152 @@
     <p>No tenemos nada que Mostrar</p>
 <% } else if (publicaciones && publicaciones.length > 0 && resultado === 1) { %>
     <% publicaciones.forEach(function(publicacion) { %>
-            <section data-bs-version="5.1" class="article13 cid-u6ZF78RI9e" id="publicacion-<%= publicacion.publicacion_id %>">       
-                <div class="container" >
-                    <div class="row justify-content-center">
-                        <div class="card col-md-12 col-lg-10">
-                            <div class="card-wrapper">
-                                <div class="card-box align-center">
-                                    <% if (typeof tipo !== 'undefined' && tipo === 'mis_publicaciones') { %>
-                                        <button class="eliminar-publicacion" data-id="<%= publicacion.publicacion_id %>">Eliminar</button>
-                                    <% } %>
-                                    <section data-bs-version="5.1" class="features21 cid-u6ZF78SJlX" id="features-4-u6ZF78SJlX">
-                                        <div class="item features-without-image">
-                                            <div class="item-wrapper">
-                                                <div class="card-box align-left">
-                                                    <div class="img-wrapper mb-3">
-                                                        <img src="/imagenes/perfil/<%= publicacion.id %>" alt="Foto de perfil de <%= publicacion.nombre %>"> 
-                                                    </div>
-                                                    <h5 class="card-title mbr-fonts-style display-5">
-                                                        <strong><%= publicacion.contenido %></strong>
-                                                    </h5>
-                                                    <p class="card-text mbr-fonts-style display-7">
-                                                        Escrito por <%= publicacion.nombre %> el <%= publicacion.fecha_publicacion %>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
-                                    <!--LIKES :O -->
-                                    <div class="like-section">
-                                        <button class="like" id="<%= publicacion.publicacion_id %>" name="<%= userid %>">
-                                            <% if (publicacion.dio_like) { %>
-                                                <i class="fa-solid fa-thumbs-up fa-2x"></i>
-                                            <% } else { %>
-                                                <i class="fa-regular fa-thumbs-up fa-2x"></i>
-                                            <% } %>
-                                        </button>
-                                        <span id="likes_<%= publicacion.publicacion_id %>"><%= publicacion.num_like %></span>
-                                    </div>          
-                                    <div class="save-section">
-                                        <button class="guarda" id="<%= publicacion.publicacion_id %>" name="<%= userid %>">
-                                            <% if (publicacion.loguardo) { %>
-                                                <i class="fa-solid fa-bookmark fa-2x"></i>
-                                            <% } else { %>
-                                                <i class="fa-regular fa-bookmark fa-2x"></i>
-                                            <% } %>
-                                        </button>
-                                        <span id="guardados_<%= publicacion.publicacion_id %>"><%= publicacion.num_guardado %></span>
-                                    </div>                             
-                                                                    
-                                    <div class="comentarios">
-                                        <h5>Comentarios:</h5>
-                                        <% if (publicacion.comentarios && publicacion.comentarios.length > 0) { %>
-                                            <ul id="comentarios-<%= publicacion.publicacion_id %>">
-                                                <% publicacion.comentarios.forEach(function(comentario) { %>
-                                                    <li id="comentario-<%= comentario.id %>">
-                                                        <strong><%= comentario.nombre %>:</strong> 
-                                                        <%= comentario.contenido %> 
-                                                        <small class="fecha-comentario"><%= comentario.fecha_comentario %></small>
-                                                    </li>
-                                                <% }); %>
-                                            </ul>
-                                        <% } else { %>
-                                            <ul id="comentarios-<%= publicacion.publicacion_id %>">
-                                            </ul>
-                                        <% } %>
-                                    </div>
+        <% if (typeof tipo !== 'undefined' && tipo === 'mis_publicaciones') { %>
+            <button class="eliminar-publicacion" data-id="<%= publicacion.publicacion_id %>">Eliminar</button>
+        <% } %>
+            
+            <div class="container container-publi" style="border: 0.5px solid #8ec823;">
+                <div class="card-container">
+                  <img src="../assets/images/photo-1564564244660-5d73c057f2d2.jpeg" alt="Foto de perfil de <%= publicacion.nombre %>" class="card-img-top">
+                  <div class="card rounded-0" style="width: 100%; margin-left: 100px; border-left: 1px solid #8ec823; border-radius: 0 !important;">
 
-                                    <!-- Formulario para agregar un comentario -->
-                                    <form class="comentario-form" data-publicacion-id="<%= publicacion.publicacion_id %>">
-                                        <input type="hidden" name="publicacion_id" value="<%= publicacion.publicacion_id %>">
-                                        <textarea name="contenido" placeholder="Escribe tu comentario..." required></textarea>
-                                        <button type="submit">Comentar</button>
-                                    </form>
-                                    <script>
-                                    function formatearFecha(fechaTexto) {
-                                        if (!fechaTexto) return "";
+                    <div class="card-body">
+                      <h5 class="card-title"><%= publicacion.nombre %>&nbsp;&nbsp;<a href="/perfilajeno/<%=publicacion.username%>">@<%= publicacion.username%></a>&nbsp;&nbsp;&nbsp;&nbsp;<%= publicacion.fecha_publi%></h5>
+                      <p class="card-text"><%= publicacion.contenido %></p>
+                    </div>
+                    <img src="" class="card-img" alt="...">
+                    <hr style="width: 94%;">
+                    <div class="card-footer bg-transparent border-0" >
+                        <div class="like-section colfoot">
+                        <button class="like" id="<%= publicacion.publicacion_id %>" name="<%= userid %>">
+                            <% if (publicacion.dio_like) { %>
+                                <i class="fa-solid fa-thumbs-up fa-2x"></i>
+                            <% } else { %>
+                                <i class="fa-regular fa-thumbs-up fa-2x"></i>
+                            <% } %>
+                        </button>
+                        <span id="likes_<%= publicacion.publicacion_id %>"><%= publicacion.num_like %></span>
+                    </div>          
+                    <div class="save-section colfoot">
+                        <button class="guarda" id="<%= publicacion.publicacion_id %>" name="<%= userid %>">
+                            <% if (publicacion.loguardo) { %>
+                                <i class="fa-solid fa-bookmark fa-2x"></i>
+                            <% } else { %>
+                                <i class="fa-regular fa-bookmark fa-2x"></i>
+                            <% } %>
+                        </button>
+                        <span id="guardados_<%= publicacion.publicacion_id %>"><%= publicacion.num_guardado %></span>
+                    </div>                             
+                                                    
+                    <div class="comentarios colfoot">
+                        <i class="fa-solid fa-comment fa-2x"></i>
+                        <% if (publicacion.comentarios && publicacion.comentarios.length > 0) { %>
+                            <ul id="comentarios-<%= publicacion.publicacion_id %>">
+                                <% publicacion.comentarios.forEach(function(comentario) { %>
+                                    <li id="comentario-<%= comentario.id %>">
+                                        <strong><%= comentario.nombre %>:</strong> 
+                                        <%= comentario.contenido %> 
+                                        <small class="fecha-comentario"><%= comentario.fecha_comentario %></small>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                        <% } else { %>
+                            <ul id="comentarios-<%= publicacion.publicacion_id %>">
+                            </ul>
+                        <% } %>
+                    </div>
+                 <!-- Formulario para agregar un comentario -->
+                 <form class="comentario-form" data-publicacion-id="<%= publicacion.publicacion_id %>">
+                    <input type="hidden" name="publicacion_id" value="<%= publicacion.publicacion_id %>">
+                    <textarea name="contenido" placeholder="Escribe tu comentario..." required></textarea>
+                    <button type="submit">Comentar</button>
+                </form>
+                <script>
+                function formatearFecha(fechaTexto) {
+                    if (!fechaTexto) return "";
 
-                                        // Verifica si la fecha ya está en formato "18/02" y la deja igual
-                                        if (/^\d{2}\/\d{2}$/.test(fechaTexto)) return fechaTexto;
+                    // Verifica si la fecha ya está en formato "18/02" y la deja igual
+                    if (/^\d{2}\/\d{2}$/.test(fechaTexto)) return fechaTexto;
 
-                                        // Extraer solo el día y el mes de "YYYY-MM-DD HH:MM:SS"
-                                        const partes = fechaTexto.split(" "); // Separa fecha y hora
-                                        if (partes.length < 1) return "";
+                    // Extraer solo el día y el mes de "YYYY-MM-DD HH:MM:SS"
+                    const partes = fechaTexto.split(" "); // Separa fecha y hora
+                    if (partes.length < 1) return "";
 
-                                        const [anio, mes, dia] = partes[0].split("-"); // Separa en año, mes, día
+                    const [anio, mes, dia] = partes[0].split("-"); // Separa en año, mes, día
 
-                                        return `${parseInt(dia)}/${mes.padStart(2, "0")}`; // Asegura que el mes tenga dos dígitos
+                    return `${parseInt(dia)}/${mes.padStart(2, "0")}`; // Asegura que el mes tenga dos dígitos
+                }
+
+                // ✅ Formatear las fechas de los comentarios existentes al cargar la página
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.querySelectorAll(".comentarios li").forEach(comentario => {
+                        const fechaElemento = comentario.querySelector("small");
+                        if (fechaElemento) {
+                            const fechaOriginal = fechaElemento.textContent.trim();
+                            if (fechaOriginal) {
+                                fechaElemento.textContent = formatearFecha(fechaOriginal);
+                            }
+                        }
+                    });
+                });
+
+                // ✅ Manejar el envío de nuevos comentarios
+                document.querySelectorAll(".comentario-form").forEach(form => {
+                    if (!form.dataset.listenerAdded) {
+                        form.addEventListener("submit", function(event) {
+                            event.preventDefault();
+                            event.stopPropagation(); // Evita que el evento se propague
+
+                            const publicacionId = this.getAttribute("data-publicacion-id");
+                            const contenido = this.querySelector("textarea").value.trim();
+                            const comentariosContainer = document.querySelector(`#comentarios-${publicacionId}`);
+
+                            if (!contenido) {
+                                alert("No puedes enviar un comentario vacío");
+                                return;
+                            }
+
+                            fetch("/comentarios", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ publicacion_id: publicacionId, contenido })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.error) {
+                                    alert(data.error);
+                                } else {
+                                    if (!document.getElementById(`comentario-${data.id}`)) {
+                                        const fechaFormateada = formatearFecha(data.fecha_comentario);
+
+                                        const nuevoComentario = document.createElement("li");
+                                        nuevoComentario.id = `comentario-${data.id}`;
+                                        nuevoComentario.innerHTML = `<strong>${data.nombre}:</strong> ${data.contenido} <small class="fecha-comentario">${fechaFormateada}</small>`;
+                                        comentariosContainer.appendChild(nuevoComentario);
                                     }
 
-                                    // ✅ Formatear las fechas de los comentarios existentes al cargar la página
-                                    document.addEventListener("DOMContentLoaded", () => {
-                                        document.querySelectorAll(".comentarios li").forEach(comentario => {
-                                            const fechaElemento = comentario.querySelector("small");
-                                            if (fechaElemento) {
-                                                const fechaOriginal = fechaElemento.textContent.trim();
-                                                if (fechaOriginal) {
-                                                    fechaElemento.textContent = formatearFecha(fechaOriginal);
-                                                }
-                                            }
-                                        });
-                                    });
+                                    this.querySelector("textarea").value = ""; // Limpiar el campo de texto
+                                }
+                            })
+                            .catch(error => console.error("Error:", error));
+                        });
 
-                                    // ✅ Manejar el envío de nuevos comentarios
-                                    document.querySelectorAll(".comentario-form").forEach(form => {
-                                        if (!form.dataset.listenerAdded) {
-                                            form.addEventListener("submit", function(event) {
-                                                event.preventDefault();
-                                                event.stopPropagation(); // Evita que el evento se propague
-
-                                                const publicacionId = this.getAttribute("data-publicacion-id");
-                                                const contenido = this.querySelector("textarea").value.trim();
-                                                const comentariosContainer = document.querySelector(`#comentarios-${publicacionId}`);
-
-                                                if (!contenido) {
-                                                    alert("No puedes enviar un comentario vacío");
-                                                    return;
-                                                }
-
-                                                fetch("/comentarios", {
-                                                    method: "POST",
-                                                    headers: { "Content-Type": "application/json" },
-                                                    body: JSON.stringify({ publicacion_id: publicacionId, contenido })
-                                                })
-                                                .then(response => response.json())
-                                                .then(data => {
-                                                    if (data.error) {
-                                                        alert(data.error);
-                                                    } else {
-                                                        if (!document.getElementById(`comentario-${data.id}`)) {
-                                                            const fechaFormateada = formatearFecha(data.fecha_comentario);
-
-                                                            const nuevoComentario = document.createElement("li");
-                                                            nuevoComentario.id = `comentario-${data.id}`;
-                                                            nuevoComentario.innerHTML = `<strong>${data.nombre}:</strong> ${data.contenido} <small class="fecha-comentario">${fechaFormateada}</small>`;
-                                                            comentariosContainer.appendChild(nuevoComentario);
-                                                        }
-
-                                                        this.querySelector("textarea").value = ""; // Limpiar el campo de texto
-                                                    }
-                                                })
-                                                .catch(error => console.error("Error:", error));
-                                            });
-
-                                            // Marcar el formulario como "con evento registrado"
-                                            form.dataset.listenerAdded = "true";
-                                        }
-                                    });
-                                    </script>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>     
+                        // Marcar el formulario como "con evento registrado"
+                        form.dataset.listenerAdded = "true";
+                    }
+                });
+                </script>
+</div>
                 </div>
-            </section>
+              </div>
+            </div>            
+            
         <% }); %>
     <% } %>
     <div id="mensaje-sin-publicaciones" style="display: none; text-align: center; margin-top: 20px;">
         <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         <p>Eliminaste tanto que te quedaste sin nada...</p>
     </div>
-    
-
     <!-- Pie de página -->
         <%- include("../routes/footer.ejs") %>
 

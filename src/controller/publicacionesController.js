@@ -9,8 +9,9 @@ const getMisPublicaciones = (req, res) => {
     }
 
     const sql = `
-        SELECT p.id AS publicacion_id, p.contenido, p.fecha_publicacion, p.num_like, p.num_guardado,
-               u.nombre, u.foto_perfil,
+        SELECT p.id AS publicacion_id, p.contenido, p.num_like, p.num_guardado,
+               u.nombre, u.foto_perfil,u.username, 
+               DATE_FORMAT(p.fecha_publicacion, '%d/%m/%Y %H:%i:%s') AS fecha_publi,
                (SELECT COUNT(*) FROM like_publicacion lp WHERE lp.id_publicacion = p.id AND lp.id_usuario = ?) AS dio_like,
                (SELECT COUNT(*) FROM guardar_publicacion gp WHERE gp.id_publicacion = p.id AND gp.id_usuario = ?) AS loguardo
         FROM publicaciones p
@@ -40,9 +41,9 @@ const getpublicaciones = (req, res) => {
 
     if (tipo === "guardados") {
         sql = `
-            SELECT u.id, u.nombre, u.foto_perfil, 
+            SELECT u.id, u.nombre, u.foto_perfil,u.username, 
                    p.id AS publicacion_id, p.contenido, 
-                   p.fecha_publicacion, p.num_like, p.num_guardado,
+                   DATE_FORMAT(p.fecha_publicacion, '%d/%m/%Y %H:%i:%s') AS fecha_publi, p.num_like, p.num_guardado,
                    (SELECT COUNT(*) FROM like_publicacion lp 
                     WHERE lp.id_publicacion = p.id AND lp.id_usuario = ?) AS dio_like,
                    (SELECT COUNT(*) FROM guardar_publicacion gp 
@@ -57,9 +58,9 @@ const getpublicaciones = (req, res) => {
     } else {
         // Consulta normal para obtener publicaciones de usuarios seguidos
         sql = `
-            SELECT u.id, u.nombre, u.foto_perfil, 
+            SELECT u.id, u.nombre, u.foto_perfil, u.username, 
                    p.id AS publicacion_id, p.contenido, 
-                   p.fecha_publicacion, p.num_like, p.num_guardado,
+                   DATE_FORMAT(p.fecha_publicacion, '%d/%m/%Y %H:%i:%s') AS fecha_publi, p.num_like, p.num_guardado,
                    (SELECT COUNT(*) FROM like_publicacion lp 
                     WHERE lp.id_publicacion = p.id AND lp.id_usuario = ?) AS dio_like,
                    (SELECT COUNT(*) FROM guardar_publicacion gp 
