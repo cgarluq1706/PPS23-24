@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat con <%= nombreUsuario %></title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.chat-container {
+    max-width: 600px;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.chat-box {
+    height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background: #fff;
+}
+
+.message {
+    padding: 8px 12px;
+    margin: 5px 0;
+    border-radius: 5px;
+    max-width: 75%;
+}
+
+.message.sent {
+    background-color: #0077b5;
+    color: white;
+    text-align: right;
+    margin-left: auto;
+}
+
+.message.received {
+    background-color: #ddd;
+    text-align: left;
+}
+
+.chat-input {
+    display: flex;
+    margin-top: 10px;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.chat-input button {
+    background-color: #0077b5;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.chat-input button:hover {
+    background-color: #005f8b;
+}
+</style>
+<body>
+    <div class="chat-container">
+        <h3>Chat con <%= nombreUsuario %></h3>
+
+        <div class="chat-box" id="chatBox">
+            <% messages.forEach((msg) => { %>
+                <div class="message <%= msg.emisor_id == sessionUserId ? 'sent' : 'received' %>">
+                    <strong><%= msg.emisor_id == sessionUserId ? 'Tú' : nombreUsuario %>:</strong>
+                    <%= msg.mensaje %> <br />
+                    <small><%= new Date(msg.fecha_envio).toLocaleString() %></small>
+                </div>
+            <% }); %>
+        </div>
+
+        <div class="chat-input">
+            <input id="messageInput" type="text" placeholder="Escribe un mensaje..." />
+            <button id="sendButton" type="submit">Enviar</button>
+        </div>
+    </div>
+
+    <div id="chatContainer"
+         data-session-user-id="<%= sessionUserId %>"
+         data-usuario-id="<%= usuarioId %>">
+    </div>
+
+    <script>
+    // Conectar con WebSocket
+    const socket = new WebSocket('ws://localhost:8080');
+
+    const chatBox = document.getElementById('chatBox');
+    const messageInput = document.getElementById('messageInput');
+    const sendButton = document.getElementById('sendButton');
+
+    const chatContainer = document.getElementById('chatContainer');
+    const emisor_id = chatContainer.getAttribute('data-session-user-id');
+    const receptor_id = chatContainer.getAttribute('data-usuario-id');
+
+    console.log('Emisor:', emisor_id, 'Receptor:', receptor_id);
+
+    // Confirmar conexión WebSocket
+    socket.onopen = () => {
+        console.log('Conectado a WebSocket');
+    };
+
+    // Manejar mensajes recibidos
+    socket.onmessage = (event) => {
+        const msg = JSON.parse(event.data);
+        console.log('Mensaje recibido:', msg);
+
+        if (msg.error) {
+            console.error(msg.error);
+            return;
+        }
+
+        const div = document.createElement('div');
+        div.classList.add('message', msg.emisorId == emisor_id ? 'sent' : 'received');
+        div.innerHTML = `<strong>${msg.emisorId == emisor_id ? 'Tú' : 'Otro'}:</strong> ${msg.contenido}`;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    };
+
+    // Manejar errores
+    socket.onerror = (error) => {
+        console.error('Error en WebSocket:', error);
+    };
+
+    // Enviar mensaje al presionar el botón
+    sendButton.addEventListener('click', () => {
+        const mensaje = messageInput.value.trim();
+        if (!mensaje) return;
+
+        console.log('Enviando mensaje:', mensaje);
+
+        const data = JSON.stringify({
+            emisorId: emisor_id,
+            receptorId: receptor_id,
+            contenido: mensaje
+        });
+
+        socket.send(data);
+        messageInput.value = '';
+    });
+
+    // Manejar desconexión
+    socket.onclose = () => {
+        console.log('Desconectado de WebSocket');
+    };
+    
+</script>
+
+</body>
+</html>

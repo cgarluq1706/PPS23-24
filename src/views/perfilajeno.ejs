@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="/assets/mobirise/css/mbr-additional.css">
     <script src="/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/assets/theme/js/script.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     
     
 <style>
@@ -55,6 +57,19 @@
     .profile-section button:hover {
         background-color: #005f8b !important;
     }
+
+    .chat-icon {
+        margin-left: 15px;
+        font-size: 20px;
+        color: #0077b5;
+        text-decoration: none;
+        width: 20px;
+    }
+
+    .chat-icon:hover {
+        color: #005f8b;
+    }
+
 </style>
 
     </style>
@@ -75,6 +90,9 @@
                     <span id="seguidos_<%= usuario.id %>">Seguidores: <%= seguidores %></span>
                 </a>
                 
+                <a href="/chat/<%= usuario.id %>" class="chat-icon" title="Enviar mensaje">
+                    <i class="fas fa-comment-dots"></i>
+                </a>
             </div>
             
             <div class="description-section">
@@ -154,7 +172,6 @@ document.getElementById(`seguidos_${id_seguido}`).innerText = "Seguidores: " + d
     });
     
     </script>
-
     <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/smoothscroll/smooth-scroll.js"></script>
     <script src="assets/ytplayer/index.js"></script>

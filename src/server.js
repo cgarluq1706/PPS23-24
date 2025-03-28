@@ -1,7 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
-//importamos las rutas
+// Importamos las rutas
 const loginRoutes = require('./routes/login');
 const imageRoutes = require('./routes/image');
 const publicacionesRoutes = require('./routes/publicaciones');
@@ -17,10 +17,8 @@ const terminosRoutes = require('./routes/terminos');
 const acercaRoutes = require('./routes/acerca');
 const contactoRoutes = require('./routes/contacto');
 
-
 const app = express();
 const port = 3000;
-
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -30,6 +28,110 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
+
+// Configuración para WebSocket
+const WebSocket = require('ws'); // Importar WebSocket
+const wss = new WebSocket.Server({ port: 8080 }); // Servidor WebSocket en puerto 8080
+
+// Guardar los sockets de los usuarios conectados
+const connectedUsers = {};
+
+wss.on('connection', (ws, req) => {
+    console.log('Nuevo cliente conectado');
+
+    ws.on('message', (message) => {
+        try {
+            const msgData = JSON.parse(message);
+            const { emisorId, receptorId, contenido } = msgData;
+
+            if (!emisorId || !receptorId || !contenido) {
+                console.error('Datos inválidos:', msgData);
+                return ws.send(JSON.stringify({ error: 'Datos inválidos' }));
+            }
+
+            console.log('Mensaje recibido:', msgData);
+
+            // Guardar mensaje en la base de datos
+            const query = "INSERT INTO mensajes (emisor_id, receptor_id, mensaje) VALUES (?, ?, ?)";
+            connection.query(query, [emisorId, receptorId, contenido], (err) => {
+                if (err) {
+                    console.error('Error al guardar mensaje en la base de datos:', err);
+                    return ws.send(JSON.stringify({ error: 'Error al guardar el mensaje' }));
+                }
+
+                console.log('Mensaje guardado en la base de datos');
+
+                // Enviar mensaje a ambos usuarios conectados
+                wss.clients.forEach(client => {
+                    if (client.readyState === WebSocket.OPEN) {
+                        client.send(JSON.stringify({
+                            emisorId,
+                            receptorId,
+                            contenido,
+                            timestamp: new Date().toISOString()
+                        }));
+                    }
+                });
+            });
+
+        } catch (error) {
+            console.error('Error al procesar el mensaje:', error);
+            ws.send(JSON.stringify({ error: 'Error al procesar el mensaje' }));
+        }
+    });
+
+    // Manejar desconexión
+    ws.on('close', () => {
+        console.log('Cliente desconectado');
+    });
+});
+
+// Ruta para el chat con otro usuario
+app.get('/chat/:id', (req, res) => {
+    const usuarioId = req.session.userId;
+    const chatWithId = req.params.id;
+
+    if (!usuarioId) {
+        return res.status(401).send('Usuario no autenticado');
+    }
+
+    // Obtener el nombre del usuario actual y del usuario con quien se chatea
+    const queryUsuario = `SELECT nombre FROM usuarios WHERE id = ?`;
+    const queryMensajes = `
+        SELECT * FROM mensajes 
+        WHERE (emisor_id = ? AND receptor_id = ?)
+        OR (emisor_id = ? AND receptor_id = ?)
+        ORDER BY fecha_envio ASC
+    `;
+
+    connection.query(queryUsuario, [chatWithId], (error, results) => {
+        if (error) {
+            console.error('Error al obtener el nombre del usuario:', error);
+            return res.status(500).send('Error en el servidor');
+        }
+
+        if (results.length === 0) {
+            return res.status(404).send('Usuario no encontrado');
+        }
+
+        const nombreUsuario = results[0].nombre;
+
+        connection.query(queryMensajes, [usuarioId, chatWithId, chatWithId, usuarioId], (err, messages) => {
+            if (err) {
+                console.error('Error al cargar mensajes:', err);
+                return res.status(500).send('Error al cargar mensajes');
+            }
+
+            // Renderizar la vista de chat y pasar variables
+            res.render('chat', {
+                usuarioId: chatWithId,
+                sessionUserId: usuarioId,
+                nombreUsuario: nombreUsuario,
+                messages: messages
+            });
+        });
+    });
+});
 
 
 // Buscar usuarios
