@@ -3,6 +3,9 @@
 
 ![](https://i.imgur.com/2iJH0rG.png)
 
+**Release 002 disponible en**
+****https://github.com/mteralg186/PPS23-24/releases/tag/Version002
+
 **Release 001 disponible en**
 ****https://github.com/mteralg186/PPS23-24/releases/tag/Version001
 
@@ -26,7 +29,10 @@ Se encuentra el script de la BD en el proyecto en formato .sql
 **4º Ejecutar el proyecto**
 *node --watch ./src/server.js*
 
-**5º Si fallara al ejecutar el servidor por faltar alguna libreria**, como por ejemplo express, instalar con: *npm install express*
+**5º Si fallara al ejecutar el servidor por faltar alguna libreria**, como por ejemplo express ó websockets, instalar con:
+*npm install express*
+*npm install ws*
+
 
 ![](https://i.imgur.com/eN9mLl4.png)
 
@@ -37,8 +43,8 @@ Se encuentra el script de la BD en el proyecto en formato .sql
 ------------
 
 
-**EDR actualizado a 14/03/2025**
-![](https://i.imgur.com/MhYiCwx.png)
+**EDR actualizado a 28/03/2025**
+![](https://i.imgur.com/czLmYNC.png)
 
 
 ------------
@@ -77,7 +83,14 @@ Se encuentra el script de la BD en el proyecto en formato .sql
 - ELIMINAR PUBLICACIONES
 - VER TUS PROPIAS PUBLICACIONES
 
+**28/03/2025 (desde 14/03/2025 a 28/03/2025)**
 
+- Poder crear,borrar publicaciones.
+- Poder eliminar la cuenta, realizado pero bajo optimización pendiente
+- Optimización de elementos guardados
+- Poder ver seguidores y seguidos
+- Inicio, acerca, contacto y términos
+- Aviso y aceptación de cookies
 
 
 ------------
