@@ -21,6 +21,15 @@ CREATE TABLE IF NOT EXISTS usuarios (
     linkedin VARCHAR(255),
     github VARCHAR(255)
 );
+CREATE TABLE IF NOT EXISTS mensajes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    emisor_id INT NOT NULL,
+    receptor_id INT NOT NULL,
+    mensaje TEXT NOT NULL,
+    fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (emisor_id) REFERENCES usuarios(id),
+    FOREIGN KEY (receptor_id) REFERENCES usuarios(id)
+);
 -- Creación de la tabla de seguimiento
 CREATE TABLE IF NOT EXISTS seguimiento (
     seguidor_id INT,
