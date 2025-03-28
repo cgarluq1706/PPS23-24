@@ -1,4 +1,5 @@
-:slightly_smiling_face:
+![](https://img.shields.io/badge/MIT-green?style=for-the-badge)![](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)![](https://img.shields.io/badge/Node%20js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)![](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
+
 ### **CASUAL FRYDAYS**
 
 ![](https://i.imgur.com/2iJH0rG.png)
