@@ -31,7 +31,7 @@ app.use(session({
 
 // Configuración para WebSocket
 const WebSocket = require('ws'); // Importar WebSocket
-const wss = new WebSocket.Server({ port: 8080 }); // Servidor WebSocket en puerto 8080
+const wss = new WebSocket.Server({ port: 8090 }); // Servidor WebSocket en puerto 8080
 
 // Guardar los sockets de los usuarios conectados
 const connectedUsers = {};
@@ -85,6 +85,10 @@ wss.on('connection', (ws, req) => {
         console.log('Cliente desconectado');
     });
 });
+
+const fileUpload = require("express-fileupload");
+app.use(fileUpload()); // Habilita recibir archivos
+
 
 // Ruta para el chat con otro usuario
 app.get('/chat/:id', (req, res) => {

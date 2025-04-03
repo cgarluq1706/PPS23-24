@@ -69,7 +69,12 @@ CREATE TABLE IF NOT EXISTS publicaciones (
     oculto BOOLEAN DEFAULT FALSE, -- Ocultar publicaciones
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
-
+CREATE TABLE IF NOT EXISTS imagen_publicacion (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    publicacion_id INT,
+    imagen LONGBLOB,
+    FOREIGN KEY (publicacion_id) REFERENCES publicaciones(id)
+);
 
 DROP TABLE IF EXISTS `comentarios`;
 SET @saved_cs_client     = @@character_set_client;
