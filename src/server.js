@@ -250,8 +250,8 @@ app.get("/perfilajeno/:username", (req, res) => {
 const busquedaRoutes = require("./routes/busqueda");
 app.use("/", busquedaRoutes);
 
-
-
+// Importar ruta de admin
+const adminRoutes = require('./routes/admin');
 
 
 // Configurar express para servir archivos estáticos desde la carpeta 'assets'
@@ -274,6 +274,7 @@ app.use('/', guardadoRoutes);
 app.use('/', terminosRoutes);
 app.use('/', acercaRoutes);
 app.use('/', contactoRoutes);
+app.use('/', adminRoutes)
 
 
 app.use((req, res, next) => {

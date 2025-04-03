@@ -19,7 +19,9 @@ CREATE TABLE IF NOT EXISTS usuarios (
     twitter VARCHAR(255),
     instagram VARCHAR(255),
     linkedin VARCHAR(255),
-    github VARCHAR(255)
+    github VARCHAR(255),
+    oculto BOOLEAN DEFAULT FALSE, -- Ocultar usuarios
+    role ENUM('admin', 'user') DEFAULT 'user'
 );
 CREATE TABLE IF NOT EXISTS mensajes (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -85,6 +87,7 @@ CREATE TABLE `comentarios` (
   `usuario_id` int(11) DEFAULT NULL,
   `contenido` text NOT NULL,
   `fecha_comentario` timestamp NOT NULL DEFAULT current_timestamp(),
+   oculto BOOLEAN DEFAULT FALSE, -- Ocultar comentarios
   PRIMARY KEY (`id`),
   KEY `publicacion_id` (`publicacion_id`),
   KEY `usuario_id` (`usuario_id`),
@@ -139,6 +142,8 @@ select * from usuarios u ;
 SHOW VARIABLES LIKE 'secure_file_priv';
 -- Hay que incluir \\ 
 -- C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\
+INSERT INTO usuarios (nombre, apellido, username, contraseña, fecha_nacimiento, telefono, role)
+VALUES ('Admin', 'Admin', 'admin', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '2000-01-01', '123456789', 'admin');
 INSERT INTO usuarios (nombre, apellido, username, contraseña, fecha_nacimiento, telefono, foto_perfil)
 VALUES ('Miguel', 'Ternero Algarín', 'miguelt', '$2a$10$DxvoLNDuQpgNbheGIRb7ZuKoJA91o24LllzbEGp4fpt.JFqLJ8QUC', '1985-10-20', '987654321', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.3\\Uploads\\IMG_36290.jpg'));
 INSERT INTO usuarios (nombre, apellido, username, contraseña, fecha_nacimiento, telefono, foto_perfil)

@@ -92,6 +92,10 @@ const postLogin = (req, res) => {
         }
 
         if (results.length > 0) {
+            // Verificamos si el usuario está oculto
+            if (results[0].oculto) {
+                return res.render('index', { mensaje: 'Este usuario está baneado y no puede inicia sesión'});
+            }
             bcrypt.compare(password, results[0].contraseña, (err, validPassword) => {
                 if (err) {
                     console.error("Error al comparar la contraseña:", err);
@@ -101,7 +105,15 @@ const postLogin = (req, res) => {
                     req.session.loggedIn = true;
                     req.session.username = username;
                     req.session.userId = results[0].id;
-                    res.redirect('/dashboard');
+                    req.session.role = results[0].role;
+                    
+                    // Redirigir según el rol de usuario
+                    if (results[0].role === 'admin') {
+                        return res.redirect('/admin'); // Redirige al panel de control
+                    } else {
+                        return res.redirect('/dashboard'); // Redirige al dashboard
+                    }
+
                 } else {
                     res.render('index', { mensaje: 'Contraseña inválida' });
                 }
