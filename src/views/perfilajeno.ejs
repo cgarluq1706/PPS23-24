@@ -13,65 +13,60 @@
     <script src="/assets/theme/js/script.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    
-    
-<style>
-    .profile-container {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        max-width: 800px !important;
-        margin: 0 auto !important;
-    }
+    <style>
+        .profile-container {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            max-width: 800px !important;
+            margin: 0 auto !important;
+        }
 
-    .description-section {
-        text-align: center !important;
-        margin-bottom: 20px !important;
-        width: 100% !important;
-    }
+        .description-section {
+            text-align: center !important;
+            margin-bottom: 20px !important;
+            width: 100% !important;
+        }
 
-    .sections-container {
-        display: flex !important;
-        justify-content: space-between !important;
-        width: 100% !important;
-        align-items: stretch !important;
-    }
+        .sections-container {
+            display: flex !important;
+            justify-content: space-between !important;
+            width: 100% !important;
+            align-items: stretch !important;
+        }
 
-    .profile-section {
-        width: 48% !important;
-        padding: 10px !important;
-        box-sizing: border-box !important;
-        border: 1px solid #ddd !important;
-        border-radius: 8px !important;
-        background-color: #f9f9f9 !important;
-    }
+        .profile-section {
+            width: 48% !important;
+            padding: 10px !important;
+            box-sizing: border-box !important;
+            border: 1px solid #ddd !important;
+            border-radius: 8px !important;
+            background-color: #f9f9f9 !important;
+        }
 
-    .profile-section button {
-        padding: 10px !important;
-        background-color: #0077b5 !important;
-        color: white !important;
-        border: none !important;
-        cursor: pointer !important;
-    }
+        .profile-section button {
+            padding: 10px !important;
+            background-color: #0077b5 !important;
+            color: white !important;
+            border: none !important;
+            cursor: pointer !important;
+        }
 
-    .profile-section button:hover {
-        background-color: #005f8b !important;
-    }
+        .profile-section button:hover {
+            background-color: #005f8b !important;
+        }
 
-    .chat-icon {
-        margin-left: 15px;
-        font-size: 20px;
-        color: #0077b5;
-        text-decoration: none;
-        width: 20px;
-    }
+        .chat-icon {
+            margin-left: 15px;
+            font-size: 20px;
+            color: #0077b5;
+            text-decoration: none;
+            width: 20px;
+        }
 
-    .chat-icon:hover {
-        color: #005f8b;
-    }
-
-</style>
-
+        .chat-icon:hover {
+            color: #005f8b;
+        }
     </style>
 </head>
 <body>
@@ -134,43 +129,73 @@
                     <p>Seguir</p>
                 <% } %>
             </button>
-
+        </div>      
+        <div class="follow-section">
+            <button id="bloquear-btn" class="<%= bloqueado ? 'btn btn-warning btn-sm' : 'btn btn-danger btn-sm' %>">
+                <i class="<%= bloqueado ? 'fas fa-unlock' : 'fas fa-ban' %>"></i>
+                <%= bloqueado ? 'Desbloquear' : 'Bloquear' %>
+            </button>
         </div>      
     </section>
     <script>
-        //Script para manejar los me gusta con una petición post al servidor con la información del usuario y la publicación
-    document.addEventListener("DOMContentLoaded", function() {
-        document.querySelectorAll('.seguir').forEach(button => {
-            button.addEventListener('click', async () => {
-                const id_seguido = button.id; // Usamos el ID del botón como ID de la publicación
-                const id_usuario = button.name;
-                console.log({ id_seguido, id_usuario });
+        // Script para manejar el botón de seguir/dejar de seguir
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('.seguir').forEach(button => {
+                button.addEventListener('click', async () => {
+                    const id_seguido = button.id;
+                    const id_usuario = button.name;
 
-                const response = await fetch('/seguir', {
-                    method: 'POST',
-                    credentials: 'include', //Esto envía cookies al servidor
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id_seguido, id_usuario})
+                    const response = await fetch('/seguir', {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id_seguido, id_usuario })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        button.innerHTML = data.text;
+                        document.getElementById(`seguidos_${id_seguido}`).innerText = "Seguidores: " + data.seguidores;
+                    } else {
+                        console.error('Error al procesar el follow:', data.error);
+                        alert("Hubo un error al intentar seguir al usuario. Intenta nuevamente.");
+                    }
                 });
-    
-                const data = await response.json();
-    
-                if (response.ok) {
-    // Actualizar el texto del botón
-    button.innerHTML = data.text;
-    
-document.getElementById(`seguidos_${id_seguido}`).innerText = "Seguidores: " + data.seguidores;
-} else {
-    console.error('Error al procesar el follow:', data.error);
-    // Mostrar un mensaje de error en la UI
-    alert("Hubo un error al intentar seguir al usuario. Intenta nuevamente.");
-}
+            });
 
+            // Script para manejar el botón de bloquear/desbloquear
+            const bloquearBtn = document.getElementById("bloquear-btn");
 
+            bloquearBtn.addEventListener("click", async () => {
+                const usuarioId = "<%= usuario.id %>";
+                const accion = bloquearBtn.classList.contains("btn-danger") ? "bloquear" : "desbloquear";
+
+                try {
+                    const response = await fetch(`/${accion}/${usuarioId}`, {
+                        method: "POST",
+                        credentials: "include",
+                    });
+
+                    if (response.ok) {
+                        if (accion === "bloquear") {
+                            bloquearBtn.classList.remove("btn-danger");
+                            bloquearBtn.classList.add("btn-warning");
+                            bloquearBtn.innerHTML = '<i class="fas fa-unlock"></i> Desbloquear';
+                        } else {
+                            bloquearBtn.classList.remove("btn-warning");
+                            bloquearBtn.classList.add("btn-danger");
+                            bloquearBtn.innerHTML = '<i class="fas fa-ban"></i> Bloquear';
+                        }
+                    } else {
+                        alert("Hubo un error al procesar la solicitud. Intenta nuevamente.");
+                    }
+                } catch (error) {
+                    console.error("Error al procesar la solicitud:", error);
+                    alert("Hubo un error al procesar la solicitud. Intenta nuevamente.");
+                }
             });
         });
-    });
-    
     </script>
     <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/smoothscroll/smooth-scroll.js"></script>

@@ -19,6 +19,7 @@ const contactoRoutes = require('./routes/contacto');
 
 const app = express();
 const port = 3000;
+const bloqueoRoutes = require('./routes/bloqueo');
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -171,78 +172,107 @@ app.get('/buscar', (req, res) => {
     });
 });
 
+// Ruta para el perfil ajeno
 app.get("/perfilajeno/:username", (req, res) => {
-    const username = req.params.username;
-    const userId = req.session.userId;
-    
+    const username = req.params.username; // Usuario cuyo perfil se quiere ver
+    const userId = req.session.userId;    // ID del usuario autenticado
+
     const queryUsuario = `SELECT * FROM usuarios WHERE username = ?`;
-    
-    const querySeguidos = `
-        SELECT COUNT(*) AS seguidos
-        FROM seguimiento s
-        INNER JOIN usuarios u ON s.seguidor_id = u.id
-        WHERE u.username = ?`;
-    
-    const querySeguidores = `
-        SELECT COUNT(*) AS seguidores
-        FROM seguimiento s
-        INNER JOIN usuarios u ON s.seguido_id = u.id
-        WHERE u.username = ?`;
-    
-    const querySeguido = `
-        SELECT COUNT(*) AS seguido
-        FROM seguimiento
-        WHERE seguidor_id = ? AND seguido_id = ?`;
-    
-    // 1️⃣ Obtener el perfilId a partir del username
-    connection.query(queryUsuario, [username], (err, resultUsuario) => {
-        if (err) {
-            console.error("Error al obtener usuario:", err);
+
+    const queryBloqueadoPor = `
+        SELECT COUNT(*) AS bloqueado
+        FROM bloqueos
+        WHERE bloqueador_id = (SELECT id FROM usuarios WHERE username = ?)
+        AND bloqueado_id = ?`;
+
+    // Verificar si el usuario está bloqueado por el dueño del perfil
+    connection.query(queryBloqueadoPor, [username, userId], (errBloqueado, resultBloqueado) => {
+        if (errBloqueado) {
+            console.error("Error al verificar si el usuario está bloqueado:", errBloqueado);
             return res.status(500).send("Error interno del servidor");
         }
-        if (resultUsuario.length === 0) {
-            return res.status(404).send("Usuario no encontrado");
+
+        if (resultBloqueado[0].bloqueado > 0) {
+            return res.status(403).send("No tienes permiso para acceder a este perfil.");
         }
-    
-        const perfilId = resultUsuario[0].id; // Obtenemos el ID del perfil visitado (seguido_id)
-    
-        // 2️⃣ Obtener la cantidad de seguidos
-        connection.query(querySeguidos, [username], (errSeguidos, resultSeguidos) => {
-            if (errSeguidos) {
-                console.error("Error al obtener seguidos:", errSeguidos);
+
+        // Si no está bloqueado, continuar con la lógica normal
+        connection.query(queryUsuario, [username], (err, resultUsuario) => {
+            if (err) {
+                console.error("Error al obtener usuario:", err);
                 return res.status(500).send("Error interno del servidor");
             }
-    
-            // 3️⃣ Obtener la cantidad de seguidores
-            connection.query(querySeguidores, [username], (errSeguidores, resultSeguidores) => {
-                if (errSeguidores) {
-                    console.error("Error al obtener seguidores:", errSeguidores);
+            if (resultUsuario.length === 0) {
+                return res.status(404).send("Usuario no encontrado");
+            }
+
+            const perfilId = resultUsuario[0].id;
+
+            const querySeguidos = `
+                SELECT COUNT(*) AS seguidos
+                FROM seguimiento s
+                INNER JOIN usuarios u ON s.seguidor_id = u.id
+                WHERE u.username = ?`;
+
+            const querySeguidores = `
+                SELECT COUNT(*) AS seguidores
+                FROM seguimiento s
+                INNER JOIN usuarios u ON s.seguido_id = u.id
+                WHERE u.username = ?`;
+
+            const querySeguido = `
+                SELECT COUNT(*) AS seguido
+                FROM seguimiento
+                WHERE seguidor_id = ? AND seguido_id = ?`;
+
+            const queryBloqueado = `
+                SELECT COUNT(*) AS bloqueado
+                FROM bloqueos
+                WHERE bloqueador_id = ? AND bloqueado_id = ?`;
+
+            connection.query(querySeguidos, [username], (errSeguidos, resultSeguidos) => {
+                if (errSeguidos) {
+                    console.error("Error al obtener seguidos:", errSeguidos);
                     return res.status(500).send("Error interno del servidor");
                 }
-    
-                // 4️⃣ Verificar si el usuario logueado sigue a este perfil
-                connection.query(querySeguido, [userId, perfilId], (errSeguido, resultSeguido) => {
-                    if (errSeguido) {
-                        console.error("Error al obtener estado de seguimiento:", errSeguido);
+
+                connection.query(querySeguidores, [username], (errSeguidores, resultSeguidores) => {
+                    if (errSeguidores) {
+                        console.error("Error al obtener seguidores:", errSeguidores);
                         return res.status(500).send("Error interno del servidor");
                     }
-    
-                    const seguido = resultSeguido[0].seguido > 0; // true si lo sigue, false si no
-    
-                    // 5️⃣ Renderizar la vista con los datos obtenidos
-                    res.render("perfilAjeno", {
-                        usuario: resultUsuario[0],
-                        seguidos: resultSeguidos[0].seguidos,
-                        seguidores: resultSeguidores[0].seguidores,
-                        seguido, // true si lo sigue, false si no
-                        userId,
-                        username: req.session.username
+
+                    connection.query(querySeguido, [userId, perfilId], (errSeguido, resultSeguido) => {
+                        if (errSeguido) {
+                            console.error("Error al obtener estado de seguimiento:", errSeguido);
+                            return res.status(500).send("Error interno del servidor");
+                        }
+
+                        const seguido = resultSeguido[0].seguido > 0;
+
+                        connection.query(queryBloqueado, [userId, perfilId], (errBloqueado2, resultBloqueado2) => {
+                            if (errBloqueado2) {
+                                console.error("Error al verificar estado de bloqueo:", errBloqueado2);
+                                return res.status(500).send("Error interno del servidor");
+                            }
+
+                            const bloqueado = resultBloqueado2[0].bloqueado > 0;
+
+                            res.render("perfilajeno", {
+                                usuario: resultUsuario[0],
+                                seguidos: resultSeguidos[0].seguidos,
+                                seguidores: resultSeguidores[0].seguidores,
+                                seguido,
+                                bloqueado,
+                                userId,
+                                username: req.session.username
+                            });
+                        });
                     });
                 });
             });
         });
     });
-    
 });
 
 
@@ -275,7 +305,7 @@ app.use('/', terminosRoutes);
 app.use('/', acercaRoutes);
 app.use('/', contactoRoutes);
 app.use('/', adminRoutes)
-
+app.use('/', bloqueoRoutes);
 
 app.use((req, res, next) => {
     console.log("Sesión activa:", req.session);
@@ -443,98 +473,142 @@ app.get('/buscar', (req, res) => {
 });
 
 app.get("/perfilajeno/:username", (req, res) => {
-    const username = req.params.username;
-    const userId = req.session.userId;
-    
+    const username = req.params.username; // Usuario cuyo perfil se quiere ver
+    const userId = req.session.userId; // ID del usuario autenticado
+
     const queryUsuario = `SELECT * FROM usuarios WHERE username = ?`;
-    
-    const querySeguidos = `
-        SELECT COUNT(*) AS seguidos
-        FROM seguimiento s
-        INNER JOIN usuarios u ON s.seguidor_id = u.id
-        WHERE u.username = ?`;
-    
-    const querySeguidores = `
-        SELECT COUNT(*) AS seguidores
-        FROM seguimiento s
-        INNER JOIN usuarios u ON s.seguido_id = u.id
-        WHERE u.username = ?`;
-    
-    const querySeguido = `
-        SELECT COUNT(*) AS seguido
-        FROM seguimiento
-        WHERE seguidor_id = ? AND seguido_id = ?`;
-    
-    //Obtener el perfilId a partir del username
-    connection.query(queryUsuario, [username], (err, resultUsuario) => {
-        if (err) {
-            console.error("Error al obtener usuario:", err);
+
+    const queryBloqueadoPor = `
+        SELECT COUNT(*) AS bloqueado
+        FROM bloqueos
+        WHERE bloqueador_id = (SELECT id FROM usuarios WHERE username = ?)
+        AND bloqueado_id = ?`;
+
+    // Verificar si el usuario está bloqueado por el dueño del perfil
+    connection.query(queryBloqueadoPor, [username, userId], (errBloqueado, resultBloqueado) => {
+        if (errBloqueado) {
+            console.error("Error al verificar si el usuario está bloqueado:", errBloqueado);
             return res.status(500).send("Error interno del servidor");
         }
-        if (resultUsuario.length === 0) {
-            return res.status(404).send("Usuario no encontrado");
+
+        if (resultBloqueado[0].bloqueado > 0) {
+            // Si el usuario está bloqueado, redirigir o mostrar un mensaje
+            return res.status(403).send("No tienes permiso para acceder a este perfil.");
         }
-    
-        const perfilId = resultUsuario[0].id; // Obtenemos el ID del perfil visitado (seguido_id)
-    
-        //Obtener la cantidad de seguidos
-        connection.query(querySeguidos, [username], (errSeguidos, resultSeguidos) => {
-            if (errSeguidos) {
-                console.error("Error al obtener seguidos:", errSeguidos);
+
+        // Si no está bloqueado, continuar con la lógica normal
+        connection.query(queryUsuario, [username], (err, resultUsuario) => {
+            if (err) {
+                console.error("Error al obtener usuario:", err);
                 return res.status(500).send("Error interno del servidor");
             }
-    
-            //  Obtener la cantidad de seguidores
-            connection.query(querySeguidores, [username], (errSeguidores, resultSeguidores) => {
-                if (errSeguidores) {
-                    console.error("Error al obtener seguidores:", errSeguidores);
+            if (resultUsuario.length === 0) {
+                return res.status(404).send("Usuario no encontrado");
+            }
+
+            const perfilId = resultUsuario[0].id; // Obtenemos el ID del perfil visitado (seguido_id)
+
+            const querySeguidos = `
+                SELECT COUNT(*) AS seguidos
+                FROM seguimiento s
+                INNER JOIN usuarios u ON s.seguidor_id = u.id
+                WHERE u.username = ?`;
+
+            const querySeguidores = `
+                SELECT COUNT(*) AS seguidores
+                FROM seguimiento s
+                INNER JOIN usuarios u ON s.seguido_id = u.id
+                WHERE u.username = ?`;
+
+            const querySeguido = `
+                SELECT COUNT(*) AS seguido
+                FROM seguimiento
+                WHERE seguidor_id = ? AND seguido_id = ?`;
+
+            const queryBloqueado = `
+                SELECT COUNT(*) AS bloqueado
+                FROM bloqueos
+                WHERE bloqueador_id = ? AND bloqueado_id = ?`;
+
+            // Obtener la cantidad de seguidos
+            connection.query(querySeguidos, [username], (errSeguidos, resultSeguidos) => {
+                if (errSeguidos) {
+                    console.error("Error al obtener seguidos:", errSeguidos);
                     return res.status(500).send("Error interno del servidor");
                 }
-    
-                // Verificar si el usuario logueado sigue a este perfil
-                connection.query(querySeguido, [userId, perfilId], (errSeguido, resultSeguido) => {
-                    if (errSeguido) {
-                        console.error("Error al obtener estado de seguimiento:", errSeguido);
+
+                // Obtener la cantidad de seguidores
+                connection.query(querySeguidores, [username], (errSeguidores, resultSeguidores) => {
+                    if (errSeguidores) {
+                        console.error("Error al obtener seguidores:", errSeguidores);
                         return res.status(500).send("Error interno del servidor");
                     }
-    
-                    const seguido = resultSeguido[0].seguido > 0; // true si lo sigue, false si no
-    
-                    // Renderizar la vista con los datos obtenidos
-                    res.render("perfilAjeno", {
-                        usuario: resultUsuario[0],
-                        seguidos: resultSeguidos[0].seguidos,
-                        seguidores: resultSeguidores[0].seguidores,
-                        seguido,
-                        userId,
-                        username: req.session.username
+
+                    // Verificar si el usuario logueado sigue a este perfil
+                    connection.query(querySeguido, [userId, perfilId], (errSeguido, resultSeguido) => {
+                        if (errSeguido) {
+                            console.error("Error al obtener estado de seguimiento:", errSeguido);
+                            return res.status(500).send("Error interno del servidor");
+                        }
+
+                        const seguido = resultSeguido[0].seguido > 0; // true si lo sigue, false si no
+
+                        // Verificar si el usuario logueado ha bloqueado a este perfil
+                        connection.query(queryBloqueado, [userId, perfilId], (errBloqueado, resultBloqueado) => {
+                            if (errBloqueado) {
+                                console.error("Error al verificar estado de bloqueo:", errBloqueado);
+                                return res.status(500).send("Error interno del servidor");
+                            }
+
+                            const bloqueado = resultBloqueado[0].bloqueado > 0; // true si está bloqueado, false si no
+
+                            // Renderizar la vista con los datos obtenidos
+                            res.render("perfilajeno", {
+                                usuario: resultUsuario[0],
+                                seguidos: resultSeguidos[0].seguidos,
+                                seguidores: resultSeguidores[0].seguidores,
+                                seguido, // true si lo sigue, false si no
+                                bloqueado, // true si está bloqueado, false si no
+                                userId,
+                                username: req.session.username
+                            });
+                        });
                     });
                 });
             });
         });
     });
-    
 });
 
-app.get("/perfilajeno/:username/siguiendo", (req, res) => {
+app.get("/perfil/:username/siguiendo", (req, res) => {
     const usernameperfil = req.params.username;
 
     const querySiguiendo = `
-    SELECT u.id, u.username, u.descripcion
-    FROM seguimiento s
-    INNER JOIN usuarios u ON s.seguido_id = u.id
-    WHERE s.seguidor_id = (SELECT id FROM usuarios WHERE username = ?)
-`;
+        SELECT u.id, u.username, u.descripcion,
+            EXISTS (
+                SELECT 1 FROM bloqueos 
+                WHERE bloqueador_id = (SELECT id FROM usuarios WHERE username = ?) 
+                AND bloqueado_id = u.id
+            ) AS bloqueado
+        FROM seguimiento s
+        INNER JOIN usuarios u ON s.seguido_id = u.id
+        WHERE s.seguidor_id = (SELECT id FROM usuarios WHERE username = ?)
+    `;
 
-    connection.query(querySiguiendo, [usernameperfil], (err, result) => {
+    connection.query(querySiguiendo, [usernameperfil, usernameperfil], (err, result) => {
         if (err) {
             console.error("Error al obtener la lista de seguidos:", err);
             return res.status(500).send("Error interno del servidor");
         }
 
-        res.render("siguiendo", {username: req.session.username, usernameperfil, siguiendo: result });
+        res.render("siguiendo", {
+            username: req.session.username,
+            usernameperfil,
+            siguiendo: result
+        });
     });
 });
+
 app.get("/perfilajeno/:username/seguidores", (req, res) => {
     const usernameperfil = req.params.username;
 

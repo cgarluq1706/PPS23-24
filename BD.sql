@@ -107,6 +107,15 @@ CREATE TABLE `comentarios` (
     FOREIGN KEY (receptor_id) REFERENCES usuarios(id)
 );
 
+CREATE TABLE bloqueos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  bloqueador_id INT NOT NULL,
+  bloqueado_id INT NOT NULL,
+  fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (bloqueador_id) REFERENCES usuarios(id),
+  FOREIGN KEY (bloqueado_id) REFERENCES usuarios(id),
+  UNIQUE (bloqueador_id, bloqueado_id)
+);
 
 --
 -- Dumping data for table `comentarios`
