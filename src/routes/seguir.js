@@ -6,7 +6,7 @@ const db = require("../conexion");
 router.post("/seguir", (req, res) => {
   const id_seguido = req.body.id_seguido;
   const id_usuario = req.body.id_usuario;
-
+  if (id_seguido != id_usuario){
   db.query(
     "SELECT * FROM seguimiento WHERE seguidor_id = ? AND seguido_id = ?",
     [id_usuario, id_seguido],
@@ -46,6 +46,7 @@ router.post("/seguir", (req, res) => {
       }
     }
   );
+}
 });
 
 function obtenerNumSeguidos(id_seguido, res, seguidod) {

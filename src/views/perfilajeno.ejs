@@ -128,7 +128,8 @@
         </div>
         <div class="follow-section">
             <button class="seguir" id="<%= usuario.id %>" name="<%= userId %>">
-                <% if (seguido) { %>
+                
+                <%   if (seguido) { %>
                     <p>Dejar de seguir</p>
                 <% } else { %>
                     <p>Seguir</p>
@@ -160,12 +161,7 @@
     button.innerHTML = data.text;
     
 document.getElementById(`seguidos_${id_seguido}`).innerText = "Seguidores: " + data.seguidores;
-} else {
-    console.error('Error al procesar el follow:', data.error);
-    // Mostrar un mensaje de error en la UI
-    alert("Hubo un error al intentar seguir al usuario. Intenta nuevamente.");
-}
-
+} 
 
             });
         });

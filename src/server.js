@@ -31,7 +31,7 @@ app.use(session({
 
 // Configuración para WebSocket
 const WebSocket = require('ws'); // Importar WebSocket
-const wss = new WebSocket.Server({ port: 8090 }); // Servidor WebSocket en puerto 8080
+const wss = new WebSocket.Server({ port: 8080 }); // Servidor WebSocket en puerto 8080
 
 // Guardar los sockets de los usuarios conectados
 const connectedUsers = {};
@@ -445,7 +445,6 @@ app.get('/buscar', (req, res) => {
 app.get("/perfilajeno/:username", (req, res) => {
     const username = req.params.username;
     const userId = req.session.userId;
-    
     const queryUsuario = `SELECT * FROM usuarios WHERE username = ?`;
     
     const querySeguidos = `
