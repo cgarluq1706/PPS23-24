@@ -96,7 +96,6 @@ body {
            
             <button id="sendButton">Enviar</button>
         </div>
-        
     </div>
 
     <div id="chatContainer"
@@ -105,133 +104,124 @@ body {
     </div>
 
     <script>
-        const socket = new WebSocket('ws://localhost:8080');
-    
-        const chatBox = document.getElementById('chatBox');
-        const messageInput = document.getElementById('messageInput');
-        const sendButton = document.getElementById('sendButton');
-        const imageInput = document.getElementById('imageInput');
-        const imageButton = document.getElementById('imageButton');
-    
-        const chatContainer = document.getElementById('chatContainer');
-        const emisor_id = chatContainer.getAttribute('data-session-user-id');
-        const receptor_id = chatContainer.getAttribute('data-usuario-id');
-    
-        console.log('Emisor:', emisor_id, 'Receptor:', receptor_id);
-    
-        // Confirmar conexión WebSocket
-        socket.onopen = () => {
-            console.log('Conectado a WebSocket');
-        };
-    
-        // Función para formatear la fecha y hora en formato numérico
-        function formatDateTime(timestamp) {
-            const fecha = new Date(timestamp);
-    
-            const dia = fecha.getDate().toString().padStart(2, '0');
-            const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
-            const año = fecha.getFullYear();
-            const hora = fecha.getHours().toString().padStart(2, '0');
-            const minutos = fecha.getMinutes().toString().padStart(2, '0');
-            const segundos = fecha.getSeconds().toString().padStart(2, '0');
-    
-            return `${dia}/${mes}/${año} ${hora}:${minutos}:${segundos}`;
+    const socket = new WebSocket('ws://localhost:8080');
+
+    const chatBox = document.getElementById('chatBox');
+    const messageInput = document.getElementById('messageInput');
+    const sendButton = document.getElementById('sendButton');
+
+    const chatContainer = document.getElementById('chatContainer');
+    const emisor_id = chatContainer.getAttribute('data-session-user-id');
+    const receptor_id = chatContainer.getAttribute('data-usuario-id');
+
+    console.log('Emisor:', emisor_id, 'Receptor:', receptor_id);
+
+    // Confirmar conexión WebSocket
+    socket.onopen = () => {
+        console.log('Conectado a WebSocket');
+    };
+
+    // Función para formatear la fecha y la hora en formato numérico
+    function formatDateTime(timestamp) {
+        const fecha = new Date(timestamp);
+
+        // Extraer valores numéricos
+        const dia = fecha.getDate().toString().padStart(2, '0'); // 01-31
+        const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // 01-12
+        const año = fecha.getFullYear(); // 2025
+        const hora = fecha.getHours().toString().padStart(2, '0'); // 00-23
+        const minutos = fecha.getMinutes().toString().padStart(2, '0'); // 00-59
+        const segundos = fecha.getSeconds().toString().padStart(2, '0'); // 00-59
+
+        return `${dia}/${mes}/${año} ${hora}:${minutos}:${segundos}`;
+    }
+
+    // Manejar mensajes recibidos
+    socket.onmessage = (event) => {
+        const msg = JSON.parse(event.data);
+        console.log('Mensaje recibido:', msg);
+
+        if (msg.error) {
+            console.error(msg.error);
+            return;
         }
-    
+
+        // Formatear fecha y hora
+        const fechaHora = formatDateTime(msg.timestamp);
+
+        // Crear el elemento del mensaje con la fecha y hora
+        const div = document.createElement('div');
+        div.classList.add('message', msg.emisorId == emisor_id ? 'sent' : 'received');
+        div.innerHTML = `<strong>${msg.emisorId == emisor_id ? 'Tú' : '<%= nombreUsuario %>'}:</strong> 
+                         ${msg.contenido} <br />
+                         <small>${fechaHora}</small>`;
+
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll al último mensaje
+    };
+
+    // Manejar errores
+    socket.onerror = (error) => {
+        console.error('Error en WebSocket:', error);
+    };
+
+    // Enviar mensaje al presionar el botón
+    sendButton.addEventListener('click', () => {
+        const mensaje = messageInput.value.trim();
+        if (!mensaje) return;
+
+        console.log('Enviando mensaje:', mensaje);
+
+        const data = JSON.stringify({
+            emisorId: emisor_id,
+            receptorId: receptor_id,
+            contenido: mensaje
+        });
+
+        socket.send(data);
+        messageInput.value = '';
+    });
+
         // Función para hacer scroll al final del chat
         function scrollToBottom() {
-            chatBox.scrollTop = chatBox.scrollHeight;
+        const chatBox = document.getElementById('chatBox');
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Llamar a la función cuando la página cargue
+    window.onload = () => {
+        scrollToBottom();
+    };
+
+    // Modifica la parte donde se recibe un mensaje para hacer scroll automáticamente
+    socket.onmessage = (event) => {
+        const msg = JSON.parse(event.data);
+        console.log('Mensaje recibido:', msg);
+
+        if (msg.error) {
+            console.error(msg.error);
+            return;
         }
-    
-        // Llamar a la función cuando la página cargue
-        window.onload = () => {
-            scrollToBottom();
-        };
-    
-        // Manejar mensajes recibidos
-        socket.onmessage = (event) => {
-            const msg = JSON.parse(event.data);
-            console.log('Mensaje recibido:', msg);
-    
-            if (msg.error) {
-                console.error(msg.error);
-                return;
-            }
-    
-            // Crear el elemento del mensaje
-            const div = document.createElement('div');
-            div.classList.add('message', msg.emisorId == emisor_id ? 'sent' : 'received');
-    
-            if (msg.tipo === 'imagen') {
-                div.innerHTML = `<strong>${msg.emisorId == emisor_id ? 'Tú' : 'Otro'}:</strong> <br>
-                                 <img src="${msg.contenido}" style="max-width: 200px; border-radius: 5px;"> <br>
-                                 <small>${formatDateTime(msg.timestamp)}</small>`;
-            } else {
-                div.innerHTML = `<strong>${msg.emisorId == emisor_id ? 'Tú' : 'Otro'}:</strong> 
-                                 ${msg.contenido} <br />
-                                 <small>${formatDateTime(msg.timestamp)}</small>`;
-            }
-    
-            chatBox.appendChild(div);
-            scrollToBottom();
-        };
-    
-        // Manejar errores
-        socket.onerror = (error) => {
-            console.error('Error en WebSocket:', error);
-        };
-    
-        // Enviar mensaje de texto
-        sendButton.addEventListener('click', () => {
-            const mensaje = messageInput.value.trim();
-            if (!mensaje) return;
-    
-            console.log('Enviando mensaje:', mensaje);
-    
-            const data = JSON.stringify({
-                emisorId: emisor_id,
-                receptorId: receptor_id,
-                tipo: 'texto',
-                contenido: mensaje,
-                timestamp: Date.now()
-            });
-    
-            socket.send(data);
-            messageInput.value = '';
-        });
-    
-        // Manejo del botón de imagen
-        imageButton.addEventListener('click', () => {
-            imageInput.click();
-        });
-    
-        imageInput.addEventListener('change', () => {
-            const file = imageInput.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (event) {
-                    const imageData = event.target.result;
-    
-                    const data = JSON.stringify({
-                        emisorId: emisor_id,
-                        receptorId: receptor_id,
-                        tipo: 'imagen',
-                        contenido: imageData,
-                        timestamp: Date.now()
-                    });
-    
-                    socket.send(data);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    
-        // Manejar desconexión
-        socket.onclose = () => {
-            console.log('Desconectado de WebSocket');
-        };
-    </script>
-    
+
+        // Crear el elemento del mensaje
+        const div = document.createElement('div');
+        div.classList.add('message', msg.emisorId == emisor_id ? 'sent' : 'received');
+        div.innerHTML = `<strong>${msg.emisorId == emisor_id ? 'Tú' : 'Otro'}:</strong> 
+                         ${msg.contenido} <br />
+                         <small>${formatDateTime(msg.timestamp)}</small>`;
+
+        chatBox.appendChild(div);
+        
+        // Hacer scroll hacia abajo después de agregar un nuevo mensaje
+        scrollToBottom();
+    };
+
+    // Manejar desconexión
+    socket.onclose = () => {
+        console.log('Desconectado de WebSocket');
+    };
+</script>
+
 
 </body>
 </html>

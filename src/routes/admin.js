@@ -152,14 +152,39 @@ router.put('/admin/users/:id/visible', verifyAdmin, (req, res) => {
 // Ruta para dar like a una publicación
 router.post('/admin/posts/:id/like', verifyAdmin, (req, res) => {
     const postId = req.params.id;
-    console.log('Post ID recibido:', postId); // Verifica el ID recibido
-    const query = 'UPDATE publicaciones SET num_like = num_like + 1 WHERE id = ?';
-    connection.query(query, [postId], (err, results) => {
+    const { likes } = req.body;
+
+    if (typeof likes !== 'number') {
+        return res.status(400).send('La cantidad de likes debe ser un número.');
+    }
+
+    // Consulta para obtener el número actual de likes
+    const getLikesQuery = 'SELECT num_like FROM publicaciones WHERE id = ?';
+    connection.query(getLikesQuery, [postId], (err, results) => {
         if (err) {
-            console.error('Error al agregar like:', err);
-            return res.status(500).send('Error al agregar like');
+            console.error('Error al obtener los likes actuales:', err);
+            return res.status(500).send('Error al obtener los likes actuales');
         }
-        res.sendStatus(200); // OK
+
+        const currentLikes = results[0]?.num_like || 0; // Likes actuales
+        const newLikes = currentLikes + likes; // Calcular los nuevos likes
+
+        // Asegurarse de que los likes no sean negativos
+        if (newLikes < 0) {
+            return res.status(400).send('Los likes no pueden ser negativos.');
+        }
+
+        // Actualizar los likes en la base de datos
+        const updateLikesQuery = 'UPDATE publicaciones SET num_like = ? WHERE id = ?';
+        connection.query(updateLikesQuery, [newLikes, postId], (err, results) => {
+            if (err) {
+                console.error('Error al actualizar likes:', err);
+                return res.status(500).send('Error al actualizar likes');
+            }
+            res.sendStatus(200); // OK
+        });
     });
 });
+
+
 module.exports = router;
