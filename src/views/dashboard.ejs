@@ -1,90 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
-    <link rel="stylesheet" href="assets/web/assets/mobirise-icons2/mobirise2.css">
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-grid.min.css">
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-reboot.min.css">
-    <link rel="stylesheet" href="assets/dropdown/css/style.css">
-    <link rel="stylesheet" href="assets/socicon/css/styles.css">
-    <link rel="stylesheet" href="assets/theme/css/style.css">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap"></noscript>
-    <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj" type="text/css">
-  
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Casual Frydays</title>
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/theme/css/style.css">
+<link rel="shortcut icon" href="./assets/images/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="assets/web/assets/mobirise-icons2/mobirise2.css">
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap-grid.min.css">
+<link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj" type="text/css">
+<style>
+    body {
+        background-color: #ffefb5;
+        font-family: 'Inter Tight', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    .welcome-section {
+        background-color: #fde156;
+        border-radius: 20px;
+        padding: 80px 40px;
+        text-align: center;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
+        max-width: 700px;
+        margin: 100px auto;
+        transition: transform 0.3s ease-in-out;
+    }
+    .welcome-section:hover {
+        transform: scale(1.02);
+    }
+    .image-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+    .image-container img {
+        width: 100%;
+        max-width: 350px;
+        height: auto;
+        border-radius: 10px;
+        transition: transform 0.3s ease-in-out;
+    }
+    .image-container img:hover {
+        transform: scale(1.05);
+    }
+    .welcome-section h1 {
+        font-size: 30px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 25px;
+    }
+    .welcome-section p {
+        font-size: 18px;
+        color: #555;
+        margin-bottom: 20px;
+    }
+    .profile-button {
+        display: inline-block;
+        background-color: #333;
+        color: #fff;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background-color 0.3s ease-in-out;
+    }
+    .profile-button:hover {
+        background-color: #ffefb5;
+        color: #333;
+    }
+</style>
 </head>
-
 <body>
-    <%- include("../routes/header.ejs") %>
-    <section data-bs-version="5.1" class="start article05 cid-u70DuSHgbr" id="article05-a">
-        <div class="container">
-          <div class="row justify-content-center align-items-center">
-            <div class="col-12">
-              <div class="card-wrapper">
-                <div class="row">
-                  <div class="col-12 col-md-12 col-lg-5 image-wrapper">
-                    <img class="w-100" src="assets/images/shop4.jpg" alt="Mobirise Website Builder">
-                  </div>
-                  <div class="col-12 col-lg col-md-12">
-                    <div class="text-wrapper align-left">
-                      <h1 class="mbr-section-title mbr-fonts-style mb-4 display-2"><strong>Bienvenido a tu red social favorita</strong></h1>
-                      <p class="mbr-text mbr-fonts-style mb-4 display-7">
-                        Encuentra amigos en la mejor red social para conecer gente joven&nbsp;&nbsp;<br>
-                      </p>
-                     <!-- <div class="mbr-section-btn mt-3"><a class="btn btn-lg btn-black display-7" href="page1.html">Registrate</a></div>-->
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-<!--
-<div id="menu-placeholder"></div>
-    <nav>
-        <a href="/dashboard">Dashboard</a>
-        <a href="/profile">Profile</a>
-        <a href="/settings">Settings</a>
-    </nav>
-    <div class="container">
-        <div class="user-info">
-            <h2>Hello, <%= username %></h2>
-            Aquí puedes mostrar más información del usuario si lo deseas
-        </div>
-        <a href="/logout" class="logout-btn">Logout</a>
+
+<%- include("../routes/header.ejs") %>
+
+
+<section class="welcome-section">
+    <div class="image-container">
+        <img src="assets/images/manos.jpg" alt="Equipo unido">
     </div>
--->
-    <!-- Script del menu
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        //Menu
-        $(function() {
-            $("#menu-placeholder").load("Menu.html");
-        });
-        //Encabezado
-        $(function() {
-            $("#footer-placeholder").load("footer.html");
-        });
-                //CSS
-                $(function() {
-            $("#css-placeholder").load("css.html");
-        });
+    <h1>¡Bienvenidos a Casual Frydays!</h1>
+    <p>Donde el trabajo se encuentra con la diversión. Comparte anécdotas, crea conexiones y disfruta del lado más humano de la oficina.</p>
+    <a href="/perfil" class="profile-button">Visita tu perfil</a>
+</section>
 
-    </script>-->
-        <!-- Script tags from second document -->
-        <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="assets/smoothscroll/smooth-scroll.js"></script>
-        <script src="assets/ytplayer/index.js"></script>
-        <script src="assets/dropdown/js/navbar-dropdown.js"></script>
-        <script src="assets/vimeoplayer/player.js"></script>
-        <script src="assets/masonry/masonry.pkgd.min.js"></script>
-        <script src="assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
-        <script src="assets/theme/js/script.js"></script>
-        <%- include("../routes/footer.ejs") %>
+
+<script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/smoothscroll/smooth-scroll.js"></script>
+<script src="assets/ytplayer/index.js"></script>
+<script src="assets/dropdown/js/navbar-dropdown.js"></script>
+<script src="assets/vimeoplayer/player.js"></script>
+<script src="assets/masonry/masonry.pkgd.min.js"></script>
+<script src="assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
+<script src="assets/theme/js/script.js"></script>
+<%- include("../routes/footer.ejs") %>
 </body>
 </html>
+

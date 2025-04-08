@@ -513,7 +513,15 @@ function viewPosts(userId) {
                         <p>Likes: ${post.likes}</p>
                         <p>Estado: ${post.oculto ? 'Oculta' : 'Visible'}</p>
                         <div class="post-actions">
-                            <button onclick="addLike(${post.id})">Dar Like</button>
+                            <!-- Cantidad de likes -->
+                            <input
+                                type="number"
+                                id="likeInput-${post.id}"
+                                placeholder="Cantidad de likes"
+                                style="width: 100px; padding: 5px; margin-right: 10px;"
+                            />
+                            <!-- Botón para actualizar los likes -->
+                            <button onclick="updateLikes(${post.id})">Actualizar Likes</button>
                             <button class="delete-button" onclick="togglePostVisibility(${post.id}, ${post.oculto})">
                                 ${post.oculto ? 'Hacer Visible' : 'Ocultar'}
                             </button>
@@ -609,23 +617,35 @@ function loadComments(postId) {
     }
     
 
-    // Dar like a una publicación
-    function addLike(postId) {
-    fetch(`/admin/posts/${postId}/like`, { method: 'POST' })
-        .then(response => {
-            if (response.ok) {
-                showAlert('Like agregado correctamente.');
-                // Recargar las publicaciones después de agregar el like
-                viewPosts(currentUserId); // Usa una variable global para almacenar el userId actual
-            } else {
-                showAlert('Error al agregar like.');
-            }
+    // Actualizar likes de una publicación
+    function updateLikes(postId) {
+        const likeInput = document.getElementById(`likeInput-${postId}`);
+        const likeValue = parseInt(likeInput.value, 10); // Convertir el valor a número
+
+        if (isNaN(likeValue)) {
+            showAlert('Por favor, introduce un número válido de likes.');
+            return;
+        }
+
+        // Enviar la cantidad de likes al servidor
+        fetch(`/admin/posts/${postId}/like`, {
+            method: 'POST',
+            headers: { 'Content-type': 'application/json' },
+            body: JSON.stringify({ likes: likeValue }),
         })
-        .catch(err => {
-            console.error('Error al agregar like:', err);
-            showAlert('Error al agregar like.');
-        });
-}
+            .then(response => {
+                if (response.ok) {
+                    showAlert('Likes actualizados correctamente.');
+                    viewPosts(currentUserId); // Recargar las publicaciones
+                } else {
+                    showAlert('Error al actualizar los likes.');
+                }
+            })
+            .catch(err => {
+                console.error('Error al actualizar likes:', err);
+                showAlert('Error al actualizar likes.');
+            });
+    }
 
     // Eliminar usuario
     function deleteUser(userId) {
