@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head> 
+    <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Términos y Condiciones</title>
@@ -13,182 +13,206 @@
         <link rel="stylesheet" href="assets/theme/css/style.css">
         <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap"></noscript>
-        <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj" type="text/css">
-        <link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css">
+        <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj">
+        <link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj" type="text/css">
+        <link rel="shortcut icon" href="./assets/images/favicon.png" type="image/x-icon">
+
+
+
 
         <style>
-            /* Asegura que el contenido no se superponga al menú */
+            body {
+            background-color: rgb(253, 0, 0);
+            font-family: "PT Serif", serif;
+            }
+           
             .content-section {
-                margin-top: 80px; /* Añade espacio entre el menú y el contenido */
+                margin-top: 80px;
+                background-color: #18ce6400;
             }
 
+
+
+
             .card {
-                background-color: #ffffff; /* Fondo blanco para las tarjetas */
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave para profundidad */
-                border-radius: 8px; /* Bordes redondeados */
-                padding: 30px; /* Espaciado dentro de la tarjeta */
-                margin-bottom: 20px; /* Separación entre las tarjetas */
+                background: linear-gradient(#ffefb5, #fcdb3a);
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                padding: 30px;
+                margin-bottom: 20px;
             }
+
+
+
 
             .card h2 {
                 font-size: 1.5rem;
-                color: #2c3e50;
+                color: #000000;
                 margin-bottom: 15px;
             }
 
+
+
+
             .card p, .card ul {
                 font-size: 1rem;
-                color: #34495e;
+                color: #000000;
                 line-height: 1.6;
             }
 
+
+
+
             .card ul {
-                list-style-type: disc;
+                list-style-type:circle;
                 margin-left: 20px;
             }
 
+
+
+
             .content-section h1 {
-                font-size: 2.5rem;
-                color: #333333;
+                font-size: 3.6rem;
+                color: #000000;
                 margin-bottom: 30px;
                 font-weight: 700;
             }
 
+
+
+
             .container {
                 max-width: 1140px;
             }
+         
+            .dark-mode h1 {
+                color: white;
+            }
+            .dark-mode a{
+                color: white;
+            }
+           
+
+
+
+
         </style>
     </head>
-    
+   
+    <body>
+        <%- include("../routes/header.ejs") %>
 
-    <section data-bs-version="5.1" class="menu menu2 cid-u6ZF78ROEn" once="menu" id="menu-5-u6ZF78ROEn">
-        <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
+
+
+
+        <!-- CONTENIDO DE LA PÁGINA -->
+        <section class="content-section">
             <div class="container">
-                <div class="navbar-brand">
-                    <span class="navbar-logo">
-                        <a href="/dashboard">
-                            <img src="assets/images/mbr-206x191.png" alt="Mobirise Website Builder" style="height: 4.3rem;">
-                        </a>
-                    </span>
-                    <span class="navbar-caption-wrap"><a class="navbar-caption text-black display-4" href="/dashboard">socialTernero</a></span>
+                <br>
+                <br>
+                <h1 class="text-center"><b>Términos y Condiciones de Casual Fry-Days</b></h1>
+                <div class="card">
+                    <h2><b>1. Introducción</b></h2>
+                    <p >Bienvenido a Casual Fry-Days. Al acceder y utilizar nuestra plataforma, usted acepta cumplir con los presentes Términos y Condiciones. Si no está de acuerdo con alguno de los términos aquí establecidos, le recomendamos que no utilice nuestro servicio.</p>
                 </div>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
-                        <li class="nav-item">
-                            <a class="nav-link link text-black text-primary display-4" href="/perfil">Mi perfil</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link link text-black text-primary display-4" href="/comentarios">Ver mis comentarios</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link link text-black text-primary display-4" href="/publicaciones">Publicaciones</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link link text-black text-primary display-4" href="/logout" aria-expanded="false">logout, <%= username %></a>
-                        </li>
+               
+                <div class="card">
+                    <h2> <b>2. Definiciones</b></h2>
+                    <ul>
+                        <li><strong>Plataforma:</strong> Se refiere a Casual Fry-Days y todos sus servicios asociados.</li>
+                        <li><strong>Usuario:</strong> Persona que accede y utiliza Casual Fry-Days.</li>
+                        <li><strong>Contenido:</strong> Todo tipo de información publicada en la plataforma, ya sea por usuarios o administradores.</li>
                     </ul>
                 </div>
+       
+                <div class="card">
+                    <h2> <b>3. Registro y Cuenta del Usuario</b></h2>
+                    <p>Para acceder a ciertas funciones, es necesario crear una cuenta proporcionando información precisa y actualizada. El usuario es responsable de mantener la confidencialidad de sus credenciales de acceso y de cualquier actividad realizada en su cuenta.</p>
+                </div>
+       
+                <div class="card">
+                    <h2><b>4. Uso Adecuado de la Plataforma </b></h2>
+                    <p>Los usuarios se comprometen a:</p>
+                    <ul>
+                        <li>No publicar contenido ofensivo, difamatorio, ilegal o que incite al odio.</li>
+                        <li>No suplantar la identidad de otra persona.</li>
+                        <li>No utilizar Casual Fry-Days con fines fraudulentos o ilegales.</li>
+                        <li>No manipular ni alterar el funcionamiento de la plataforma.</li>
+                    </ul>
+                </div>
+       
+                <div class="card">
+                    <h2><b>5. Contenido Generado por el Usuario</b></h2>
+                    <p>Al publicar contenido en Casual Fry-Days, el usuario otorga a la plataforma una licencia no exclusiva, mundial y gratuita para usar, reproducir y distribuir dicho contenido. No obstante, el usuario sigue siendo el propietario del contenido que publica.</p>
+                </div>
+       
+                <div class="card">
+                    <h2><b>6. Privacidad y Protección de Datos</b></h2>
+                    <p>Nos comprometemos a proteger la privacidad de nuestros usuarios. La información recopilada será utilizada conforme a nuestra Política de Privacidad, la cual describe en detalle el tratamiento de datos personales.</p>
+                </div>
+       
+                <div class="card">
+                    <h2><b>7. Propiedad Intelectual</b></h2>
+                    <p>El diseño, logotipos, marcas y contenido de Casual Fry-Days son propiedad de la plataforma o de terceros con licencia. No se permite el uso no autorizado de estos elementos.</p>
+                </div>
+       
+                <div class="card">
+                    <h2><b>8. Sanciones y Terminación de Cuenta</b></h2>
+                    <p>Casual Fry-Days se reserva el derecho de suspender o eliminar cuentas que infrinjan estos términos. En caso de violaciones graves, podrá tomarse acción legal contra el infractor.</p>
+                </div>
+       
+                <div class="card">
+                    <h2><b>9. Limitación de Responsabilidad</b></h2>
+                    <p>Casual Fry-Days no se hace responsable de:</p>
+                    <ul>
+                        <li>Contenido publicado por los usuarios.</li>
+                        <li>Posibles fallas o interrupciones del servicio.</li>
+                        <li>Daños derivados del uso de la plataforma.</li>
+                    </ul>
+                </div>
+       
+                <div class="card">
+                    <h2><b>10. Modificaciones y Vigencia</b></h2>
+                    <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. Se notificará a los usuarios sobre cambios relevantes, y el uso continuo de la plataforma implicará la aceptación de los nuevos términos.</p>
+                </div>
+       
+                <div class="card">
+                    <h2><b>11. Legislación Aplicable y Resolución de Conflictos</b></h2>
+                    <p>Estos términos se rigen por la legislación vigente en el país donde opera Casual Fry-Days. En caso de disputa, se intentará resolver de manera amistosa; si no es posible, se recurrirá a los tribunales competentes.</p>
+                </div>
+       
+                <div class="card">
+                    <h2><b>12. Contacto</b></h2>
+                    <p>Para consultas o reclamaciones, puede comunicarse con nosotros a través del correo <a  href="mailto:soporte@socialternero.com">soporte@casualfrydays.com</a>.</p>
+                </div>
             </div>
-        </nav>
-    </section>
+        </section>
 
-    <!-- CONTENIDO DE LA PÁGINA -->
-    <section class="content-section bg-light p-4">
-        <div class="container">
-            <h1 class="text-center">Términos y Condiciones de Casual Fry-Days</h1>
-            <div class="card">
-                <h2>1. Introducción</h2>
-                <p>Bienvenido a Casual Fry-Days. Al acceder y utilizar nuestra plataforma, usted acepta cumplir con los presentes Términos y Condiciones. Si no está de acuerdo con alguno de los términos aquí establecidos, le recomendamos que no utilice nuestro servicio.</p>
-            </div>
-            
-            <div class="card">
-                <h2>2. Definiciones</h2>
-                <ul>
-                    <li><strong>Plataforma:</strong> Se refiere a Casual Fry-Days y todos sus servicios asociados.</li>
-                    <li><strong>Usuario:</strong> Persona que accede y utiliza Casual Fry-Days.</li>
-                    <li><strong>Contenido:</strong> Todo tipo de información publicada en la plataforma, ya sea por usuarios o administradores.</li>
-                </ul>
-            </div>
-    
-            <div class="card">
-                <h2>3. Registro y Cuenta del Usuario</h2>
-                <p>Para acceder a ciertas funciones, es necesario crear una cuenta proporcionando información precisa y actualizada. El usuario es responsable de mantener la confidencialidad de sus credenciales de acceso y de cualquier actividad realizada en su cuenta.</p>
-            </div>
-    
-            <div class="card">
-                <h2>4. Uso Adecuado de la Plataforma</h2>
-                <p>Los usuarios se comprometen a:</p>
-                <ul>
-                    <li>No publicar contenido ofensivo, difamatorio, ilegal o que incite al odio.</li>
-                    <li>No suplantar la identidad de otra persona.</li>
-                    <li>No utilizar Casual Fry-Days con fines fraudulentos o ilegales.</li>
-                    <li>No manipular ni alterar el funcionamiento de la plataforma.</li>
-                </ul>
-            </div>
-    
-            <div class="card">
-                <h2>5. Contenido Generado por el Usuario</h2>
-                <p>Al publicar contenido en Casual Fry-Days, el usuario otorga a la plataforma una licencia no exclusiva, mundial y gratuita para usar, reproducir y distribuir dicho contenido. No obstante, el usuario sigue siendo el propietario del contenido que publica.</p>
-            </div>
-    
-            <div class="card">
-                <h2>6. Privacidad y Protección de Datos</h2>
-                <p>Nos comprometemos a proteger la privacidad de nuestros usuarios. La información recopilada será utilizada conforme a nuestra Política de Privacidad, la cual describe en detalle el tratamiento de datos personales.</p>
-            </div>
-    
-            <div class="card">
-                <h2>7. Propiedad Intelectual</h2>
-                <p>El diseño, logotipos, marcas y contenido de Casual Fry-Days son propiedad de la plataforma o de terceros con licencia. No se permite el uso no autorizado de estos elementos.</p>
-            </div>
-    
-            <div class="card">
-                <h2>8. Sanciones y Terminación de Cuenta</h2>
-                <p>Casual Fry-Days se reserva el derecho de suspender o eliminar cuentas que infrinjan estos términos. En caso de violaciones graves, podrá tomarse acción legal contra el infractor.</p>
-            </div>
-    
-            <div class="card">
-                <h2>9. Limitación de Responsabilidad</h2>
-                <p>Casual Fry-Days no se hace responsable de:</p>
-                <ul>
-                    <li>Contenido publicado por los usuarios.</li>
-                    <li>Posibles fallas o interrupciones del servicio.</li>
-                    <li>Daños derivados del uso de la plataforma.</li>
-                </ul>
-            </div>
-    
-            <div class="card">
-                <h2>10. Modificaciones y Vigencia</h2>
-                <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. Se notificará a los usuarios sobre cambios relevantes, y el uso continuo de la plataforma implicará la aceptación de los nuevos términos.</p>
-            </div>
-    
-            <div class="card">
-                <h2>11. Legislación Aplicable y Resolución de Conflictos</h2>
-                <p>Estos términos se rigen por la legislación vigente en el país donde opera Casual Fry-Days. En caso de disputa, se intentará resolver de manera amistosa; si no es posible, se recurrirá a los tribunales competentes.</p>
-            </div>
-    
-            <div class="card">
-                <h2>12. Contacto</h2>
-                <p>Para consultas o reclamaciones, puede comunicarse con nosotros a través del correo <a href="mailto:soporte@socialternero.com">soporte@casualfrydays.com</a>.</p>
-            </div>
-        </div>
-    </section>
 
-    <!-- FOOTER -->
-    <footer class="footer mt-5">
-        <div class="container text-center">
-            <p>© 2025 Casual Fry-Days. Todos los derechos reservados.</p>
-        </div>
-    </footer>
 
-    <!-- Scripts -->
-    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/smoothscroll/smooth-scroll.js"></script>
-    <script src="assets/ytplayer/index.js"></script>
-    <script src="assets/dropdown/js/navbar-dropdown.js"></script>
-    <script src="assets/vimeoplayer/player.js"></script>
-    <script src="assets/masonry/masonry.pkgd.min.js"></script>
-    <script src="assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
-    <script src="assets/theme/js/script.js"></script>
-    <%- include("../routes/footer.ejs") %>
-</body>
+
+        <!-- Scripts -->
+        <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/smoothscroll/smooth-scroll.js"></script>
+        <script src="assets/ytplayer/index.js"></script>
+        <script src="assets/dropdown/js/navbar-dropdown.js"></script>
+        <script src="assets/vimeoplayer/player.js"></script>
+        <script src="assets/masonry/masonry.pkgd.min.js"></script>
+        <script src="assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
+        <script src="assets/theme/js/script.js"></script>
+        <%- include("../routes/footer.ejs") %>
+    </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
