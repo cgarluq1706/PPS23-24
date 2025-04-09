@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publicaciones</title>
+    <link rel="stylesheet" href="/assets/web/assets/mobirise-icons2/mobirise2.css">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="/assets/dropdown/css/style.css">
+    <link rel="stylesheet" href="/assets/socicon/css/styles.css">
+    <link rel="stylesheet" href="/assets/theme/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap"></noscript>
+    <link rel="preload" as="style" href="/assets/mobirise/css/mbr-additional.css?v=Wf9Ojj"><link rel="stylesheet" href="/assets/mobirise/css/mbr-additional.css?v=Wf9Ojj" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+    <style>
+        .overlay {
+            z-index: 1000000;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        .overlay img {
+            width: auto;
+            max-width: 90vw;
+            max-height: 80%;
+            border-radius: 10px;
+        }
+                .carousel-control-prev, .carousel-control-next {
+            width: auto;
+            height: 100px;
+            top: 50%;
+            transform: translateY(-50%);
+            filter: invert(100%); 
+        }
+
+        .carousel-control-prev {
+            left: -60px; 
+        }
+
+        .carousel-control-next {
+            right: -60px; 
+        }
+            .card-footer {
+      display: flex;
+      justify-content: space-between; 
+      gap: 10px; 
+    }
+    .colfoot {
+      flex: 1;
+    }
+            .container-publi{
+                width: 100vw;
+                margin-bottom: 20px;
+            }
+            .card-container {
+      position: relative;
+    }
+    .card-img-top {
+      position: absolute;  
+        margin-right: 20px;
+      width: 100px;
+      height: auto;
+      border-radius: 50%;  
+      border: 2px solid #fff;
+    }
+        .fecha-comentario {
+            font-size: 12px; /* Letra más pequeña */
+            color: rgb(238, 216, 216); /* Color gris */
+            margin-left: 10px; /* Espacio entre el comentario y la fecha */
+            display: inline-block;
+        }
+        .formulario-publicacion {
+            margin-top: 150px; /* Añade más espacio entre el menú y el formulario */
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto; /* Centra el formulario horizontalmente */
+        }
+        .formulario-publicacion textarea {
+            width: 100%; /* Asegura que el textarea ocupe todo el ancho disponible */
+            height: 100px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+            margin-bottom: 10px;
+            resize: none;
+        }
+        .formulario-publicacion button {
+            margin-top: 10px; /* Añade espacio entre el textarea y el botón */
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .formulario-publicacion button:hover {
+            background-color: #0056b3;
+        }
+        .header-spacing {
+            margin-top: 150px; /* Ajusta este valor según sea necesario */
+        }
+        .eliminar-publicacion {
+            margin-bottom: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #dc3545;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .eliminar-publicacion:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Llamada al menu -->
+    <%- include("../routes/header.ejs") %>
+    <div class="header-spacing"></div>
+            <div class="container container-publi">
+                <div class="card-container">
+                  <img src="/assets/images/photo-1564564244660-5d73c057f2d2.jpeg" alt="Foto de perfil de <%= publicacion.nombre %>" class="card-img-top">
+                  <div class="card rounded-0" style="width: 100%; margin-left: 100px; border: 1px solid #8ec823; border-radius: 0 !important;">
+
+                    <div class="card-body">
+                      <h5 class="card-title"><%= publicacion.nombre %>&nbsp;&nbsp;<a href="/perfilajeno/<%=publicacion.username%>">@<%= publicacion.username%></a>&nbsp;&nbsp;&nbsp;&nbsp;<%= publicacion.fecha_publi%></h5>
+                      <p class="card-text"><%= publicacion.contenido %></p>
+                    </div>
+                    <% if (publicacion.imagenes.length > 0) { %>
+                        <center>
+                            <div id="myCarouselElement<%= publicacion.publicacion_id%>" class="carousel slide" data-ride="carousel" data-interval="false" style="width: 35%; margin: auto;">
+                                <!-- Contenido del carrusel -->
+                                <div class="carousel-inner">
+                                    <% publicacion.imagenes.forEach((imagen, index) => { %>
+                                        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                            <img id="img_<%= publicacion.publicacion_id %>_<%= index %>" class="d-block w-100" src="data:image/jpeg;base64, <%= imagen %>" alt="Imagen <%= index + 1 %>" style="width: 35%; cursor: pointer;">
+                                            <div id="overlay_<%= publicacion.publicacion_id %>_<%= index %>" class="overlay">
+                                                <img id="expandedImg_<%= publicacion.publicacion_id %>_<%= index %>" src="" alt="Imagen Ampliada">
+                                            </div>
+                                            <script>
+                                                document.getElementById("img_<%= publicacion.publicacion_id %>_<%= index %>").addEventListener("click", function() {
+                                                    const overlay = document.getElementById("overlay_<%= publicacion.publicacion_id %>_<%= index %>");
+                                                    const expandedImg = document.getElementById("expandedImg_<%= publicacion.publicacion_id %>_<%= index %>");
+                                                    expandedImg.src = this.src;
+                                                    overlay.style.display = "flex";
+                                                });
+                    
+                                                document.getElementById("overlay_<%= publicacion.publicacion_id %>_<%= index %>").addEventListener("click", function() {
+                                                    this.style.display = "none";
+                                                });
+                                            </script>
+                                        </div>
+                                    <% }) %>
+                                </div>
+                                <% if (publicacion.imagenes.length > 1) { %>
+                                <!-- Botones de navegación -->
+                                <a class="carousel-control-prev" href="javascript:void(0);" role="button" data-target="#myCarouselElement<%= publicacion.publicacion_id%>" role="button" data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="javascript:void(0);" role="button" data-target="#myCarouselElement<%= publicacion.publicacion_id%>"  role="button" data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                                <% }%>
+                            </div>
+                        </center>
+                    <% } %>
+                    
+                    <hr style="width: 100%;">
+                    <div class="card-footer bg-transparent border-0" >
+                        <div class="like-section colfoot">
+                        <button class="like" id="<%= publicacion.publicacion_id %>" name="<%= userid %>">
+                            <% if (publicacion.dio_like) { %>
+                                <i class="fa-solid fa-thumbs-up fa-2x"></i>
+                            <% } else { %>
+                                <i class="fa-regular fa-thumbs-up fa-2x"></i>
+                            <% } %>
+                        </button>
+                        <span id="likes_<%= publicacion.publicacion_id %>"><%= publicacion.num_like %></span>
+                    </div>          
+                    <div class="save-section colfoot">
+                        <button class="guarda" id="<%= publicacion.publicacion_id %>" name="<%= userid %>">
+                            <% if (publicacion.loguardo) { %>
+                                <i class="fa-solid fa-bookmark fa-2x"></i>
+                            <% } else { %>
+                                <i class="fa-regular fa-bookmark fa-2x"></i>
+                            <% } %>
+                        </button>
+                        <span id="guardados_<%= publicacion.publicacion_id %>"><%= publicacion.num_guardado %></span>
+                    </div>                             
+                                                    
+                    <div class="comentarios colfoot">
+                        <i class="fa-solid fa-comment fa-2x"></i>
+                        <% if (publicacion.comentarios && publicacion.comentarios.length > 0) { %>
+                            <ul id="comentarios-<%= publicacion.publicacion_id %>">
+                                <% publicacion.comentarios.forEach(function(comentario) { %>
+                                    <li id="comentario-<%= comentario.id %>">
+                                        <strong><%= comentario.nombre %>:</strong> 
+                                        <%= comentario.contenido %> 
+                                        <small class="fecha-comentario"><%= comentario.fecha_comentario %></small>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                        <% } else { %>
+                            <ul id="comentarios-<%= publicacion.publicacion_id %>">
+                            </ul>
+                        <% } %>
+                    </div>
+                 <!-- Formulario para agregar un comentario -->
+                 <form class="comentario-form" data-publicacion-id="<%= publicacion.publicacion_id %>">
+                    <input type="hidden" name="publicacion_id" value="<%= publicacion.publicacion_id %>">
+                    <textarea name="contenido" placeholder="Escribe tu comentario..." required></textarea>
+                    <button type="submit">Comentar</button>
+                </form>
+                <script>
+                function formatearFecha(fechaTexto) {
+                    if (!fechaTexto) return "";
+
+                    // Verifica si la fecha ya está en formato "18/02" y la deja igual
+                    if (/^\d{2}\/\d{2}$/.test(fechaTexto)) return fechaTexto;
+
+                    // Extraer solo el día y el mes de "YYYY-MM-DD HH:MM:SS"
+                    const partes = fechaTexto.split(" "); // Separa fecha y hora
+                    if (partes.length < 1) return "";
+
+                    const [anio, mes, dia] = partes[0].split("-"); // Separa en año, mes, día
+
+                    return `${parseInt(dia)}/${mes.padStart(2, "0")}`; // Asegura que el mes tenga dos dígitos
+                }
+
+                // ✅ Formatear las fechas de los comentarios existentes al cargar la página
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.querySelectorAll(".comentarios li").forEach(comentario => {
+                        const fechaElemento = comentario.querySelector("small");
+                        if (fechaElemento) {
+                            const fechaOriginal = fechaElemento.textContent.trim();
+                            if (fechaOriginal) {
+                                fechaElemento.textContent = formatearFecha(fechaOriginal);
+                            }
+                        }
+                    });
+                });
+
+                // ✅ Manejar el envío de nuevos comentarios
+                document.querySelectorAll(".comentario-form").forEach(form => {
+                    if (!form.dataset.listenerAdded) {
+                        form.addEventListener("submit", function(event) {
+                            event.preventDefault();
+                            event.stopPropagation(); // Evita que el evento se propague
+
+                            const publicacionId = this.getAttribute("data-publicacion-id");
+                            const contenido = this.querySelector("textarea").value.trim();
+                            const comentariosContainer = document.querySelector(`#comentarios-${publicacionId}`);
+
+                            if (!contenido) {
+                                alert("No puedes enviar un comentario vacío");
+                                return;
+                            }
+
+                            fetch("/comentarios", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ publicacion_id: publicacionId, contenido })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.error) {
+                                    alert(data.error);
+                                } else {
+                                    if (!document.getElementById(`comentario-${data.id}`)) {
+                                        const fechaFormateada = formatearFecha(data.fecha_comentario);
+
+                                        const nuevoComentario = document.createElement("li");
+                                        nuevoComentario.id = `comentario-${data.id}`;
+                                        nuevoComentario.innerHTML = `<strong>${data.nombre}:</strong> ${data.contenido} <small class="fecha-comentario">${fechaFormateada}</small>`;
+                                        comentariosContainer.appendChild(nuevoComentario);
+                                    }
+
+                                    this.querySelector("textarea").value = ""; // Limpiar el campo de texto
+                                }
+                            })
+                            .catch(error => console.error("Error:", error));
+                        });
+
+                        // Marcar el formulario como "con evento registrado"
+                        form.dataset.listenerAdded = "true";
+                    }
+                });
+                </script>
+<script
+>$('#myCarouselElement<%= publicacion.publicacion_id%>').carousel({
+    interval: false
+  });
+    </script>
+
+</div>
+                </div>
+              </div>
+            </div>            
+    <!-- Pie de página -->
+        <%- include("../routes/footer.ejs") %>
+
+    <!-- Scripts aquí... -->
+    <script src="/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/smoothscroll/smooth-scroll.js"></script>
+    <script src="/assets/ytplayer/index.js"></script>
+    <script src="/assets/dropdown/js/navbar-dropdown.js"></script>
+    <script src="/assets/vimeoplayer/player.js"></script>
+    <script src="/assets/masonry/masonry.pkgd.min.js"></script>
+    <script src="/assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script src="/assets/theme/js/script.js"></script>
+
+    <!-- Script para manejar los likes -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('.like').forEach(button => {
+            button.addEventListener('click', async () => {
+                const id_publicacion = button.id; // Usamos el ID del botón como ID de la publicación
+                const id_usuario = button.name;
+                const response = await fetch('/like', {
+                    method: 'POST',
+                    credentials: 'include', // Esto envía cookies al servidor
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_publicacion, id_usuario })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Actualizar el icono de "Me Gusta"
+                    button.innerHTML = data.text;
+
+                    // Actualizar el contador de likes
+                    document.getElementById(`likes_${id_publicacion}`).innerText = data.likes;
+                } else {
+                    console.error('Error al procesar el like:', data.error);
+                }
+            });
+        });
+    });
+    </script>
+
+    <!-- Script para manejar los elementos guardados -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Obtener 'tipo' desde la URL (query string)
+        const urlParams = new URLSearchParams(window.location.search);
+        const tipo = urlParams.get('tipo');  // Obtiene el valor de 'tipo'
+
+        document.querySelectorAll('.guarda').forEach(button => {
+            button.addEventListener('click', async () => {
+                const id_publicacion = button.id;
+                const id_usuario = button.name;
+
+                const response = await fetch('/elementoguardado', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_publicacion, id_usuario })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    button.innerHTML = data.text;
+                    document.getElementById(`guardados_${id_publicacion}`).innerText = data.guardados2;
+
+                    // Eliminar la publicación si no está guardada y estamos en la página de guardados
+                    if (!data.esta_guardado && tipo === "guardados") {
+                        console.log(`Publicación ${id_publicacion} ya no está guardada. Eliminando...`);
+
+                        const publicacionElemento = document.getElementById(`publicacion-${id_publicacion}`);
+                        if (publicacionElemento) {
+                            publicacionElemento.remove();
+                            console.log("Publicación eliminada del DOM.");
+                        } else {
+                            console.warn("Elemento no encontrado en el DOM.");
+                        }
+
+                        // Verificar si ya no hay más publicaciones guardadas
+                        const publicacionesGuardadas = document.querySelectorAll('.guarda').length;
+                        if (publicacionesGuardadas === 0) {
+                            // Mostrar el mensaje de que ya no hay publicaciones guardadas
+                            const mensaje = document.getElementById("mensaje-sin-publicaciones");
+                            if (mensaje) {
+                                mensaje.style.display = 'block';
+                            }
+                        }
+                    }
+                } else {
+                    console.error('Error al procesar el guardado:', data.error);
+                }
+            });
+        });
+    });
+    </script>
+
+
+
+
+</body>
+</html>

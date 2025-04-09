@@ -183,13 +183,14 @@
         <% if (typeof tipo !== 'undefined' && tipo === 'mis_publicaciones') { %>
             <button class="eliminar-publicacion" data-id="<%= publicacion.publicacion_id %>">Eliminar</button>
         <% } %>
-            
+
             <div class="container container-publi">
                 <div class="card-container">
                   <img src="../assets/images/photo-1564564244660-5d73c057f2d2.jpeg" alt="Foto de perfil de <%= publicacion.nombre %>" class="card-img-top">
                   <div class="card rounded-0" style="width: 100%; margin-left: 100px; border: 1px solid #8ec823; border-radius: 0 !important;">
 
-                    <div class="card-body">
+                    <div class="card-body"  onclick="window.location.href='/publicaciones/<%= publicacion.username %>/<%= publicacion.publicacion_id %>'" 
+                        style="cursor: pointer;">
                       <h5 class="card-title"><%= publicacion.nombre %>&nbsp;&nbsp;<a href="/perfilajeno/<%=publicacion.username%>">@<%= publicacion.username%></a>&nbsp;&nbsp;&nbsp;&nbsp;<%= publicacion.fecha_publi%></h5>
                       <p class="card-text"><%= publicacion.contenido %></p>
                     </div>
@@ -364,7 +365,7 @@
 </div>
                 </div>
               </div>
-            </div>            
+            </div>          
             
         <% }); %>
     <% } %>

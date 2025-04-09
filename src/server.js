@@ -30,6 +30,25 @@ app.use(session({
     saveUninitialized: true
 }));
 
+// Middleware para verificar si el usuario está logueado
+app.use((req, res, next) => {
+    const rutasPublicas = ["/login", "/registro", "/assets", "/images", "/css", "/js", "/register", "/recovery", "restore-account"];
+
+    // Si la ruta actual es pública, dejarla pasar
+    if (rutasPublicas.some(ruta => req.path.startsWith(ruta))) {
+        return next();
+    }
+
+    // Si no está logueado, redirigir a /login
+    if (!req.session.userId) {
+        return res.redirect("/login");
+    }
+    next();
+});
+
+
+  
+
 // Configuración para WebSocket
 const WebSocket = require('ws'); // Importar WebSocket
 const wss = new WebSocket.Server({ port: 8080 }); // Servidor WebSocket en puerto 8080
@@ -176,7 +195,7 @@ app.get('/buscar', (req, res) => {
 app.get("/perfilajeno/:username", (req, res) => {
     const usernamever = req.params.username; // Usuario cuyo perfil se quiere ver
     const userId = req.session.userId;    // ID del usuario autenticado
-
+    let estasbloqueado = false;
 
     const queryUsuario = `SELECT * FROM usuarios WHERE username = ?`;
 
@@ -194,7 +213,7 @@ app.get("/perfilajeno/:username", (req, res) => {
         }
 
         if (resultBloqueado[0].bloqueado > 0) {
-            return res.status(403).send("No tienes permiso para acceder a este perfil.");
+             estasbloqueado = true;
         }
 
         // Si no está bloqueado, continuar con la lógica normal
@@ -267,6 +286,7 @@ app.get("/perfilajeno/:username", (req, res) => {
                                 bloqueado,
                                 userId,
                                 usernamever,
+                                estasbloqueado,
                                 username: req.session.username
                             });
                         });
@@ -441,6 +461,68 @@ app.get('/perfil', (req, res) => {
         });
     });
 });
+
+app.get("/publicaciones/:username/:id", (req, res) => {
+    const { username, id } = req.params;
+    const userid = req.session.userId;
+
+    const query = `
+        SELECT u.id, u.username, u.nombre, u.foto_perfil,
+               p.id AS publicacion_id, p.contenido, p.num_like, p.num_guardado, 
+               DATE_FORMAT(p.fecha_publicacion, '%d/%m/%Y %H:%i:%s') AS fecha_publi,
+            (SELECT COUNT(*) FROM like_publicacion lp 
+            WHERE lp.id_publicacion = p.id AND lp.id_usuario = ?) AS dio_like,
+            (SELECT COUNT(*) FROM guardar_publicacion gp 
+            WHERE gp.id_publicacion = p.id AND gp.id_usuario = ?) AS loguardo,
+               img.id AS imagen_id, TO_BASE64(img.imagen) AS imagen_base64
+        FROM publicaciones p
+        INNER JOIN usuarios u ON p.usuario_id = u.id
+        LEFT JOIN imagen_publicacion img ON img.publicacion_id = p.id
+        WHERE u.username = ? AND p.id = ?;
+    `;
+
+    connection.query(query, [userid, userid, username, id], (err, results) => {
+
+        if (err) {
+            console.error(err);
+            return res.status(500).send("Error al obtener la publicación");
+        }
+
+        if (results.length === 0) {
+            return res.status(404).send("Publicación no encontrada");
+        }
+
+        // Agrupar imágenes si hay varias
+        const publicacion = {
+            publicacion_id: results[0].publicacion_id,
+            contenido: results[0].contenido,
+            nombre: results[0].nombre,
+            username: results[0].username,
+            foto_perfil: results[0].foto_perfil,
+            num_like: results[0].num_like,
+            num_guardado: results[0].num_guardado,
+            fecha_publi: results[0].fecha_publi,
+            loguardo: results[0].loguardo,
+            dio_like: results[0].dio_like,
+            imagenes: []
+        };
+
+        results.forEach(row => {
+            if (row.imagen_base64) {
+                publicacion.imagenes.push(row.imagen_base64);
+            }
+        });
+
+        res.render("solopublicacion", {
+            publicacion,
+            userid,
+            username: req.session.username
+            
+        });
+    });
+});
+
+
 
 app.get("/perfil/:username/siguiendo", (req, res) => {
     const usernameperfil = req.params.username;

@@ -14,6 +14,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
+        body{
+            min-height: 100vh;
+        }
         .profile-container {
             display: flex !important;
             flex-direction: column !important;
@@ -72,7 +75,12 @@
 <body>
     <%- include("../routes/header.ejs") %>
     <br>
-
+    <% if(estasbloqueado){ %>
+        <center>
+        <h1><%- usernamever %> te ha bloqueado</h1>
+        <img src="/assets/images/tristepatatas.png" style="height: 20vh; width: 20vh;"></img>
+    </center>
+    <% } else { %>
     <section class="people07" id="people07-d">
         <div class="profile-container">
             <div class="img-wrapper mt-4">
@@ -203,6 +211,7 @@
             });
         });
     </script>
+            <% } %>
     <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/smoothscroll/smooth-scroll.js"></script>
     <script src="assets/ytplayer/index.js"></script>
@@ -213,4 +222,5 @@
     <script src="assets/theme/js/script.js"></script>
     <%- include("../routes/footer.ejs") %>
 </body>
+
 </html>
