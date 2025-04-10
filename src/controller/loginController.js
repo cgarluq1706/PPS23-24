@@ -211,20 +211,20 @@ const deleteAccount = (req, res) => {
                 return res.render('borrar', { mensaje: 'Contraseña incorrecta' });
             }
 
-            // Si las contraseñas coinciden, proceder a eliminar la cuenta
-            const deleteQuery = 'DELETE FROM usuarios WHERE id = ?';
-            connection.query(deleteQuery, [userId], (err, results) => {
+            // Si las contraseñas coinciden, marcar al usuario como oculto
+            const updateQuery = 'UPDATE usuarios SET oculto = TRUE WHERE id = ?';
+            connection.query(updateQuery, [userId], (err, results) => {
                 if (err) {
-                    console.error('Error al eliminar la cuenta:', err);
-                    return res.status(500).send('Error al eliminar la cuenta');
+                    console.error('Error al ocultar la cuenta:', err);
+                    return res.status(500).send('Error al ocultar la cuenta');
                 }
 
-                // Destruir la sesión después de eliminar la cuenta
+                // Destruir la sesión después de ocultar la cuenta
                 req.session.destroy((err) => {
                     if (err) {
                         console.error('Error al destruir la sesión:', err);
                     }
-                    res.redirect('/'); // Redirigir al inicio después de eliminar la cuenta
+                    res.redirect('/login'); // Redirigir al login después de ocultar la cuenta
                 });
             });
         });
@@ -234,80 +234,26 @@ const deleteAccount = (req, res) => {
 
 // Función para desactivar cuenta (guardar datos en la tabla "recovery" y desactivar cuenta)
 const deactivateAccount = (req, res) => {
-    const userId = req.session.userId; // El ID del usuario debe estar guardado en la sesión
+    const userId = req.session.userId; // Obtener el ID del usuario desde la sesión
 
     if (!userId) {
         return res.status(401).send('Usuario no autenticado');
     }
 
-    // Verificar si el usuario existe en la tabla `usuarios`
-    const queryUsuario = 'SELECT * FROM usuarios WHERE id = ?';
-    connection.query(queryUsuario, [userId], (err, results) => {
+    const query = 'UPDATE usuarios SET oculto = TRUE WHERE id = ?';
+
+    connection.query(query, [userId], (err, results) => {
         if (err) {
-            console.error('Error al buscar el usuario:', err);
-            return res.status(500).send('Error al buscar el usuario');
+            console.error('Error al desactivar la cuenta:', err);
+            return res.status(500).send('Error al desactivar la cuenta');
         }
 
-        if (results.length === 0) {
-            console.log(`Usuario con ID ${userId} no encontrado en la tabla usuarios`);
-            return res.status(404).send('Usuario no encontrado');
-        }
-
-        const usuario = results[0];
-        console.log(`Usuario encontrado: ${usuario.id} - ${usuario.username}`);
-
-        // 1️⃣ Insertar los datos del usuario en la tabla `recovery`
-        const queryRecovery = `
-            INSERT INTO reco (id, nombre, apellido, username, foto_perfil, fecha_nacimiento, telefono, descripcion, twitter, instagram, linkedin, github)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `;
-        connection.query(queryRecovery, [
-            usuario.id,
-            usuario.nombre,
-            usuario.apellido,
-            usuario.username,
-            usuario.foto_perfil,
-            usuario.fecha_nacimiento,
-            usuario.telefono,
-            usuario.descripcion,
-            usuario.twitter,
-            usuario.instagram,
-            usuario.linkedin,
-            usuario.github
-        ], (errorInsert, resultsInsert) => {
-            if (errorInsert) {
-                console.error('Error al insertar en la tabla recovery:', errorInsert);
-                return res.status(500).send('Error al guardar en la tabla recovery');
+        // Destruir la sesión después de desactivar la cuenta
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Error al destruir la sesión:', err);
             }
-
-            console.log('Usuario copiado a la tabla recovery con éxito');
-
-            // 2️⃣ Borrar el usuario de la tabla `usuarios`
-            const deleteQuery = 'DELETE FROM usuarios WHERE id = ?';
-            connection.query(deleteQuery, [userId], (err, resultsDelete) => {
-                if (err) {
-                    console.error('Error al ejecutar la eliminación de usuario:', err);
-                    return res.status(500).send('Error al eliminar la cuenta');
-                }
-
-                console.log(`Filas afectadas por la eliminación: ${resultsDelete.affectedRows}`);
-
-                // Verificar si el usuario fue eliminado
-                if (resultsDelete.affectedRows === 0) {
-                    console.log(`No se encontró el usuario con ID ${userId} para borrar en la tabla usuarios`);
-                    return res.status(404).send('No se pudo eliminar el usuario');
-                }
-
-                // 3️⃣ Destruir la sesión después de eliminar la cuenta
-                req.session.destroy((err) => {
-                    if (err) {
-                        console.error('Error al destruir la sesión:', err);
-                    }
-                    console.log('Sesión destruida con éxito');
-                    // Redirigir al inicio después de desactivar
-                    res.redirect('/'); // Redirige al inicio después de desactivar
-                });
-            });
+            res.redirect('/'); // Redirigir al inicio
         });
     });
 };

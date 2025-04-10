@@ -83,6 +83,11 @@
             background-color: #218838;
         }
 
+        a:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
 
     </style>
 </head>
@@ -177,7 +182,20 @@
                                 <label for="telefono">Teléfono:</label>
                                 <input type="tel" id="telefono" name="telefono" value="<%= usuario.telefono %>">
                                 <br><br>
-                                <a href="/borrar">Borrar usuario</a>
+                                <a href="/borrar" style="
+                                    display: inline-block;
+                                    padding: 10px 20px;
+                                    font-size: 1em;
+                                    font-weight: bold;
+                                    color: #fff;
+                                    text-decoration: none;
+                                    background: linear-gradient(45deg, #ff416c, #ff4b2b);
+                                    border-radius: 5px;
+                                    transition: transform 0.2s ease, box-shadow 0.2s ease;
+                                    text-align: center;
+                                ">
+                                    Borrar usuario
+                                </a>
                             </div>
                         </div>
                         <!-- Botón unico de gurdado -->

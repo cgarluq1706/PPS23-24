@@ -1,125 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-	<title>borrar</title>
-	<link rel="stylesheet" type="text/css" href="slide navbar style.css">
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
-
-<style>
-    body{
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        font-family: 'Jost', sans-serif;
-        background: linear-gradient(to bottom, #0f0c29, #fce474, #fcec7c);
-    }
-    .main{
-        width: 350px;
-        height: 500px;
-        background: red;
-        overflow: hidden;
-        background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;
-        border-radius: 10px;
-        box-shadow: 5px 20px 50px #000;
-    }
-    #chk{
-        display: none;
-    }
-    .borrar{
-        position: relative;
-        width:100%;
-        height: 100%;
-    }
-    label{
-        color: #fff;
-        font-size: 2.3em;
-        justify-content: center;
-        display: flex;
-        margin: 50px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: .5s ease-in-out;
-    }
-    input{
-        width: 60%;
-        height: 10px;
-        background: #e0dede;
-        justify-content: center;
-        display: flex;
-        margin: 20px auto;
-        padding: 12px;
-        border: none;
-        outline: none;
-        border-radius: 5px;
-    }
-    button{
-        width: 60%;
-        height: 40px;
-        margin: 10px auto;
-        justify-content: center;
-        display: block;
-        color: #fff;
-        background: #573b8a;
-        font-size: 1em;
-        font-weight: bold;
-        margin-top: 30px;
-        outline: none;
-        border: none;
-        border-radius: 5px;
-        transition: .2s ease-in;
-        cursor: pointer;
-    }
-    button:hover{
-        background: #6d44b8;
-    }
-    .desactivar{
-        height: 460px;
-        background: #eee;
-        border-radius: 60% / 10%;
-        transform: translateY(-180px);
-        transition: .8s ease-in-out;
-    }
-    .desactivar label{
-        color: #573b8a;
-        transform: scale(.6);
-    }
-    
-    #chk:checked ~ .desactivar{
-        transform: translateY(-500px);
-    }
-    #chk:checked ~ .desactivar label{
-        transform: scale(1);	
-    }
-    #chk:checked ~ .borrar label{
-        transform: scale(.6);
-    }
-                                             
-                
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Cuenta</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/theme/css/style.css">
+    <style>
+        body {
+            background-color: #ffefb5;
+            font-family: 'Inter Tight', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .delete-section {
+            background-color: #fde156;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            margin: auto;
+            transition: transform 0.3s ease-in-out;
+        }
+        .delete-section:hover {
+            transform: scale(1.02);
+        }
+        .delete-section h1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .delete-section p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        .delete-section input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .delete-section button {
+            display: inline-block;
+            background-color: #333;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .delete-section button:hover {
+            background-color: #ffefb5;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-	<div class="main">  	
-		<input type="checkbox" id="chk" aria-hidden="true">
-
-			<div class="borrar">
-				<form action="/borrar" method="POST">
-                    <label for="chk" aria-hidden="true">Borrar Cuenta</label>
-                    <input type="password" name="contraseña" placeholder="Contraseña" required=""/>
-                    <button type="submit" name="delete_user">Confirmar</button>
-
-				</form>
-			</div>
-
-			<div class="desactivar">
-                <form action="/desactivar" method="POST">
-                    <label for="chk" aria-hidden="true">Desactivar</label>
-                    <input type="password" name="contraseña" placeholder="Contraseña" required/>
-                    <button type="submit" name="deactivate_user">Confirmar</button>
-                </form>
-			</div>
-	</div>
+    <div class="delete-section">
+        <h1>Eliminar Cuenta</h1>
+        <p>¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.</p>
+        <form action="/borrar" method="POST">
+            <input type="password" name="contraseña" placeholder="Ingresa tu contraseña" required>
+            <button type="submit">Confirmar</button>
+        </form>
+    </div>
 </body>
-</html>            
+</html>      
