@@ -1,7 +1,26 @@
 const connection = require('../conexion');
 
+// ✅ Función para obtener opciones de encuesta (reutilizable)
+const obtenerOpcionesEncuesta = (publicacion) => {
+    return new Promise((resolve) => {
+        const sqlEncuesta = `
+            SELECT e.id AS encuesta_id, oe.id AS opcion_id, oe.texto_opcion, oe.votos
+            FROM encuestas e
+            JOIN opciones_encuesta oe ON oe.encuesta_id = e.id
+            WHERE e.publicacion_id = ?
+        `;
+        connection.query(sqlEncuesta, [publicacion.publicacion_id], (err, opciones) => {
+            if (!err && opciones.length > 0) {
+                publicacion.es_encuesta = true;
+                publicacion.opciones = opciones;
+            }
+            resolve();
+        });
+    });
+};
+
 // Obtener publicaciones del usuario actual
-const getMisPublicaciones = (req, res) => {
+const getMisPublicaciones = async (req, res) => {
     const usuario_id = req.session.userId;
 
     if (!usuario_id) {
@@ -21,7 +40,7 @@ const getMisPublicaciones = (req, res) => {
         (SELECT COUNT(*) FROM like_publicacion lp WHERE lp.id_publicacion = p.id AND lp.id_usuario = ?) AS dio_like,
         (SELECT COUNT(*) FROM guardar_publicacion gp WHERE gp.id_publicacion = p.id AND gp.id_usuario = ?) AS loguardo,
         img.id AS imagen_id,
-        TO_BASE64(img.imagen) AS imagen_base64  -- Convertimos el BLOB a Base64
+        TO_BASE64(img.imagen) AS imagen_base64
     FROM publicaciones p
     INNER JOIN usuarios u ON p.usuario_id = u.id
     LEFT JOIN imagen_publicacion img ON img.publicacion_id = p.id
@@ -30,19 +49,17 @@ const getMisPublicaciones = (req, res) => {
     ORDER BY p.fecha_publicacion DESC, img.id;
     `;
 
-    connection.query(sql, [usuario_id, usuario_id, usuario_id], (err, results) => {
+    connection.query(sql, [usuario_id, usuario_id, usuario_id], async (err, results) => {
         if (err) {
             console.error('Error al obtener publicaciones', err);
             return res.status(500).json({ error: "Error al obtener publicaciones" });
         }
 
-        // Agrupar imágenes por publicación
         const publicaciones = [];
 
         results.forEach((row) => {
             let pub = publicaciones.find(p => p.publicacion_id === row.publicacion_id);
             if (!pub) {
-                // Si no existe, agregar una nueva publicación
                 pub = {
                     publicacion_id: row.publicacion_id,
                     contenido: row.contenido,
@@ -59,7 +76,6 @@ const getMisPublicaciones = (req, res) => {
                 publicaciones.push(pub);
             }
 
-            // Agregar la imagen a la lista de imágenes de la publicación
             if (row.imagen_base64) {
                 pub.imagenes.push({
                     imagen_id: row.imagen_id,
@@ -68,7 +84,8 @@ const getMisPublicaciones = (req, res) => {
             }
         });
 
-        // Pasar las publicaciones agrupadas a la vista
+        await Promise.all(publicaciones.map(pub => obtenerOpcionesEncuesta(pub)));
+
         res.render('publicaciones', { 
             username: req.session.username, 
             userid: usuario_id, 
@@ -79,13 +96,11 @@ const getMisPublicaciones = (req, res) => {
     });
 };
 
-
 // Obtener publicaciones con comentarios
 const getpublicaciones = (req, res) => {
     const username = req.session.username;
     const userid = req.session.userId;
-    const tipo = req.query.tipo; // Recibe el parámetro tipo=guardados desde la URL
-
+    const tipo = req.query.tipo;
 
     let sql;
     let params = [userid, userid, username];
@@ -107,9 +122,8 @@ const getpublicaciones = (req, res) => {
             WHERE gp.id_usuario = ? AND p.oculto = FALSE
             ORDER BY p.fecha_publicacion DESC, img.id;
         `;
-        params = [userid, userid, userid]; // Solo filtra por el usuario que guardó
+        params = [userid, userid, userid];
     } else {
-        // Consulta normal para obtener publicaciones de usuarios seguidos
         sql = `
             SELECT u.id, u.nombre, u.foto_perfil, u.username, 
                    p.id AS publicacion_id, p.contenido, 
@@ -127,24 +141,22 @@ const getpublicaciones = (req, res) => {
             WHERE u2.username = ? AND p.oculto = FALSE
             ORDER BY p.fecha_publicacion DESC, img.id;
         `;
-        params = [userid, userid, req.session.username]; // Aquí filtra por el usuario logueado
+        params = [userid, userid, req.session.username];
     }
-    
+
     connection.query(sql, params, (err, results) => {
         if (err) {
             return res.status(500).json({ error: "Error al obtener publicaciones" });
         }
-    
+
         if (results.length === 0) {
             res.render('publicaciones', { tipo: 'publicaciones', username: req.session.username, resultado: 0 });
         } else {
-            // Agrupar publicaciones por publicación_id
             const publicaciones = [];
-    
+
             results.forEach((row) => {
                 let pub = publicaciones.find(p => p.publicacion_id === row.publicacion_id);
                 if (!pub) {
-                    // Si no existe, crear una nueva publicación
                     pub = {
                         publicacion_id: row.publicacion_id,
                         contenido: row.contenido,
@@ -160,8 +172,7 @@ const getpublicaciones = (req, res) => {
                     };
                     publicaciones.push(pub);
                 }
-    
-                // Agregar la imagen a la lista de imágenes de la publicación
+
                 if (row.imagen_base64) {
                     pub.imagenes.push({
                         imagen_id: row.imagen_id,
@@ -169,11 +180,9 @@ const getpublicaciones = (req, res) => {
                     });
                 }
             });
-    
-            // Ahora obtener los comentarios de cada publicación
-            const publicacionesConComentarios = [];
+
             let comentariosProcessed = 0;
-    
+
             publicaciones.forEach((publicacion) => {
                 const sqlComentarios = `
                     SELECT c.id, c.contenido, 
@@ -183,18 +192,19 @@ const getpublicaciones = (req, res) => {
                     INNER JOIN usuarios u ON c.usuario_id = u.id
                     WHERE c.publicacion_id = ?
                 `;
-    
-                connection.query(sqlComentarios, [publicacion.publicacion_id], (err, comentarios) => {
+
+                connection.query(sqlComentarios, [publicacion.publicacion_id], async (err, comentarios) => {
                     if (err) {
                         console.error('Error al obtener comentarios', err);
                         return res.status(500).send('Error al obtener comentarios');
                     }
-    
+
                     publicacion.comentarios = comentarios;
                     comentariosProcessed++;
-    
-                    // Cuando se hayan procesado todos los comentarios
+
                     if (comentariosProcessed === publicaciones.length) {
+                        await Promise.all(publicaciones.map(pub => obtenerOpcionesEncuesta(pub)));
+
                         res.render('publicaciones', { 
                             tipo: 'publicaciones', 
                             username: req.session.username, 
@@ -207,8 +217,7 @@ const getpublicaciones = (req, res) => {
             });
         }
     });
-};    
-
+};
 
 // Obtener comentarios de una publicación
 const getComentarios = (req, res) => {

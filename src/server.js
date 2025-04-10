@@ -245,6 +245,10 @@ app.get("/perfilajeno/:username", (req, res) => {
     
 });
 
+// encuestas
+const encuestasRoutes = require('./routes/encuestas');
+app.use('/', encuestasRoutes);
+
 
 // buscar usuarios
 const busquedaRoutes = require("./routes/busqueda");
@@ -445,6 +449,7 @@ app.get('/buscar', (req, res) => {
 app.get("/perfilajeno/:username", (req, res) => {
     const username = req.params.username;
     const userId = req.session.userId;
+    
     const queryUsuario = `SELECT * FROM usuarios WHERE username = ?`;
     
     const querySeguidos = `

@@ -145,6 +145,22 @@
             <p id="contador-imagenes">0/4 imágenes seleccionadas</p>
             <button type="submit" class="btn btn-primary">Crear Publicación</button>
         </form>
+        <button onclick="toggleEncuestaForm()">➕ Crear encuesta</button>
+
+        <div id="formEncuesta" style="display:none; margin-top: 20px;">
+            <form action="/guardar-encuesta" method="POST">
+                <label>Pregunta:</label><br>
+                <textarea name="contenido" required></textarea><br><br>
+        
+                <label>Opciones:</label><br>
+                <input type="text" name="opciones[]" placeholder="Opción 1" required><br>
+                <input type="text" name="opciones[]" placeholder="Opción 2" required><br>
+                <input type="text" name="opciones[]" placeholder="Opción 3"><br>
+                <input type="text" name="opciones[]" placeholder="Opción 4"><br><br>
+        
+                <button type="submit">Enviar encuesta</button>
+            </form>
+        </div>        
     </div>
         <!-- Botón para ver las publicaciones del usuario -->
         <div class="text-center mt-4" id="misPublicaciones">
@@ -273,6 +289,19 @@
                             <ul id="comentarios-<%= publicacion.publicacion_id %>">
                             </ul>
                         <% } %>
+                        <% if (publicacion.es_encuesta) { %>
+                            <div class="encuesta">
+                                <h4>Encuesta:</h4>
+                                <form class="form-voto" data-publicacion="<%= publicacion.publicacion_id %>">
+                                    <% publicacion.opciones.forEach(op => { %>
+                                        <button type="button" onclick="votar('<%= op.opcion_id %>', this)">
+                                            <%= op.texto_opcion %> (<%= op.votos %> votos)
+                                        </button><br>
+                                    <% }); %>
+                                </form>
+                            </div>
+                        <% } %>
+                        
                     </div>
                  <!-- Formulario para agregar un comentario -->
                  <form class="comentario-form" data-publicacion-id="<%= publicacion.publicacion_id %>">
@@ -308,6 +337,23 @@
                         }
                     });
                 });
+
+                function votar(opcion_id, button) {
+                fetch('/votar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ opcion_id })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('¡Voto registrado!');
+                        location.reload();
+                    } else {
+                        alert(data.error || 'Error al votar');
+                    }
+                });
+            }
 
                 // ✅ Manejar el envío de nuevos comentarios
                 document.querySelectorAll(".comentario-form").forEach(form => {
@@ -354,6 +400,10 @@
                         form.dataset.listenerAdded = "true";
                     }
                 });
+                function toggleEncuestaForm() {
+                 const form = document.getElementById('formEncuesta');
+                form.style.display = form.style.display === 'none' ? 'block' : 'none';
+                 }
                 </script>
 <script
 >$('#myCarouselElement<%= publicacion.publicacion_id%>').carousel({
