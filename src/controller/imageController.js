@@ -74,29 +74,27 @@ const getImage = (req, res) => {
     });
 };
 
-const modificaFoto = async (req, res) => {
-    const username = req.session.username;
-    const image = req.file;
+const modificaFoto = (req, res) => {
+    const image = req.files?.image; // Acceder al archivo cargado con 'image' como el nombre del campo
+
     if (!image) {
-        res.redirect('/perfil?mensaje=' + encodeURIComponent('Error al obtener imagen de perfil'));
-        return;
+        return res.redirect('/perfil?mensaje=' + encodeURIComponent('No se ha subido ninguna imagen'));
     }
 
-    // Actualizar la foto de perfil del usuario en la base de datos
+    // Procesar la imagen, por ejemplo, guardarla en la base de datos
+    const username = req.session.username;
+    const imageBuffer = image.data; // Usar el buffer de la imagen cargada
+
     const updateQuery = 'UPDATE usuarios SET foto_perfil = ? WHERE username = ?';
-    const values = [image.buffer, username];
+    const values = [imageBuffer, username];
 
-    // Ejecutar la consulta UPDATE
-    connection.query(updateQuery, values, function(error, results, fields) {
+    connection.query(updateQuery, values, (error, results) => {
         if (error) {
-            res.redirect('/perfil?mensaje=' + encodeURIComponent('Error al actualizar la foto de perfil'));
-            return;
+            return res.redirect('/perfil?mensaje=' + encodeURIComponent('Error al actualizar la foto de perfil'));
         }
-        
-        res.redirect('perfil');
 
+        res.redirect('/perfil');
     });
-
 };
 
 module.exports = {

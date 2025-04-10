@@ -37,21 +37,30 @@
             max-height: 80%;
             border-radius: 10px;
         }
-                .carousel-control-prev, .carousel-control-next {
-            width: auto;
-            height: 100px;
-            top: 50%;
-            transform: translateY(-50%);
-            filter: invert(100%); 
-        }
+        .carousel-inner img {
+    width: 100% !important;
+    height: auto;
+    max-height: 400px;
+    object-fit: contain;
+}
+.carousel-control-prev, .carousel-control-next {
+    width: 40px;
+    height: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(224, 253, 3, 0.3); /* Fondo sutil para visibilidad */
+    border-radius: 50%;
+    filter: invert(100%);
+    z-index: 1;
+}
 
-        .carousel-control-prev {
-            left: -60px; 
-        }
+.carousel-control-prev {
+    left: 10px; /* ✅ Ahora dentro del carrusel */
+}
 
-        .carousel-control-next {
-            right: -60px; 
-        }
+.carousel-control-next {
+    right: 10px;
+}
             .card-footer {
       display: flex;
       justify-content: space-between; 
@@ -60,21 +69,29 @@
     .colfoot {
       flex: 1;
     }
-            .container-publi{
-                width: 100vw;
-                margin-bottom: 20px;
-            }
-            .card-container {
-      position: relative;
-    }
-    .card-img-top {
-      position: absolute;  
-        margin-right: 20px;
-      width: 100px;
-      height: auto;
-      border-radius: 50%;  
-      border: 2px solid #fff;
-    }
+    .container-publi {
+    width: 100%;
+    padding: 0 15px; /* Añade margen interior para evitar que pegue a los lados */
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.card-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.card-img-top {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
         .fecha-comentario {
             font-size: 12px; /* Letra más pequeña */
             color: rgb(238, 216, 216); /* Color gris */
@@ -129,6 +146,114 @@
         .eliminar-publicacion:hover {
             background-color: #c82333;
         }
+        .comentario-form {
+    width: 90%;
+    max-width: 100%; /* Se alinea con el card */
+    margin: 0 auto;
+    padding: 20px 0 10px 0;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.comentario-form textarea {
+    width: 100%;
+    padding: 10px 0;
+    border: none;
+    border-bottom: 2px solid #b3ff00;
+    outline: none;
+    resize: none;
+    background-color: transparent;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s;
+}
+
+.comentario-form textarea::placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+.comentario-form textarea:focus {
+    border-bottom-color: #fcdb3a;
+}
+
+.comentario-form button {
+    margin: 10px auto 0 auto; /* Centrado horizontal con margen arriba */
+    padding: 8px 16px;
+    background-color: #b3ff00;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: block; /* Necesario para que 'margin: auto' funcione */
+}
+
+
+.comentario-form button:hover {
+    background-color:#fcdb3a;
+}
+
+.alineado-card {
+    margin-left: 100px; /* Igual que el card */
+    width: 90% ; /* Ajusta el ancho descontando ese margen */
+}
+.lista-comentarios {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+}
+
+.comentario-item {
+    width: 100%; /* Ocupa todo el ancho disponible */
+    padding: 12px 15px; /* Más espacio para que sea más legible */
+    margin-bottom: 12px; /* Más separación entre comentarios */
+    border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+    word-wrap: break-word; /* Para ajustar texto largo */
+    background-color: #f9f9f9;
+    border-radius: 8px; /* Bordes redondeados para un mejor diseño */
+    gap: 10px; /* Espacio entre imagen y texto */
+    align-items: center; /* Alineación vertical de imagen y texto */
+}
+
+.comentario-item img {
+    width: 40px; /* Tamaño de la imagen */
+    height: 40px; /* Mantener la imagen cuadrada */
+    border-radius: 50%; /* Bordes redondeados para la imagen */
+    object-fit: cover; /* Asegura que la imagen se recorte y se ajuste bien */
+}
+
+.comentario-item .contenido-comentario {
+    font-size: 1rem;
+    color: #444;
+    white-space: normal; /* Deja que el contenido se ajuste automáticamente */
+    margin-top: 8px;
+}
+
+.comentario-item strong {
+    color: #333;
+    font-weight: bold;
+}
+
+.comentario-item .fecha-comentario {
+    display: block;
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 5px;
+    font-style: italic; /* Da un estilo diferente a la fecha */
+    margin-left: 10px; /* Espacio entre el contenido del comentario y la fecha */
+}
+
+
+
+
     </style>
 </head>
 <body>
@@ -137,16 +262,16 @@
     <div class="header-spacing"></div>
             <div class="container container-publi">
                 <div class="card-container">
-                  <img src="/assets/images/photo-1564564244660-5d73c057f2d2.jpeg" alt="Foto de perfil de <%= publicacion.nombre %>" class="card-img-top">
-                  <div class="card rounded-0" style="width: 100%; margin-left: 100px; border: 1px solid #8ec823; border-radius: 0 !important;">
+                  <img src="data:image/jpeg;base64,<%= publicacion.foto_perfil %>" alt="Foto de perfil de <%= publicacion.nombre %>" class="card-img-top">
+                  <div class="card rounded-0" style="flex: 1; border: 1px solid #8ec823; border-radius: 0 !important;">
 
                     <div class="card-body">
                       <h5 class="card-title"><%= publicacion.nombre %>&nbsp;&nbsp;<a href="/perfilajeno/<%=publicacion.username%>">@<%= publicacion.username%></a>&nbsp;&nbsp;&nbsp;&nbsp;<%= publicacion.fecha_publi%></h5>
-                      <p class="card-text"><%= publicacion.contenido %></p>
+                      <p class="card-text"><%- publicacion.contenido %></p>
                     </div>
                     <% if (publicacion.imagenes.length > 0) { %>
                         <center>
-                            <div id="myCarouselElement<%= publicacion.publicacion_id%>" class="carousel slide" data-ride="carousel" data-interval="false" style="width: 35%; margin: auto;">
+                            <div id="myCarouselElement<%= publicacion.publicacion_id%>" class="carousel slide" data-ride="carousel" data-interval="false" style="width: 100%; max-width: 500px; margin: auto;">
                                 <!-- Contenido del carrusel -->
                                 <div class="carousel-inner">
                                     <% publicacion.imagenes.forEach((imagen, index) => { %>
@@ -206,106 +331,14 @@
                             <% } %>
                         </button>
                         <span id="guardados_<%= publicacion.publicacion_id %>"><%= publicacion.num_guardado %></span>
-                    </div>                             
-                                                    
+                    </div>      
                     <div class="comentarios colfoot">
                         <i class="fa-solid fa-comment fa-2x"></i>
-                        <% if (publicacion.comentarios && publicacion.comentarios.length > 0) { %>
-                            <ul id="comentarios-<%= publicacion.publicacion_id %>">
-                                <% publicacion.comentarios.forEach(function(comentario) { %>
-                                    <li id="comentario-<%= comentario.id %>">
-                                        <strong><%= comentario.nombre %>:</strong> 
-                                        <%= comentario.contenido %> 
-                                        <small class="fecha-comentario"><%= comentario.fecha_comentario %></small>
-                                    </li>
-                                <% }); %>
-                            </ul>
-                        <% } else { %>
-                            <ul id="comentarios-<%= publicacion.publicacion_id %>">
-                            </ul>
-                        <% } %>
-                    </div>
-                 <!-- Formulario para agregar un comentario -->
-                 <form class="comentario-form" data-publicacion-id="<%= publicacion.publicacion_id %>">
-                    <input type="hidden" name="publicacion_id" value="<%= publicacion.publicacion_id %>">
-                    <textarea name="contenido" placeholder="Escribe tu comentario..." required></textarea>
-                    <button type="submit">Comentar</button>
-                </form>
-                <script>
-                function formatearFecha(fechaTexto) {
-                    if (!fechaTexto) return "";
-
-                    // Verifica si la fecha ya está en formato "18/02" y la deja igual
-                    if (/^\d{2}\/\d{2}$/.test(fechaTexto)) return fechaTexto;
-
-                    // Extraer solo el día y el mes de "YYYY-MM-DD HH:MM:SS"
-                    const partes = fechaTexto.split(" "); // Separa fecha y hora
-                    if (partes.length < 1) return "";
-
-                    const [anio, mes, dia] = partes[0].split("-"); // Separa en año, mes, día
-
-                    return `${parseInt(dia)}/${mes.padStart(2, "0")}`; // Asegura que el mes tenga dos dígitos
-                }
-
-                // ✅ Formatear las fechas de los comentarios existentes al cargar la página
-                document.addEventListener("DOMContentLoaded", () => {
-                    document.querySelectorAll(".comentarios li").forEach(comentario => {
-                        const fechaElemento = comentario.querySelector("small");
-                        if (fechaElemento) {
-                            const fechaOriginal = fechaElemento.textContent.trim();
-                            if (fechaOriginal) {
-                                fechaElemento.textContent = formatearFecha(fechaOriginal);
-                            }
-                        }
-                    });
-                });
-
-                // ✅ Manejar el envío de nuevos comentarios
-                document.querySelectorAll(".comentario-form").forEach(form => {
-                    if (!form.dataset.listenerAdded) {
-                        form.addEventListener("submit", function(event) {
-                            event.preventDefault();
-                            event.stopPropagation(); // Evita que el evento se propague
-
-                            const publicacionId = this.getAttribute("data-publicacion-id");
-                            const contenido = this.querySelector("textarea").value.trim();
-                            const comentariosContainer = document.querySelector(`#comentarios-${publicacionId}`);
-
-                            if (!contenido) {
-                                alert("No puedes enviar un comentario vacío");
-                                return;
-                            }
-
-                            fetch("/comentarios", {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ publicacion_id: publicacionId, contenido })
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.error) {
-                                    alert(data.error);
-                                } else {
-                                    if (!document.getElementById(`comentario-${data.id}`)) {
-                                        const fechaFormateada = formatearFecha(data.fecha_comentario);
-
-                                        const nuevoComentario = document.createElement("li");
-                                        nuevoComentario.id = `comentario-${data.id}`;
-                                        nuevoComentario.innerHTML = `<strong>${data.nombre}:</strong> ${data.contenido} <small class="fecha-comentario">${fechaFormateada}</small>`;
-                                        comentariosContainer.appendChild(nuevoComentario);
-                                    }
-
-                                    this.querySelector("textarea").value = ""; // Limpiar el campo de texto
-                                }
-                            })
-                            .catch(error => console.error("Error:", error));
-                        });
-
-                        // Marcar el formulario como "con evento registrado"
-                        form.dataset.listenerAdded = "true";
-                    }
-                });
-                </script>
+                        <span id="guardados_<%= publicacion.publicacion_id %>"><%= publicacion.num_com %></span>
+                    </div>                       
+                                                    
+ 
+              
 <script
 >$('#myCarouselElement<%= publicacion.publicacion_id%>').carousel({
     interval: false
@@ -313,9 +346,126 @@
     </script>
 
 </div>
-                </div>
+ 
+                </div> 
+                <form class="comentario-form alineado-card" data-publicacion-id="<%= publicacion.publicacion_id %>">
+                    <input type="hidden" name="publicacion_id" value="<%= publicacion.publicacion_id %>">
+                    <textarea name="contenido" placeholder="Escribe tu comentario..." required></textarea>
+                    <button type="submit">Comentar</button>
+                </form>
+                <script>
+                    document.addEventListener("input", function(e) {
+                        if (e.target.tagName.toLowerCase() === "textarea") {
+                            e.target.style.height = "auto";
+                            e.target.style.height = e.target.scrollHeight + "px";
+                        }
+                    });
+                    </script>
+<% if (publicacion.comentarios && publicacion.comentarios.length > 0) { %>
+    <ul id="comentarios-<%= publicacion.publicacion_id %>" class="lista-comentarios">
+        <% publicacion.comentarios.forEach(function(comentario) { %>
+            <li id="comentario-<%= comentario.id %>" class="comentario-item">
+                <img src="data:image/jpeg;base64,<%= comentario.foto_perfil %>" alt="Foto de perfil de <%= publicacion.nombre %>" class="card-img-top"> <strong><%= comentario.nombre %>:</strong> 
+                <%- comentario.contenido %> 
+                <small class="fecha-comentario"><%= comentario.fecha_comentario %></small>
+            </li>
+        <% }); %>
+    </ul>
+<% } else { %>
+    <ul id="comentarios-<%= publicacion.publicacion_id %>" class="lista-comentarios">
+    </ul>
+<% } %>
+
               </div>
-            </div>            
+            </div>      
+
+
+        <script>
+            function formatearFecha(fechaTexto) {
+                if (!fechaTexto) return "";
+
+                // Verifica si la fecha ya está en formato "18/02" y la deja igual
+                if (/^\d{2}\/\d{2}$/.test(fechaTexto)) return fechaTexto;
+
+                // Extraer solo el día y el mes de "YYYY-MM-DD HH:MM:SS"
+                const partes = fechaTexto.split(" "); // Separa fecha y hora
+                if (partes.length < 1) return "";
+
+                const [anio, mes, dia] = partes[0].split("-"); // Separa en año, mes, día
+
+                return `${parseInt(dia)}/${mes.padStart(2, "0")}`; // Asegura que el mes tenga dos dígitos
+            }
+
+            // ✅ Formatear las fechas de los comentarios existentes al cargar la página
+            document.addEventListener("DOMContentLoaded", () => {
+                document.querySelectorAll(".comentarios li").forEach(comentario => {
+                    const fechaElemento = comentario.querySelector("small");
+                    if (fechaElemento) {
+                        const fechaOriginal = fechaElemento.textContent.trim();
+                        if (fechaOriginal) {
+                            fechaElemento.textContent = formatearFecha(fechaOriginal);
+                        }
+                    }
+                });
+            });
+
+            // ✅ Manejar el envío de nuevos comentarios
+            document.querySelectorAll(".comentario-form").forEach(form => {
+    if (!form.dataset.listenerAdded) {
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+            event.stopPropagation(); // Evita que el evento se propague
+
+            const publicacionId = this.getAttribute("data-publicacion-id");
+            let contenido = this.querySelector("textarea").value.trim();
+            const comentariosContainer = document.querySelector(`#comentarios-${publicacionId}`);
+
+            if (!contenido) {
+                alert("No puedes enviar un comentario vacío");
+                return;
+            }
+
+            // Reemplazar los saltos de línea con <br>
+            contenido = contenido.replace(/\n/g, '<br>');
+
+            fetch("/comentarios", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ publicacion_id: publicacionId, contenido })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    if (!document.getElementById(`comentario-${data.id}`)) {
+                        const fechaFormateada = formatearFecha(data.fecha_comentario);
+
+                        const nuevoComentario = document.createElement("li");
+                        nuevoComentario.id = `comentario-${data.id}`;
+                        nuevoComentario.className = `comentario-item`;
+                        nuevoComentario.innerHTML = `     
+                <img src="data:image/jpeg;base64,${data.foto_perfil}" 
+                     alt="Foto de perfil de ${data.nombre}" 
+                     class="card-img-top">
+                            <strong>${data.nombre}:</strong> 
+                            ${data.contenido} 
+                            <small class="fecha-comentario">${fechaFormateada}</small>`;
+                        comentariosContainer.appendChild(nuevoComentario);
+                    }
+
+                    this.querySelector("textarea").value = ""; // Limpiar el campo de texto
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        });
+
+        // Marcar el formulario como "con evento registrado"
+        form.dataset.listenerAdded = "true";
+    }
+});
+
+            </script> 
     <!-- Pie de página -->
         <%- include("../routes/footer.ejs") %>
 

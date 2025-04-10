@@ -85,7 +85,7 @@
         <div class="profile-container">
             <div class="img-wrapper mt-4">
                 <strong>Perfil de <%= usuario.nombre %></strong>
-                <img src="/imagen/<%= usuario.id %>" alt="Foto de perfil">
+                <img src="data:image/jpeg;base64,<%= foto_perfil_base64 %>" alt="Foto de perfil">
             </div>
             <div class="img-wrapper mt-4">
                 <a href="/perfilajeno/<%= usuario.username %>/siguiendo">Siguiendo: <%= seguidos %></a>
@@ -129,6 +129,7 @@
                 </div>
             </div>
         </div>    
+        <center>
         <% if (usernamever === username) { %>
             <a href="/perfil">Ir a mi perfil</a>
         <% } else { %>
@@ -148,7 +149,8 @@
                 </button>
             </div>  
         <% } %>
-        
+        <a href="/publicaciones/<%= usuario.username %>" >Publicaciones de <%= usuario.username %></a>
+        </center>
         
     </section>
     <script>

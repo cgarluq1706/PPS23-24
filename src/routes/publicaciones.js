@@ -14,4 +14,7 @@ router.delete('/publicaciones/:id', publicacionesController.eliminarPublicacion)
 // Ruta para obtener las publicaciones del usuario
 router.get('/mis_publicaciones', publicacionesController.getMisPublicaciones);
 
+router.get('/publicaciones/:username', publicacionesController.getSusPublicaciones);
+
+router.get('/publicaciones/:username/:id', publicacionesController.verpublicacion);
 module.exports = router;

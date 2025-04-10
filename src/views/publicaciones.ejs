@@ -4,21 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publicaciones</title>
-    <link rel="stylesheet" href="assets/web/assets/mobirise-icons2/mobirise2.css">
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-grid.min.css">
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-reboot.min.css">
-    <link rel="stylesheet" href="assets/dropdown/css/style.css">
-    <link rel="stylesheet" href="assets/socicon/css/styles.css">
-    <link rel="stylesheet" href="assets/theme/css/style.css">
+    <link rel="stylesheet" href="/assets/web/assets/mobirise-icons2/mobirise2.css">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="/assets/dropdown/css/style.css">
+    <link rel="stylesheet" href="/assets/socicon/css/styles.css">
+    <link rel="stylesheet" href="/assets/theme/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap"></noscript>
-    <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj" type="text/css">
+    <link rel="preload" as="style" href="/assets/mobirise/css/mbr-additional.css?v=Wf9Ojj"><link rel="stylesheet" href="/assets/mobirise/css/mbr-additional.css?v=Wf9Ojj" type="text/css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
     <style>
+        
         .overlay {
             z-index: 1000000;
             position: fixed;
@@ -37,21 +38,31 @@
             max-height: 80%;
             border-radius: 10px;
         }
-                .carousel-control-prev, .carousel-control-next {
-            width: auto;
-            height: 100px;
-            top: 50%;
-            transform: translateY(-50%);
-            filter: invert(100%); 
-        }
+        .carousel-inner img {
+    width: 100% !important;
+    height: auto;
+    max-height: 400px;
+    object-fit: contain;
+}
+.carousel-control-prev, .carousel-control-next {
+    width: 40px;
+    height: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.3); /* Fondo sutil para visibilidad */
+    border-radius: 50%;
+    filter: invert(100%);
+    z-index: 1;
+}
 
-        .carousel-control-prev {
-            left: -60px; 
-        }
+.carousel-control-prev {
+    left: 10px; /* ✅ Ahora dentro del carrusel */
+}
 
-        .carousel-control-next {
-            right: -60px; 
-        }
+.carousel-control-next {
+    right: 10px;
+}
+
             .card-footer {
       display: flex;
       justify-content: space-between; 
@@ -60,21 +71,28 @@
     .colfoot {
       flex: 1;
     }
-            .container-publi{
-                width: 100vw;
-                margin-bottom: 20px;
-            }
-            .card-container {
-      position: relative;
-    }
-    .card-img-top {
-      position: absolute;  
-        margin-right: 20px;
-      width: 100px;
-      height: auto;
-      border-radius: 50%;  
-      border: 2px solid #fff;
-    }
+    .container-publi {
+    width: 100%;
+    padding: 0 15px; /* Añade margen interior para evitar que pegue a los lados */
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+.card-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.card-img-top {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
         .fecha-comentario {
             font-size: 12px; /* Letra más pequeña */
             color: rgb(238, 216, 216); /* Color gris */
@@ -129,6 +147,11 @@
         .eliminar-publicacion:hover {
             background-color: #c82333;
         }
+        .ver-mas-link {
+    color: blue;
+    cursor: pointer;
+}
+
     </style>
 </head>
 <body>
@@ -145,11 +168,28 @@
             <p id="contador-imagenes">0/4 imágenes seleccionadas</p>
             <button type="submit" class="btn btn-primary">Crear Publicación</button>
         </form>
+        <button onclick="toggleEncuestaForm()">➕ Crear encuesta</button>
+        
+        <div id="formEncuesta" style="display:none; margin-top: 20px;">
+            <form action="/guardar-encuesta" method="POST">
+                <label>Pregunta:</label><br>
+                <textarea name="contenido" required></textarea><br><br>
+        
+                <label>Opciones:</label><br>
+                <input type="text" name="opciones[]" placeholder="Opción 1" required><br>
+                <input type="text" name="opciones[]" placeholder="Opción 2" required><br>
+                <input type="text" name="opciones[]" placeholder="Opción 3"><br>
+                <input type="text" name="opciones[]" placeholder="Opción 4"><br><br>
+        
+                <button type="submit">Enviar encuesta</button>
+            </form>
+        </div>  
     </div>
         <!-- Botón para ver las publicaciones del usuario -->
         <div class="text-center mt-4" id="misPublicaciones">
-            <a href="/mis_publicaciones" class="btn btn-secondary">Mis publicaciones</a>
+            <a href="/publicaciones?tipo=guardados" class="btn btn-secondary">Ver elementos guardados</a>
         </div>
+
 
     <% } %>
     <script>
@@ -186,17 +226,29 @@
 
             <div class="container container-publi">
                 <div class="card-container">
-                  <img src="../assets/images/photo-1564564244660-5d73c057f2d2.jpeg" alt="Foto de perfil de <%= publicacion.nombre %>" class="card-img-top">
-                  <div class="card rounded-0" style="width: 100%; margin-left: 100px; border: 1px solid #8ec823; border-radius: 0 !important;">
+                  <img src="data:image/jpeg;base64,<%= publicacion.foto_perfil %>" alt="Foto de perfil de <%= publicacion.nombre %>" class="card-img-top">
+                  <div class="card rounded-0" style="flex: 1; border: 1px solid #8ec823; border-radius: 0 !important;">
 
                     <div class="card-body"  onclick="window.location.href='/publicaciones/<%= publicacion.username %>/<%= publicacion.publicacion_id %>'" 
                         style="cursor: pointer;">
                       <h5 class="card-title"><%= publicacion.nombre %>&nbsp;&nbsp;<a href="/perfilajeno/<%=publicacion.username%>">@<%= publicacion.username%></a>&nbsp;&nbsp;&nbsp;&nbsp;<%= publicacion.fecha_publi%></h5>
-                      <p class="card-text"><%= publicacion.contenido %></p>
+                      <p class="card-text"><%- publicacion.contenido %></p>
                     </div>
+                    <% if (publicacion.es_encuesta) { %>
+                        <div class="encuesta">
+                            <h4>Encuesta:</h4>
+                            <form class="form-voto" data-publicacion="<%= publicacion.publicacion_id %>">
+                                <% publicacion.opciones.forEach(op => { %>
+                                    <button type="button" onclick="votar('<%= op.opcion_id %>', this)">
+                                        <%= op.texto_opcion %> (<%= op.votos %> votos)
+                                    </button><br>
+                                <% }); %>
+                            </form>
+                        </div>
+                    <% } %>
                     <% if (publicacion.imagenes.length > 0) { %>
                         <center>
-                            <div id="myCarouselElement<%= publicacion.publicacion_id%>" class="carousel slide" data-ride="carousel" data-interval="false" style="width: 35%; margin: auto;">
+                            <div id="myCarouselElement<%= publicacion.publicacion_id%>" class="carousel slide" data-ride="carousel" data-interval="false" style="width: 100%; max-width: 500px; margin: auto;">
                                 <!-- Contenido del carrusel -->
                                 <div class="carousel-inner">
                                     <% publicacion.imagenes.forEach((imagen, index) => { %>
@@ -260,102 +312,8 @@
                                                     
                     <div class="comentarios colfoot">
                         <i class="fa-solid fa-comment fa-2x"></i>
-                        <% if (publicacion.comentarios && publicacion.comentarios.length > 0) { %>
-                            <ul id="comentarios-<%= publicacion.publicacion_id %>">
-                                <% publicacion.comentarios.forEach(function(comentario) { %>
-                                    <li id="comentario-<%= comentario.id %>">
-                                        <strong><%= comentario.nombre %>:</strong> 
-                                        <%= comentario.contenido %> 
-                                        <small class="fecha-comentario"><%= comentario.fecha_comentario %></small>
-                                    </li>
-                                <% }); %>
-                            </ul>
-                        <% } else { %>
-                            <ul id="comentarios-<%= publicacion.publicacion_id %>">
-                            </ul>
-                        <% } %>
+                        <span id="guardados_<%= publicacion.publicacion_id %>"><%= publicacion.num_com %></span>
                     </div>
-                 <!-- Formulario para agregar un comentario -->
-                 <form class="comentario-form" data-publicacion-id="<%= publicacion.publicacion_id %>">
-                    <input type="hidden" name="publicacion_id" value="<%= publicacion.publicacion_id %>">
-                    <textarea name="contenido" placeholder="Escribe tu comentario..." required></textarea>
-                    <button type="submit">Comentar</button>
-                </form>
-                <script>
-                function formatearFecha(fechaTexto) {
-                    if (!fechaTexto) return "";
-
-                    // Verifica si la fecha ya está en formato "18/02" y la deja igual
-                    if (/^\d{2}\/\d{2}$/.test(fechaTexto)) return fechaTexto;
-
-                    // Extraer solo el día y el mes de "YYYY-MM-DD HH:MM:SS"
-                    const partes = fechaTexto.split(" "); // Separa fecha y hora
-                    if (partes.length < 1) return "";
-
-                    const [anio, mes, dia] = partes[0].split("-"); // Separa en año, mes, día
-
-                    return `${parseInt(dia)}/${mes.padStart(2, "0")}`; // Asegura que el mes tenga dos dígitos
-                }
-
-                // ✅ Formatear las fechas de los comentarios existentes al cargar la página
-                document.addEventListener("DOMContentLoaded", () => {
-                    document.querySelectorAll(".comentarios li").forEach(comentario => {
-                        const fechaElemento = comentario.querySelector("small");
-                        if (fechaElemento) {
-                            const fechaOriginal = fechaElemento.textContent.trim();
-                            if (fechaOriginal) {
-                                fechaElemento.textContent = formatearFecha(fechaOriginal);
-                            }
-                        }
-                    });
-                });
-
-                // ✅ Manejar el envío de nuevos comentarios
-                document.querySelectorAll(".comentario-form").forEach(form => {
-                    if (!form.dataset.listenerAdded) {
-                        form.addEventListener("submit", function(event) {
-                            event.preventDefault();
-                            event.stopPropagation(); // Evita que el evento se propague
-
-                            const publicacionId = this.getAttribute("data-publicacion-id");
-                            const contenido = this.querySelector("textarea").value.trim();
-                            const comentariosContainer = document.querySelector(`#comentarios-${publicacionId}`);
-
-                            if (!contenido) {
-                                alert("No puedes enviar un comentario vacío");
-                                return;
-                            }
-
-                            fetch("/comentarios", {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ publicacion_id: publicacionId, contenido })
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.error) {
-                                    alert(data.error);
-                                } else {
-                                    if (!document.getElementById(`comentario-${data.id}`)) {
-                                        const fechaFormateada = formatearFecha(data.fecha_comentario);
-
-                                        const nuevoComentario = document.createElement("li");
-                                        nuevoComentario.id = `comentario-${data.id}`;
-                                        nuevoComentario.innerHTML = `<strong>${data.nombre}:</strong> ${data.contenido} <small class="fecha-comentario">${fechaFormateada}</small>`;
-                                        comentariosContainer.appendChild(nuevoComentario);
-                                    }
-
-                                    this.querySelector("textarea").value = ""; // Limpiar el campo de texto
-                                }
-                            })
-                            .catch(error => console.error("Error:", error));
-                        });
-
-                        // Marcar el formulario como "con evento registrado"
-                        form.dataset.listenerAdded = "true";
-                    }
-                });
-                </script>
 <script
 >$('#myCarouselElement<%= publicacion.publicacion_id%>').carousel({
     interval: false
@@ -377,15 +335,37 @@
         <%- include("../routes/footer.ejs") %>
 
     <!-- Scripts aquí... -->
-    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/smoothscroll/smooth-scroll.js"></script>
-    <script src="assets/ytplayer/index.js"></script>
-    <script src="assets/dropdown/js/navbar-dropdown.js"></script>
-    <script src="assets/vimeoplayer/player.js"></script>
-    <script src="assets/masonry/masonry.pkgd.min.js"></script>
-    <script src="assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
-    <script src="assets/theme/js/script.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/smoothscroll/smooth-scroll.js"></script>
+    <script src="/assets/ytplayer/index.js"></script>
+    <script src="/assets/dropdown/js/navbar-dropdown.js"></script>
+    <script src="/assets/vimeoplayer/player.js"></script>
+    <script src="/assets/masonry/masonry.pkgd.min.js"></script>
+    <script src="/assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script src="/assets/theme/js/script.js"></script>
 
+    <script>
+                        function votar(opcion_id, button) {
+                fetch('/votar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ opcion_id })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('¡Voto registrado!');
+                        location.reload();
+                    } else {
+                        alert(data.error || 'Error al votar');
+                    }
+                });
+            }
+            function toggleEncuestaForm() {
+                 const form = document.getElementById('formEncuesta');
+                form.style.display = form.style.display === 'none' ? 'block' : 'none';
+                 }
+    </script>
     <!-- Script para manejar la creación y eliminación de publicaciones -->
     <script>
 document.addEventListener("DOMContentLoaded", function() {

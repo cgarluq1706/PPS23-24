@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS mensajes (
     FOREIGN KEY (emisor_id) REFERENCES usuarios(id),
     FOREIGN KEY (receptor_id) REFERENCES usuarios(id)
 );
+
 -- Creación de la tabla de seguimiento
 CREATE TABLE IF NOT EXISTS seguimiento (
     seguidor_id INT,
@@ -153,7 +154,31 @@ CREATE TABLE IF NOT EXISTS guardar_publicacion (
     FOREIGN KEY (id_publicacion) REFERENCES publicaciones(id) ON DELETE CASCADE
 );
 
+-- Tabla principal de encuestas
+CREATE TABLE encuestas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    publicacion_id INT NOT NULL,
+    FOREIGN KEY (publicacion_id) REFERENCES publicaciones(id) ON DELETE CASCADE
+);
 
+-- Tabla de opciones
+CREATE TABLE opciones_encuesta (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    encuesta_id INT NOT NULL,
+    texto_opcion VARCHAR(255) NOT NULL,
+    votos INT DEFAULT 0,
+    FOREIGN KEY (encuesta_id) REFERENCES encuestas(id) ON DELETE CASCADE
+);
+
+-- Tabla de votos de usuarios
+CREATE TABLE votos_encuesta (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    opcion_id INT NOT NULL,
+    usuario_id INT NOT NULL,
+    UNIQUE(opcion_id, usuario_id),
+    FOREIGN KEY (opcion_id) REFERENCES opciones_encuesta(id) ON DELETE CASCADE,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
 select * from usuarios u ;
 
 
