@@ -4,6 +4,7 @@
 
 ![](https://i.imgur.com/2iJH0rG.png)
 
+
 **Release 003 disponible en**
 https://github.com/mteralg186/PPS23-24/releases/tag/Version003
 
@@ -15,6 +16,7 @@ https://github.com/mteralg186/PPS23-24/releases/tag/Version003
 
 VideoDemo [![](https://i.imgur.com/nDFC66C.png)](https://www.youtube.com/watch?v=XwmCFWEHQwY)
 
+![](https://raw.githubusercontent.com/mteralg186/PPS23-24/refs/heads/11042025/src/assets/images/tristepatatas.png)
 
 ------------
 
