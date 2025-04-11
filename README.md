@@ -4,6 +4,9 @@
 
 ![](https://i.imgur.com/2iJH0rG.png)
 
+**Release 003 disponible en**
+https://github.com/mteralg186/PPS23-24/releases/tag/Version003
+
 **Release 002 disponible en**
 ****https://github.com/mteralg186/PPS23-24/releases/tag/Version002
 
@@ -45,8 +48,8 @@ Se encuentra el script de la BD en el proyecto en formato .sql
 ------------
 
 
-**EDR actualizado a 28/03/2025**
-![](https://i.imgur.com/czLmYNC.png)
+**EDR actualizado a 11/04/2025**
+![](https://i.imgur.com/bzFACpn.png)
 
 
 ------------
@@ -90,6 +93,20 @@ Se encuentra el script de la BD en el proyecto en formato .sql
 - PODER VER SEGUIDORES Y SEGUIDOS
 - INICIO, ACERCA, CONTACTO Y TÉRMINOS
 - AVISO Y ACEPTACIÓN DE COOKIES
+
+**11/04/2025 (desde 28/03/2025 a 11/04/2025)**
+
+- PANEL DE CONTROL DE ADMINISTRADOR
+- SISTEMA DE MENSAJERÍA/CHAT
+- PODER SUBIR IMÁGENES EN LAS PUBLICACIONES
+- CARRUSEL DE IMÁGENES
+- PODER BLOQUEAR USUARIOS
+- GENERACIÓN DE ENCUESTAS
+- CAPACIDAD DE QUE LOS USUARIOS PUEDAN BORRAR SUS CUENTAS
+- OPTIMIZACIÓN DEL CÓDIGO
+- IMPLEMENTACIÓN DEL ESTILO AL 70%
+- USABILIDAD DE LA WEB
+- SECURIZACIÓN DE RUTAS
 
 ------------
 
