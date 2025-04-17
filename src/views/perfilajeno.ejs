@@ -167,11 +167,6 @@
         }
        
     </style>
-   
-   
-
-
-
 
 </head>
 <body>
@@ -193,11 +188,15 @@
                     <img src="/assets/images/perfil2.png" alt="Foto de perfil por defecto">
                 <% } %>
             </div>
+           
 
 
             <div class="description-section">
                 <p><b>Descripción:</b> <%= usuario.descripcion || 'Sin descripción' %></p>
             </div>
+            <a href="/chat/<%= usuario.id %>" class="chat-icon" title="Enviar mensaje">
+                <i class="fas fa-comment-dots"></i>
+            </a>
 
 
             <div class="sections-container">
@@ -218,6 +217,8 @@
                 </div>
 
 
+
+
                 <div class="profile-section">
                     <p><b>Información personal</b></p>
                     <p>Nombre: <%= usuario.nombre %></p>
@@ -226,6 +227,8 @@
                     <p>Teléfono: <%= usuario.telefono || 'No disponible' %></p>
                 </div>
             </div>
+
+
 
 
             <div class="follow-section">
@@ -239,12 +242,16 @@
             </div>
 
 
+
+
             <div class="follow-section">
                 <button id="bloquear-btn" class="<%= bloqueado ? 'btn btn-warning btn-sm' : 'btn btn-danger btn-sm' %>">
                     <i class="<%= bloqueado ? 'fas fa-unlock' : 'fas fa-ban' %>"></i>
                     <%= bloqueado ? 'Desbloquear' : 'Bloquear' %>
                 </button>
             </div>
+
+
 
 
             <center>
@@ -261,6 +268,8 @@
                     const id_usuario = button.name;
 
 
+
+
                     const response = await fetch('/seguir', {
                         method: 'POST',
                         credentials: 'include',
@@ -269,7 +278,11 @@
                     });
 
 
+
+
                     const data = await response.json();
+
+
 
 
                     if (response.ok) {
@@ -283,7 +296,11 @@
             });
 
 
+
+
             const bloquearBtn = document.getElementById("bloquear-btn");
+
+
 
 
             bloquearBtn.addEventListener("click", async () => {
@@ -291,11 +308,15 @@
                 const accion = bloquearBtn.classList.contains("btn-danger") ? "bloquear" : "desbloquear";
 
 
+
+
                 try {
                     const response = await fetch(`/${accion}/${usuarioId}`, {
                         method: "POST",
                         credentials: "include",
                     });
+
+
 
 
                     if (response.ok) {
@@ -329,6 +350,3 @@
     <%- include("../routes/footer.ejs") %>
 </body>
 </html>
-
-
-
