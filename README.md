@@ -4,6 +4,8 @@
 
 ![](https://i.imgur.com/2iJH0rG.png)
 
+**Release 004 disponible en**
+https://github.com/mteralg186/PPS23-24/releases/tag/Version004
 
 **Release 003 disponible en**
 https://github.com/mteralg186/PPS23-24/releases/tag/Version003
@@ -109,6 +111,11 @@ Se encuentra el script de la BD en el proyecto en formato .sql
 - IMPLEMENTACIÓN DEL ESTILO AL 70%
 - USABILIDAD DE LA WEB
 - SECURIZACIÓN DE RUTAS
+
+**18/04/2025 (desde 11/04/2025 a 11/08/2025)**
+
+Rediseño gráfico
+Optimización y eliminación de bugs
 
 ------------
 
