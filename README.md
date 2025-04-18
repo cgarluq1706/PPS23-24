@@ -114,8 +114,8 @@ Se encuentra el script de la BD en el proyecto en formato .sql
 
 **18/04/2025 (desde 11/04/2025 a 11/08/2025)**
 
-Rediseño gráfico
-Optimización y eliminación de bugs
+- REDISEÑO GRÁFICO
+- OPTIMIZACIÓN Y ELIMINACIÓN DE BUGS
 
 ------------
 
