@@ -11,10 +11,10 @@ https://github.com/mteralg186/PPS23-24/releases/tag/Version004
 https://github.com/mteralg186/PPS23-24/releases/tag/Version003
 
 **Release 002 disponible en**
-****https://github.com/mteralg186/PPS23-24/releases/tag/Version002
+https://github.com/mteralg186/PPS23-24/releases/tag/Version002
 
 **Release 001 disponible en**
-****https://github.com/mteralg186/PPS23-24/releases/tag/Version001
+https://github.com/mteralg186/PPS23-24/releases/tag/Version001
 
 VideoDemo [![](https://i.imgur.com/nDFC66C.png)](https://www.youtube.com/watch?v=XwmCFWEHQwY)
 
