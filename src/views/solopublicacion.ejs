@@ -76,21 +76,48 @@
     box-sizing: border-box;
 }
 
-.card-container {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 10px;
-    flex-wrap: wrap;
-}
 
-.card-img-top {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    flex-shrink: 0;
-}
+.card {
+            border: 1px solid #fcdb3a !important;
+            border-radius: 10px !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            background-color: #fff2c1;
+        }
+
+
+
+
+        .card-title {
+            color: #f0c800 !important;
+        }
+
+
+
+
+        .card-title a {
+            color: #f0c800 !important;
+        }  
+
+
+
+
+   
+        .card-container {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+   
+        .card-img-top {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
 
         .fecha-comentario {
             font-size: 12px; /* Letra más pequeña */
@@ -269,6 +296,36 @@
                       <h5 class="card-title"><%= publicacion.nombre %>&nbsp;&nbsp;<a href="/perfilajeno/<%=publicacion.username%>">@<%= publicacion.username%></a>&nbsp;&nbsp;&nbsp;&nbsp;<%= publicacion.fecha_publi%></h5>
                       <p class="card-text"><%- publicacion.contenido %></p>
                     </div>
+                    <% if (publicacion.es_encuesta) { %>
+                        <div class="encuesta">
+                            <h4>Encuesta:</h4>
+                            <form class="form-voto" data-publicacion="<%= publicacion.publicacion_id %>">
+                                <% publicacion.opciones.forEach(op => { %>
+                                    <button type="button" onclick="votar('<%= op.opcion_id %>', this)">
+                                        <%= op.texto_opcion %> (<%= op.votos %> votos)
+                                    </button><br>
+                                <% }); %>
+                            </form>
+                        </div>
+                    <% } %>
+                    <script>
+                        function votar(opcion_id, button) {
+                fetch('/votar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ opcion_id })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('¡Voto registrado!');
+                        location.reload();
+                    } else {
+                        alert(data.error || 'Error al votar');
+                    }
+                });
+            }
+    </script>
                     <% if (publicacion.imagenes.length > 0) { %>
                         <center>
                             <div id="myCarouselElement<%= publicacion.publicacion_id%>" class="carousel slide" data-ride="carousel" data-interval="false" style="width: 100%; max-width: 500px; margin: auto;">

@@ -527,7 +527,7 @@ const eliminarPublicacion = (req, res) => {
     });
 };
 
-const verpublicacion = (req, res) => {
+const verpublicacion = async (req, res) => {
 const { username, id } = req.params;
 const userid = req.session.userId;
 
@@ -548,7 +548,7 @@ const query = `
     WHERE u.username = ? AND p.id = ?;
 `;
 
-connection.query(query, [userid, userid, username, id], (err, results) => {
+connection.query(query, [userid, userid, username, id], async (err, results) => {
     if (err) {
         console.error(err);
         return res.status(500).send("Error al obtener la publicación");
@@ -591,7 +591,7 @@ connection.query(query, [userid, userid, username, id], (err, results) => {
         WHERE c.publicacion_id = ?
     `;
 
-    connection.query(sqlComentarios, [publicacion.publicacion_id], (err, comentarios) => {
+    connection.query(sqlComentarios, [publicacion.publicacion_id], async (err, comentarios) => {
         if (err) {
             console.error('Error al obtener comentarios', err);
             return res.status(500).send('Error al obtener comentarios');
@@ -602,6 +602,7 @@ connection.query(query, [userid, userid, username, id], (err, results) => {
             comentario.foto_perfil = comentario.foto_perfil_base64_comentario; // Foto de perfil en Base64 del comentarista
             delete comentario.foto_perfil_base64_comentario; // Limpiar el campo extra
         });
+        await obtenerOpcionesEncuesta(publicacion);
 
         publicacion.comentarios = comentarios;
 

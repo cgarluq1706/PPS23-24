@@ -384,7 +384,12 @@
 
                     <div class="card-body"  onclick="window.location.href='/publicaciones/<%= publicacion.username %>/<%= publicacion.publicacion_id %>'"
                         style="cursor: pointer;">
-                      <h5 class="card-title"><%= publicacion.nombre %>&nbsp;&nbsp;<a href="/perfilajeno/<%=publicacion.username%>">@<%= publicacion.username%></a>&nbsp;&nbsp;&nbsp;&nbsp;<%= publicacion.fecha_publi%></h5>
+                      <h5 class="card-title"><%= publicacion.nombre %>&nbsp;&nbsp;
+                        <% if (typeof tipo !== 'undefined' && tipo === 'mis_publicaciones') { %>
+                            <a href="/perfil">@<%= publicacion.username%></a>&nbsp;&nbsp;&nbsp;&nbsp;<%= publicacion.fecha_publi%></h5>
+                            <% } else{%>
+                            <a href="/perfilajeno/<%=publicacion.username%>">@<%= publicacion.username%></a>&nbsp;&nbsp;&nbsp;&nbsp;<%= publicacion.fecha_publi%></h5>
+                            <% }%>
                       <p class="card-text"><%- publicacion.contenido %></p>
                     </div>
                     <% if (publicacion.es_encuesta) { %>
