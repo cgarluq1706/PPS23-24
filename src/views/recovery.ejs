@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Activar Cuenta</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Open Sans", sans-serif;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      width: 100%;
+      padding: 0 10px;
+    }
+    body::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: url("assets/images/logo.png"), linear-gradient(135deg, #ffefb5, #fcdb3a);
+      background-position: center;
+      background-size: cover;
+    }
+    .wrapper {
+      width: 400px;
+      border-radius: 8px;
+      padding: 30px;
+      background: white;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: black;
+    }
+    .input-field {
+      position: relative;
+      border-bottom: 2px solid #ccc;
+      margin: 15px 0;
+    }
+    .input-field label {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      color: black;
+      font-size: 16px;
+      pointer-events: none;
+      transition: 0.15s ease;
+    }
+    .input-field input {
+      width: 100%;
+      height: 40px;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      color: black;
+    }
+    .input-field input:focus~label,
+    .input-field input:valid~label {
+      font-size: 0.8rem;
+      top: 10px;
+      transform: translateY(-120%);
+    }
+
+    
+
+    .wrapper a {
+      color: rgb(134, 37, 37);
+      text-decoration: none;
+    }
+    .wrapper a:hover {
+      text-decoration: underline;
+    }
+    button {
+      background: black;
+      color: white;
+      font-weight: 600;
+      border: none;
+      padding: 12px 20px;
+      cursor: pointer;
+      border-radius: 3px;
+      font-size: 16px;
+      border: 2px solid transparent;
+      transition: 0.3s ease;
+    }
+    button:hover {
+      color: black;
+      border-color: black;
+      background: rgba(255, 255, 255, 0.15);
+    }
+    .register {
+      text-align: center;
+      margin-top: 30px;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="wrapper">
+    <form action="/recovery" method="POST">
+      <h2>Activa tu cuenta</h2>
+        <div class="input-field">
+        <input type="text" name="username" required>
+        <label>Introduce tu usuario</label>
+      </div>
+      <div class="input-field">
+        <input type="password" name="password" required>
+        <label>Introduce tu contraseña</label>
+      </div>
+      <button type="submit">Entrar</button>
+
+    </form>
+  </div>
+</body>
+</html>

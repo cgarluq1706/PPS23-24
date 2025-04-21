@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Casual Frydays</title>
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/theme/css/style.css">
+<link rel="shortcut icon" href="./assets/images/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="assets/web/assets/mobirise-icons2/mobirise2.css">
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap-grid.min.css">
+<link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=Wf9Ojj" type="text/css">
+<style>
+    body {
+        background-color: #ffefb5;
+        font-family: 'Inter Tight', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    .borrar-section {
+        background-color: #fde156;
+        border-radius: 20px;
+        padding: 80px 40px;
+        text-align: center;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
+        max-width: 700px;
+        margin: 100px auto;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    #chk{
+        display: none;
+    }
+    .borrar{
+        position: relative;
+        width:100%;
+        height: 100%;
+    }
+    label{
+        color: black;
+        font-size: 2.3em;
+        justify-content: center;
+        display: flex;
+        margin: 50px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: .5s ease-in-out;
+    }
+    input{
+        width: 60%;
+        height: 10px;
+        background: #e0dede;
+        justify-content: center;
+        display: flex;
+        margin: 20px auto;
+        padding: 12px;
+        border: none;
+        outline: none;
+        border-radius: 5px;
+    }
+    .botonborrar{
+        width: 60%;
+        height: 40px;
+        margin: 10px auto;
+        justify-content: center;
+        display: block;
+        color: #fff;
+        background: #573b8a;
+        font-size: 1em;
+        font-weight: bold;
+        margin-top: 30px;
+        outline: none;
+        border: none;
+        border-radius: 5px;
+        transition: .2s ease-in;
+        cursor: pointer;
+    }
+    button:hover{
+        background: #6d44b8;
+    }
+    .desactivar{
+        height: 460px;
+        background: #eee;
+        border-radius: 60% / 10%;
+        transform: translateY(-180px);
+        transition: .8s ease-in-out;
+    }
+    .desactivar label{
+        color: #573b8a;
+        transform: scale(.6);
+    }
+    
+    #chk:checked ~ .desactivar{
+        transform: translateY(-500px);
+    }
+    #chk:checked ~ .desactivar label{
+        transform: scale(1);	
+    }
+    #chk:checked ~ .borrar label{
+        transform: scale(.6);
+    }
+    .logo-img {
+        width: 300px;
+        display: block;
+        margin: 0 auto;
+      }
+
+
+</style>
+</head>
+<body>
+
+
+<%- include("../routes/header.ejs") %>
+
+
+<section class="borrar-section">
+	<div class="main">  	
+		<input type="checkbox" id="chk" aria-hidden="true">
+
+			<div class="borrar">
+				<form action="/borrar" method="POST">
+                    <label for="chk" aria-hidden="true">Borrar Cuenta</label>
+                    <input type="password" name="contraseña" placeholder="Contraseña" required=""/>
+                    <button type="submit" name="delete_user" class="botonborrar">Confirmar</button>
+                
+
+				</form>
+                <img src="assets/images/logo.png" alt="Freidora" class="logo-img">
+      
+			</div>
+    <h1>¡Estás a punto de borrar tu cuenta!</h1>
+    <p>Esta acción es permanente y no se puede deshacer.</p>
+</section>
+
+
+<script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/smoothscroll/smooth-scroll.js"></script>
+<script src="assets/ytplayer/index.js"></script>
+<script src="assets/dropdown/js/navbar-dropdown.js"></script>
+<script src="assets/vimeoplayer/player.js"></script>
+<script src="assets/masonry/masonry.pkgd.min.js"></script>
+<script src="assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
+<script src="assets/theme/js/script.js"></script>
+<%- include("../routes/footer.ejs") %>
+</body>
+</html>
+
