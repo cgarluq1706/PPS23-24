@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     linkedin VARCHAR(255),
     github VARCHAR(255),
     oculto BOOLEAN DEFAULT FALSE, -- Ocultar usuarios
+    cuentastat boolean default 1,
     role ENUM('admin', 'user') DEFAULT 'user'
 );
 CREATE TABLE IF NOT EXISTS mensajes (
