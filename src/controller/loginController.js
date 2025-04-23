@@ -234,111 +234,6 @@ const deleteAccount = (req, res) => {
     });
 };
 
-
-// Función para desactivar cuenta (guardar datos en la tabla "recovery" y desactivar cuenta)
-const deactivateAccount = (req, res) => {
-    const userId = req.session.userId; // Obtener el ID del usuario desde la sesión
-
-    if (!userId) {
-        return res.status(401).send('Usuario no autenticado');
-    }
-
-    const query = 'UPDATE usuarios SET oculto = TRUE WHERE id = ?';
-
-    connection.query(query, [userId], (err, results) => {
-        if (err) {
-            console.error('Error al desactivar la cuenta:', err);
-            return res.status(500).send('Error al desactivar la cuenta');
-        }
-
-        // Destruir la sesión después de desactivar la cuenta
-        req.session.destroy((err) => {
-            if (err) {
-                console.error('Error al destruir la sesión:', err);
-            }
-            res.redirect('/'); // Redirigir al inicio
-        });
-    });
-};
-
-// Ruta para manejar el formulario de recuperación
-const restoreAccount = (req, res) => {
-    const { username, password } = req.body; // Recibe el username y la contraseña desde el formulario
-
-    if (!username || !password) {
-        return res.status(400).send('Faltan el nombre de usuario o la contraseña');
-    }
-
-    // Verificar si el usuario existe en la tabla `recovery`
-    const queryRecovery = 'SELECT * FROM reco WHERE username = ?';
-    connection.query(queryRecovery, [username], (err, results) => {
-        if (err) {
-            console.error('Error al buscar el usuario en recovery:', err);
-            return res.status(500).send('Error al buscar el usuario');
-        }
-
-        if (results.length === 0) {
-            console.log(`Usuario con username ${username} no encontrado en la tabla recovery`);
-            return res.status(404).send('Usuario no encontrado en la tabla recovery');
-        }
-
-        const recoveryUser = results[0];
-
-        // Cifrar la contraseña antes de insertarla en la tabla usuarios
-        bcrypt.hash(password, 10, (err, hashedPassword) => {
-            if (err) {
-                console.error('Error al cifrar la contraseña:', err);
-                return res.status(500).send('Error al cifrar la contraseña');
-            }
-
-            // Insertar los datos del usuario en la tabla `usuarios`
-            const queryInsertUsuario = `
-                INSERT INTO usuarios (nombre, apellido, username, contraseña, foto_perfil, fecha_nacimiento, telefono, descripcion, twitter, instagram, linkedin, github)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            `;
-
-            connection.query(queryInsertUsuario, [
-                recoveryUser.nombre,
-                recoveryUser.apellido,
-                recoveryUser.username,
-                hashedPassword, // Contraseña cifrada
-                recoveryUser.foto_perfil,
-                recoveryUser.fecha_nacimiento,
-                recoveryUser.telefono,
-                recoveryUser.descripcion,
-                recoveryUser.twitter,
-                recoveryUser.instagram,
-                recoveryUser.linkedin,
-                recoveryUser.github
-            ], (errorInsert, resultsInsert) => {
-                if (errorInsert) {
-                    console.error('Error al insertar en la tabla usuarios:', errorInsert);
-                    return res.status(500).send('Error al guardar en la tabla usuarios');
-                }
-
-                console.log('Usuario restaurado en la tabla usuarios con éxito');
-
-                // Eliminar el usuario de la tabla `recovery` después de restaurarlo
-                const deleteQuery = 'DELETE FROM reco WHERE username = ?';
-                connection.query(deleteQuery, [username], (errDelete, resultsDelete) => {
-                    if (errDelete) {
-                        console.error('Error al eliminar el usuario de recovery:', errDelete);
-                        return res.status(500).send('Error al eliminar el usuario de recovery');
-                    }
-
-                    console.log(`Usuario con username ${username} eliminado de recovery`);
-
-                    // Redirigir al login
-                    res.redirect('/login'); // Redirige al login
-                });
-            });
-        });
-    });
-};
-
-
-
-
 module.exports = {
     getIndex,
     login,
@@ -351,6 +246,4 @@ module.exports = {
     getError,
     getPerfil,
     deleteAccount,
-    deactivateAccount,
-    restoreAccount
 };

@@ -106,7 +106,7 @@ router.put('/admin/comments/:id/visible', verifyAdmin, (req, res) => {
 router.get('/admin/users/search/all', verifyAdmin, (req, res) => {
     const { username } = req.query;
     const query = `
-        SELECT id, nombre, apellido, username, fecha_nacimiento, telefono, foto_perfil, descripcion, twitter, instagram, linkedin, github, role, oculto
+        SELECT id, nombre, apellido, username, fecha_nacimiento, telefono, TO_BASE64(foto_perfil) AS foto_perfil_base64, descripcion, twitter, instagram, linkedin, github, role, oculto
         FROM usuarios 
         WHERE username LIKE ?
     `;

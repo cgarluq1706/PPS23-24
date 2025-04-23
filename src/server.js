@@ -14,8 +14,6 @@ const seguirRoutes = require("./routes/seguir");
 const guardadoRoutes = require("./routes/elementoguardado");
 const connection = require('./conexion');
 const { deleteAccount } = require('./controller/loginController');
-const { deactivateAccount } = require('./controller/loginController');
-const { restoreAccount } = require('./controller/loginController'); 
 
 const terminosRoutes = require('./routes/terminos');
 const acercaRoutes = require('./routes/acerca');
@@ -35,7 +33,7 @@ app.use(session({
 }));
 
 app.use((req, res, next) => {
-    const rutasPublicas = ["/login", "/registro", "/assets", "/images", "/css", "/js", "/register", "/recovery", "restore-account"];
+    const rutasPublicas = ["/login", "/registro", "/assets", "/images", "/css", "/js", "/register" ];
 
     if (rutasPublicas.some(ruta => req.path.startsWith(ruta))) {
         return next();
@@ -132,20 +130,9 @@ app.get('/borrar', (req, res) => {
     }
 });
 
-
 // Ruta para borrar cuenta
 app.post('/borrar', deleteAccount);
 
-// Ruta para desactivar cuenta
-app.post('/desactivar', deactivateAccount);
-
-
-// Ruta para mostrar el formulario de recuperación
-app.get('/recovery', (req, res) => {
-    res.render('recovery');
-  });
-
-  app.post('/restore-account', restoreAccount);
 //plantillas
 app.set('view engine', 'ejs');
 app.set('views', './src/views');
@@ -176,7 +163,6 @@ app.use((req, res, next) => {
 
 const comentariosRoutes = require('./routes/comentarios'); // Importa la ruta de comentarios
 app.use("/", comentariosRoutes); // Activa la ruta de comentarios
-
 
   
 app.listen(port, () => {

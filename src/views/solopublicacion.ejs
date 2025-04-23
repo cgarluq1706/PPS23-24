@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/assets/dropdown/css/style.css">
     <link rel="stylesheet" href="/assets/socicon/css/styles.css">
     <link rel="stylesheet" href="/assets/theme/css/style.css">
+    <link rel="shortcut icon" href="/assets/images/favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap"></noscript>
@@ -293,7 +294,12 @@
                   <div class="card rounded-0" style="flex: 1; border: 1px solid #8ec823; border-radius: 0 !important;">
 
                     <div class="card-body">
-                      <h5 class="card-title"><%= publicacion.nombre %>&nbsp;&nbsp;<a href="/perfilajeno/<%=publicacion.username%>">@<%= publicacion.username%></a>&nbsp;&nbsp;&nbsp;&nbsp;<%= publicacion.fecha_publi%></h5>
+                        <%  if(soyyo){%>
+                      <h5 class="card-title"><%= publicacion.nombre %>&nbsp;&nbsp;<a href="/perfil/">@<%= publicacion.username%></a>&nbsp;&nbsp;&nbsp;&nbsp;<%= publicacion.fecha_publi%></h5>
+                      <%  }else{%>
+                        <h5 class="card-title"><%= publicacion.nombre %>&nbsp;&nbsp;<a href="/perfilajeno/<%=publicacion.username%>">@<%= publicacion.username%></a>&nbsp;&nbsp;&nbsp;&nbsp;<%= publicacion.fecha_publi%></h5>
+
+                        <%  }%>
                       <p class="card-text"><%- publicacion.contenido %></p>
                     </div>
                     <% if (publicacion.es_encuesta) { %>

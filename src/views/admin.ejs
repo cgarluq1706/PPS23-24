@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/assets/images/favicon.png" type="image/x-icon">
     <title>Panel de control</title>
     <style>
         body {
@@ -420,7 +421,7 @@ function searchUser() {
             if (user) {
                 searchResult.innerHTML = `
                     <div class="user-card ${user.oculto ? 'hidden-user' : ''}">
-                        ${user.foto_perfil ? `<img src="data:image/jpeg;base64,${user.foto_perfil}" alt="Foto de perfil">` : ''}
+                        ${user.foto_perfil_base64 ? `<img src="data:image/jpeg;base64,${user.foto_perfil_base64}" alt="Foto de perfil">` : ''}
                         <div class="user-details">
                             <div class="user-row">
                                 <p><strong>Nombre:</strong> ${user.nombre || 'No especificado'}</p>

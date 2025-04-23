@@ -41,24 +41,6 @@ CREATE TABLE IF NOT EXISTS seguimiento (
     FOREIGN KEY (seguidor_id) REFERENCES usuarios(id),
     FOREIGN KEY (seguido_id) REFERENCES usuarios(id)
 );
-CREATE TABLE IF NOT EXISTS reco (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    apellido VARCHAR(100) not null,
-    username varchar(100) not null unique,
- --   email VARCHAR(100) NOT NULL UNIQUE,
-    contraseña CHAR(60) NOT NULL,
-    fecha_nacimiento date,
-    telefono varchar(100),
-    foto_perfil LONGBLOB,
-    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    activo boolean default 1,
-    descripcion VARCHAR(100),
-    twitter VARCHAR(255),
-    instagram VARCHAR(255),
-    linkedin VARCHAR(255),
-    github VARCHAR(255)
-);
 
 
 -- Creación de la tabla de publicaciones

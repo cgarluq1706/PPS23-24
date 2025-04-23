@@ -605,11 +605,12 @@ connection.query(query, [userid, userid, username, id], async (err, results) => 
         await obtenerOpcionesEncuesta(publicacion);
 
         publicacion.comentarios = comentarios;
-
+        const soyyo = req.session.username === username;
         res.render("solopublicacion", {
             publicacion,
             userid,
-            username: req.session.username
+            username: req.session.username,
+            soyyo
         });
     });
 });
