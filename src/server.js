@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 // Importamos las rutas
 const loginRoutes = require('./routes/login');
 const imageRoutes = require('./routes/image');
@@ -29,7 +30,12 @@ app.use(bodyParser.json());
 app.use(session({
     secret: 'secret', // Cambia esta cadena secreta
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true, // Evita que las cookies sean accesibles desde JavaScript del cliente
+        secure: false, // Cambia a true si usas HTTPS en producción
+        sameSite: 'Lax' // Usa 'Strict' o 'Lax' según tus necesidades
+    }
 }));
 
 app.use((req, res, next) => {
@@ -46,6 +52,15 @@ app.use((req, res, next) => {
 
     next();
 });
+
+// Configurar X-Frame-Options para prevenir clickjacking
+app.use(helmet.frameguard({ action: 'deny' }));
+
+// Configurar X-Content-Type-Options para prevenir interpretaciones erróneas de tipos MIME
+app.use(helmet.noSniff()); // Añade la cabecera X-Content-Type-Options: nosniff
+
+// Server Leaks Information via "X-Powered-By" HTTP Response
+app.disable('x-powered-by'); // Deshabilitar el encabezado "X-Powered-By"
 
 
 // Configuración para WebSocket

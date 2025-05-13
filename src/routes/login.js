@@ -17,5 +17,6 @@ router
     //.get('/publicaciones',loginController.getpublicaciones)
     .get('/perfil',loginController.getPerfil)
     .get('/error',loginController.getError);
+    
 
 module.exports = router;
